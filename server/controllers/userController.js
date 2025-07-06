@@ -1,6 +1,7 @@
 const User=require("../models/User");
 const bcrypt=require("bcryptjs");
 const validator=require("validator");
+const generateToken=require("../utils/generateToken");
 
 const  registerUser=async (req,res)=>{
 
@@ -60,7 +61,8 @@ const loginUser=async (req,res)=>{
     return res.status(200).json({
         _id:user._id,
         name:user.name,
-        email:user.email
+        email:user.email,
+        token:generateToken(user._id)
     });
 
 };
