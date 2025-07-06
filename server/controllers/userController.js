@@ -12,7 +12,7 @@ const  registerUser=async (req,res)=>{
     {
         return res.status(400).json({message:"Please enter the valid email"});
     }
-    
+
     if(userExists)
     {
         return res.status(400).json({message:"This email already exists"});
@@ -39,4 +39,30 @@ const  registerUser=async (req,res)=>{
 
 };
 
-module.exports={registerUser};
+const loginUser=async (req,res)=>{
+
+    const {email,password}=req.body;
+
+    const user=await User.findOne({email});
+
+    if(!user)
+    {
+        return res.status(400).json({message:"This email is not registerd"});
+    }
+
+    const isPasswordValid=await bcrypt.compare(password,user.password);
+
+    if(!isPasswordValid)
+    {
+        return res.status(400).json({message:"Invalid Password"});
+    }
+
+    return res.status(200).json({
+        _id:user._id,
+        name:user.name,
+        email:user.email
+    });
+
+};
+
+module.exports={registerUser,loginUser};
