@@ -1,5 +1,6 @@
 const User=require("../models/User");
 const bcrypt=require("bcryptjs");
+const validator=require("validator");
 
 const  registerUser=async (req,res)=>{
 
@@ -7,10 +8,18 @@ const  registerUser=async (req,res)=>{
 
     const userExists=await User.findOne({email});
 
+    if(!validator.isEmail(email))
+    {
+        return res.status(400).json({message:"Please enter the valid email"});
+    }
+    
     if(userExists)
     {
         return res.status(400).json({message:"This email already exists"});
     }
+
+
+
 
     const hashedPassword=await bcrypt.hash(password,10);
 
