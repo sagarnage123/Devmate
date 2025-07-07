@@ -1,13 +1,16 @@
 const express=require("express");
 const cors=require("cors");
 const mongoose=require("mongoose");
+
 require("dotenv").config();
 
 const app=express();
 const userRoutes=require("./routes/userRoutes.js");
+const {errorHandler}=require("./middleware/errorMiddleware.js");
 
 app.use(cors());
 app.use(express.json());
+app.use(errorHandler);
 
 app.use("/api/users",userRoutes);
 
