@@ -6,24 +6,26 @@ require("dotenv").config();
 
 const app=express();
 const userRoutes=require("./routes/userRoutes.js");
-const {errorHandler}=require("./middleware/errorMiddleware.js");
+
 
 app.use(cors());
 app.use(express.json());
-app.use(errorHandler);
 
 app.use("/api/users",userRoutes);
 
 app.get("/",(req,res)=>{
 
     res.send("Hello");
-
+    
 });
 
 app.get("/api/test",(req,res)=>{
     res.json({message:"Hey hello from devmate"});
-
+    
 });
+
+const { errorHandler } = require("./middleware/errorMiddleware.js");
+app.use(errorHandler);
 
 const PORT=process.env.PORT || 5000;
 

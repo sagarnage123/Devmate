@@ -1,10 +1,13 @@
-const errorHandler=(err,req,res,nect)=>{
+const errorHandler=(err,req,res,next)=>{
 
-    const statusCode=res.statuCode===200?500:res.statusCode;
+    const statusCode=err.statusCode || 500;
+    const message=err.message || "Internal server error";
 
     res.status(statusCode).json({
-        messasge:err.messasge,
-        stack:process.env.NODE_ENV==="production"?null:err.stack,
+        success:false,
+        message:message,
+        stack: process.env.NODE_ENV === "production" ? null : err.stack,
+
     });
 
 };
