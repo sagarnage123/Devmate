@@ -6,6 +6,7 @@ require("dotenv").config();
 
 const app=express();
 const userRoutes=require("./routes/userRoutes.js");
+const User=require("./models/User.js")
 
 
 app.use(cors());
@@ -26,6 +27,9 @@ app.get("/api/test",(req,res)=>{
 
 const { errorHandler } = require("./middleware/errorMiddleware.js");
 app.use(errorHandler);
+
+
+
 
 const PORT=process.env.PORT || 5000;
 
