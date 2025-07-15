@@ -7,12 +7,14 @@ require("dotenv").config();
 const app=express();
 const userRoutes=require("./routes/userRoutes.js");
 const User=require("./models/User.js")
+const noteRoutes=require("./routes/noteRoutes.js");
 
 
 app.use(cors());
 app.use(express.json());
 
 app.use("/api/users",userRoutes);
+app.use("/api/notes",noteRoutes);
 
 app.get("/",(req,res)=>{
 
