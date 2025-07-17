@@ -17,7 +17,7 @@ const createNote = asyncHandler(async (req, res, next) => {
         user: req.user._id,
         title: title,
         content: content,
-        tags:Array.isArray(tags)?tags:[tags]
+        tags:formatTag
     });
 
     return res.status(201).json(note);
@@ -26,32 +26,49 @@ const createNote = asyncHandler(async (req, res, next) => {
 
 const getUserNotes = asyncHandler(async (req, res, next) => {
 
-    const keyword = req.query.search ? {
-        $or: [
-            { title: { $regex: req.query.search, $options: "i" } },
-            { content: { $regex: req.query.search, $options: "i" } },
-        ]
-    } : {};
+    const filter={user:req.user._id};
 
-    const tagFilter=req.query.tag?{tags:req.query.tag}:{};
+    if(req.query.tag)
+    {
+        filter.tags={$in:[req.query.tag.toLowerCase()]};
+        
+    }
 
+    let sortParamiter="updatedAt";
+    let order=-1;
+
+    if(req.query.sort)
+    {
+        sortParamiter = req.query.sort;
+        order = req.query.order?.toLowerCase() === "asc" ? 1 : -1;
+
+    }
+
+
+
+    if(req.query.search)
+    {
+        filter.$or=[
+            {title:{$regex:req.query.search,$options:"i"}},
+            {content:{$regex:req.query.search,$options:"i"}}
+        ];
+
+    }
+
+    
     const pages = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const skip = (pages - 1) * limit;
 
-    const notes = await Note.find({
-        user: req.user._id,
-        ...keyword,
-        ...tagFilter
-    }).sort({ updatedAt: -1 })
+    const notes = await Note.find(filter)
+        .sort({ [sortParamiter]: order })
         .skip(skip)
         .limit(limit);
 
-    const total = await Note.countDocuments({
-        user: req.user._id,
-        ...keyword,
-        ...tagFilter
-    });
+    const total = await Note.countDocuments(filter);
+
+    const test = await Note.find(filter);
+   
 
     return res.status(200).json(
         {
