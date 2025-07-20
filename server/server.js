@@ -12,7 +12,10 @@ const noteRoutes=require("./routes/noteRoutes.js");
 const tagRoutes=require("./routes/tagRoutes.js")
 
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
 app.use(express.json());
 
 app.use("/api/users",userRoutes);

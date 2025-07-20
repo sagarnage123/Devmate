@@ -1,8 +1,9 @@
-import { useState } from "react";
+ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Login(){
+    console.log("Login route is hit");
 
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
