@@ -127,5 +127,9 @@ const getUserProfile=asyncHandler(async (req,res,next)=>{
 
 
 }) ;
+const getCurrentUser=asyncHandler(async (req,res,next)=>{
 
-module.exports = { registerUser, loginUser , updateUser,getUserProfile };
+    res.status(200).json({user:req.user});
+});
+
+module.exports = { registerUser, loginUser , updateUser,getUserProfile ,getCurrentUser};

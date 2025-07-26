@@ -18,7 +18,8 @@ export default function Login(){
                 password
             }, { withCredentials:true});
 
-            console.log(res.data);
+            localStorage.setItem("devmate-token",res.data.token);
+
             navigate("/dashboard");
             
         } catch (error) {
