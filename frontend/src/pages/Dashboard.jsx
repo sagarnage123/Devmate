@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Dashboard() {
 
@@ -8,6 +9,8 @@ export default function Dashboard() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+
+        toast.success("Toast is mounted");
 
         const fetchUser = async () => {
             const token = localStorage.getItem("devmate-token");
@@ -60,9 +63,15 @@ export default function Dashboard() {
 
             <button
                 onClick={()=>{
-                    console.log("Logout Tried")
-                    localStorage.removeItem("devmate-token")
-                    window.location.href="/login"
+                    
+                    toast.success("Logged out!");
+                    
+                    setTimeout(()=>{
+                        
+                        localStorage.removeItem("devmate-token");
+                        window.location.href="/login" ;
+
+                    },300);
                 }
 
                 }
