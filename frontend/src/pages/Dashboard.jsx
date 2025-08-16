@@ -28,7 +28,7 @@ export default function Dashboard() {
                         Authorization: `Bearer ${token}`
                     },
                 });
-                console.log("Response from backend:", res.data);
+                // console.log("Response from backend:", res.data);
                 setUser(res.data.user);
 
             } catch (error) {
@@ -38,7 +38,7 @@ export default function Dashboard() {
                 else setError("❌ Failed to fetch user. Please try later.");
             } finally {
                 setLoading(false);
-                console.log(user);
+                // console.log(user);
             }
         };
 
