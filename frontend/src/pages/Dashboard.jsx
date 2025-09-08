@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import api from "../api/axios"
 
 export default function Dashboard() {
 
@@ -10,7 +11,7 @@ export default function Dashboard() {
 
     useEffect(() => {
 
-        toast.success("Toast is mounted");
+        // toast.success("Toast is mounted");
 
         const fetchUser = async () => {
             const token = localStorage.getItem("devmate-token");
@@ -23,12 +24,17 @@ export default function Dashboard() {
             }
 
             try {
-                const res = await axios.get("/api/users/me", {
+                // const res = await axios.get("/api/users/me", {
+                //     headers: {
+                //         Authorization: `Bearer ${token}`
+                //     },
+                // });
+                const res = await api.get("/users/me", {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },
                 });
-                // console.log("Response from backend:", res.data);
+               
                 setUser(res.data.user);
 
             } catch (error) {
@@ -38,7 +44,7 @@ export default function Dashboard() {
                 else setError("❌ Failed to fetch user. Please try later.");
             } finally {
                 setLoading(false);
-                // console.log(user);
+                
             }
         };
 
@@ -57,8 +63,11 @@ export default function Dashboard() {
         <div className="p-6 max-w-2xl mx-auto">
 
             <h1 className="text-2xl font-bold mb-2">📋 Welcome back!</h1>
+            <h1 className="text-2xl font-bold mb-2">
+                Welcome {user?.name}
+            </h1>
             <p className="text-gray-700">
-                Hello,<span className="font-semibold">{user?.name || user?.email}</span>
+                Email is .......<span className="font-semibold">{user?.email}</span>
             </p>
 
             <button

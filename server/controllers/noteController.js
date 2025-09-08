@@ -82,8 +82,7 @@ const getUserNotes = asyncHandler(async (req, res, next) => {
 });
 
 const updateNote = asyncHandler(async (req, res, next) => {
-
-
+    
     const note = await Note.findById(req.params.id);
 
     if (!note)

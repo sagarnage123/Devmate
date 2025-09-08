@@ -70,7 +70,9 @@ const updateUser=asyncHandler(async (req,res,next)=>{
 
     if(email && !validator.isEmail(email))
     {
-        return next(createError("Please enter the valid email",402));
+        return next(createError("Please enter the valid email",400));
+        // bad request status code=400
+        // payment required s c=402
     }
 
     
@@ -79,21 +81,24 @@ const updateUser=asyncHandler(async (req,res,next)=>{
     
     const user=await User.findById(req.user._id);
 
+    if (!user)
+        return next(createError("User Not found", 404));
+    // Not found status code=404
+
     const userEmail=user.email;
     if(email && email.toString() !== userEmail.toString())
     {
         const curUser=await User.findOne({email});
 
-        if(curUser && curUser._id !== user._id)
-            return next(createError("This email is laready registered",400));
+        if(curUser && curUser._id.toString() !== user._id.toString())
+            return next(createError("This email is laready registered",409));
 
         user.email=email;
-        console.log(userEmail,email);
+        // console.log(userEmail,email);
         
     }
 
-    if(!user)
-        return next(createError("User Not found",401));
+    
 
     if(name)
         user.name=name;
@@ -105,9 +110,8 @@ const updateUser=asyncHandler(async (req,res,next)=>{
     return res.status(200).json({
         id:user._id,
         name:user.name,
-        email:user.email,
-        pass:user.password
-    })
+        email:user.email
+    });
 
 
     next();

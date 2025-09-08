@@ -20,7 +20,7 @@ export default function Register(){
                 password
             }, { withCredentials:true});
 
-            console.log(res.data);
+           
             navigate("/dashboard");
             
         } catch (error) {

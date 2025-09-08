@@ -23,7 +23,8 @@ export default function Login(){
 
             if(token)
             localStorage.setItem("devmate-token", token);
-            console.log(res?.data);
+
+            // console.log(res?.data);
             navigate("/dashboard");
             
         } catch (error) {

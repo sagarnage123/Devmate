@@ -21,7 +21,7 @@ const createClient= asyncHandler(async (req,res,next)=>{
             return next(createError("This email is already registerd",409));
 
     }
-    console.log('Create clinet called');
+    // console.log('Create clinet called');
     
 
     const newClient=await Client.create({
