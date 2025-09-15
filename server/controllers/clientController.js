@@ -21,8 +21,7 @@ const createClient= asyncHandler(async (req,res,next)=>{
             return next(createError("This email is already registerd",409));
 
     }
-    // console.log('Create clinet called');
-    
+  
 
     const newClient=await Client.create({
         userId:req.user._id,
@@ -39,4 +38,15 @@ const createClient= asyncHandler(async (req,res,next)=>{
 
 }); 
 
-module.exports={createClient};
+const getClients=asyncHandler(async (req,res,next)=>{
+
+    if(!req.user)
+        return createError(next("User not found",401));
+
+    const clients=await Client.find({userId:req.user._id});
+
+    res.status(200).json({clients});
+
+});
+
+module.exports={createClient,getClients};
