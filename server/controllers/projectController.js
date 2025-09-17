@@ -58,8 +58,6 @@ const getProject=asyncHandler(async (req,res,next) =>{
 
 const updateProject=asyncHandler(async (req,res,next)=>{
     const {id}=req.params;
-
-    
     
     if(!req.user)
         return next(createError("Unauthorized",401));
@@ -69,12 +67,12 @@ const updateProject=asyncHandler(async (req,res,next)=>{
 
     const allowedUpdates = ["title", "description", "status", "startDate", "dueDate", "budget"];
     const updates={};
-
+    
     for(let key of allowedUpdates)
     {
         if(req.body[key]!==undefined)
             updates[key]=req.body[key];
-    }
+    } 
 
     const updatedProject=await Project.findOneAndUpdate({_id:id,userId:req.user._id},
         updates,

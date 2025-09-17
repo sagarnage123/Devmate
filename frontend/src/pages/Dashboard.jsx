@@ -24,6 +24,8 @@ export default function Dashboard() {
     const [submiting,setSubmiting]=useState(false);
     const [status,setStatus]=useState("planned");
 
+    const [editingProject,setEditingProject]=useState(null);
+
     useEffect(() => {
 
         const fetchUser = async () => {
@@ -203,6 +205,11 @@ export default function Dashboard() {
                             <p className="text-gray-500">Start: {formatDate(project.startDate)}</p>
                             <p className="text-gray-500">Due: {formatDate(project.dueDate)}</p>
                             <p className="text-gray-700">Description: {project.description || "No description"}</p>
+                            <button onClick={()=> setEditingProject(project)}
+                            className="mt-2 px-3 py-1 bg-yellow-500 text-white-rounded"
+                            >
+                                ✏️ Edit
+                            </button>
 
                         </div>
                     ))
@@ -286,5 +293,89 @@ export default function Dashboard() {
 
                     </form>
                 </div>
+
+                { editingProject && (
+                    <div className="fixed inset-0 bg-black bg-opacity flex item-center justify-center">
+                        <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
+                            <h2 className="text-xl font-semibold mb-4">
+                                Edit Project
+                            </h2>
+
+                            <form onSubmit={async (e)=>{
+                                e.preventDefault();
+
+                                try {
+                                    const res=await api.put(`/project/${editingProject._id}`,editingProject);
+                                    toast.success("✅ Project updated!");
+                                    
+                                    await fetchProject();
+                                } catch (error) {
+                                    toast.error("❌ Failed to update project.");
+                                    console.log(error);
+                                    
+                                }finally{
+                                    setEditingProject(null);
+                                }
+                            }}
+                            className="grid grid-cols-1 gap-4">
+
+                                <input
+                                 type="text"
+                                 value={editingProject.title}
+                                 onChange={(e)=>{setEditingProject({...editingProject,title:e.target.value})}}
+                                 className="p-2 border rounded"
+                                 />
+
+                                 <textarea 
+                                 value={editingProject.description}
+                                 onChange={(e)=>{setEditingProject({...editingProject,description:e.target.value})}}
+                                 className="p-2 border rounded "
+                                 ></textarea>
+
+                                 <input 
+                                 type="number"
+                                 value={editingProject.budget || ""}
+                                 onChange={(e)=>{
+                                    setEditingProject({...editingProject,budget:e.target.value});
+                                 }}
+                                 className="p-2 border rounded" />
+
+                                 <select
+                                value={editingProject.status}
+                                  onChange={(e)=>{
+                                    setEditingProject({...editingProject,status:e.target.value})
+
+                                  }}
+                                  className="p-2 border rounded"
+                                  >
+                                <option value="">Select status</option>
+                                <option value="planned">Planned</option>
+                                <option value="in-progress">Active</option>
+                                <option value="completed">Completed</option>
+                                <option value="on-hold">On Hold</option>
+                                  </select>
+
+                                  <div className="flex-gap-2">
+                                    <button type="submit"
+                                    className="px-4 py-2 bg-green-500 text-white rounded">
+                                        Save
+                                    </button>
+
+                                    <button 
+                                    type="button"
+                                    onClick={()=>{
+                                        setEditingProject(null);
+
+                                    }}
+                                    className="px-4 py-2 bg-red-300 rounded">Cancel</button>
+
+
+                                  </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                )} 
         </div>);
 }
