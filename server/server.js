@@ -12,6 +12,7 @@ const noteRoutes=require("./routes/noteRoutes.js");
 const tagRoutes=require("./routes/tagRoutes.js")
 const clientRoutes=require("./routes/clientRoutes.js");
 const projectRoutes=require("./routes/projectRoute");
+const taskRoutes=require("./routes/taskRoutes.js");
 
 const allowedOrigins = ['http://localhost:5173',
     'http://localhost:5174',]
@@ -38,6 +39,7 @@ app.use("/api/notes",noteRoutes);
 app.use("/api/tags",tagRoutes);
 app.use("/api/client",clientRoutes);
 app.use("/api/project",projectRoutes);
+app.use("/api/task",taskRoutes);
 
 app.get("/",(req,res)=>{
 

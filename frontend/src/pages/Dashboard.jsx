@@ -205,11 +205,32 @@ export default function Dashboard() {
                             <p className="text-gray-500">Start: {formatDate(project.startDate)}</p>
                             <p className="text-gray-500">Due: {formatDate(project.dueDate)}</p>
                             <p className="text-gray-700">Description: {project.description || "No description"}</p>
-                            <button onClick={()=> setEditingProject(project)}
-                            className="mt-2 px-3 py-1 bg-yellow-500 text-white-rounded"
-                            >
-                                ✏️ Edit
-                            </button>
+
+                            <div className="flex-gap-2">
+                                <button onClick={()=> setEditingProject(project)}
+                                className="mt-2 px-3 py-1 bg-yellow-500 text-white-rounded"
+                                >
+                                    ✏️ Edit
+                                </button>
+
+                                <button type="button"
+                                className="mt-3 px-3 py-1 bg-red-500 text-white-rounded"
+                                onClick={async (e)=>{
+
+                                    try {
+                                        const res=await api.delete(`/project/${project._id}`);
+                                        await fetchProject();
+                                        toast.success(" Project deleted succefully");
+                                        
+                                    } catch (error) {
+                                        toast.error(error?.data?.message || "❌ Failed to delete the project");
+                                    }
+
+                                }}>
+                                    Delete
+                                </button>
+
+                            </div>
 
                         </div>
                     ))
@@ -368,8 +389,6 @@ export default function Dashboard() {
 
                                     }}
                                     className="px-4 py-2 bg-red-300 rounded">Cancel</button>
-
-
                                   </div>
 
                             </form>
