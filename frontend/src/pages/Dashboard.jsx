@@ -26,6 +26,105 @@ export default function Dashboard() {
 
     const [editingProject,setEditingProject]=useState(null);
 
+    //  states related to task
+    const [taskByProjectId,setTaskByProjectId]=useState({});
+    const [taskLoading,setTaskLoading]=useState({});
+    const [expandedProjectId,setExpandedProjectId]=useState(null);
+
+    const [newTaskTitle, setNewTaskTitle] = useState("");
+    const [newTaskPriority, setNewTaskPriority] = useState("medium");
+    const [newTaskDueDate, setNewTaskDueDate] = useState("");
+    const [taskSubmitting, setTaskSubmitting] = useState(false);
+
+    const fetchTasksForProject=async (projectId)=>{
+        if(!projectId)
+            return;
+
+        setTaskLoading(prev=>({...prev,[projectId]:true}));
+
+        try {
+            const res=await api.get("/task",{params:{projectId}});
+
+            const task=res?.data ?? res?.task ?? [];
+
+            setTaskByProjectId(prev=>({...prev,[projectId]:task}));
+            
+        } catch (error) {
+            toast.error("Failed to load the task");
+        }finally{
+            setTaskLoading(prev=>({...prev,[projectId]:false}));
+        }
+    }
+
+    const toggleProjectExpand=async (projectId)=>{
+        if(expandedProjectId===projectId)
+        {
+            setExpandedProjectId(null);
+            return;
+        }
+        setExpandedProjectId(projectId);
+
+        if(!taskByProjectId[projectId])
+            fetchTasksForProject(projectId);
+    }
+
+    const handleCreateTask=async (projectId)=>{
+        if(!projectId)
+            return;
+        setTaskSubmitting(true);
+
+        try {
+            const res=await api.post("/task",{
+                projectId,
+                title:newTaskTitle,
+                priority:newTaskPriority,
+                dueDate:newTaskDueDate || undefined
+            });
+
+            toast.success("Task created");
+
+            await fetchTasksForProject(projectId);
+            
+            
+        } catch (error) {
+
+            const mess=error?.response?.data?.message ?? error?.message ?? "Failed to create task";
+            toast.error(mess);
+            
+        }finally{
+            setTaskSubmitting(false);
+            setNewTaskTitle("");
+            setNewTaskPriority("medium");
+            setNewTaskDueDate("");
+        }
+    };
+
+    const handleUpdateTask=async (taskId,updates,projectId)=>{
+        if(!taskId)
+            return;
+
+        try {
+            const res=api.put(`/task/${taskId}`,updates);
+            await fetchTasksForProject(projectId);
+        } catch (error) {
+            
+        }
+    }
+
+    const handleDeleteTask=async (taskId,projectId)=>{
+        if(!taskId)
+            return;
+        if(!confirm("Delete this task?"))
+            return;
+
+        try {
+            await api.delete(`/task/${taskId}`);
+            await fetchTasksForProject(projectId);
+        } catch (error) {
+            toast.error("Failed to delete the task")
+        }
+    }
+
     useEffect(() => {
 
         const fetchUser = async () => {
@@ -207,6 +306,11 @@ export default function Dashboard() {
                             <p className="text-gray-700">Description: {project.description || "No description"}</p>
 
                             <div className="flex-gap-2">
+                                <button
+                                onClick={()=>toggleProjectExpand(project._id)}
+                                className="mt-2 px-3 py-1 bg-gray-200 rounded text-sm">
+                                    {expandedProjectId===project._id?"Hide tasks":"Show tasks"}
+                                </button>
                                 <button onClick={()=> setEditingProject(project)}
                                 className="mt-2 px-3 py-1 bg-yellow-500 text-white-rounded"
                                 >
@@ -229,6 +333,54 @@ export default function Dashboard() {
                                 }}>
                                     Delete
                                 </button>
+                                {
+                                    expandedProjectId===project._id && (
+                                        <div className="border-t mt-3 pt-3 space-y-3">
+                                            {taskLoading[project._id] ? (<p>⏳ Loading tasks...</p>)
+                                                :(taskByProjectId[project._id] || []).length == 0?(<p className="text-sm text-gray-500">No tasks yet for this project.</p>)
+                                                :(
+                                                    <ul className="space-y-2">
+
+                                                        {
+                                                            taskByProjectId[project._id].map(task=>(
+                                                                <li key={task._id} 
+                                                                className="p-2 border rounded flex justify-between item-start">
+                                                                    <div className="font-medium">
+                                                                        {task.title}
+                                                                    </div>
+
+                                                                    <div className="text-xs text-gray-500">
+                                                                        {task.priority} Due {formatDate(task.dueDate)}
+                                                                    </div>
+                                                                    <div className="flex item-centre gap-2">
+
+                                                                        <select value={task.status}
+                                                                        onChange={(e)=>{handleUpdateTask(task._id,{status:e.target.value},project._id)}}
+                                                                        className="p-1 border rounded text-sm">
+                                                                            <option value="todo">todo</option>
+                                                                            <option value="in-progress">in-progress</option>
+                                                                            <option value="done">done</option>
+                                                                        </select>
+
+                                                                        <button onClick={()=>handleDeleteTask(task._id,project._id)}
+                                                                            className="px-2 py-1 bg-red-500 text-white rounded text-sm">
+                                                                                Delete
+                                                                        </button>
+
+                                                                    </div>
+
+                                                                </li>
+                                                            ))
+
+                                                        }
+
+                                                    </ul>
+                                                )
+                                                 }
+
+                                        </div>
+                                    )
+                                }
 
                             </div>
 
