@@ -17,7 +17,7 @@ const createTask=asyncHandler(async (req,res,next)=>{
         return next(createError("Title is required for the task"),400);
 
     const project=await Project.findOne({_id:projectId,userId:req.user._id});
-    console.log(title);
+   
     
     if(!project)
         return next(createError("Project not found",404));

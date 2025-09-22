@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import api from "../api/axios"
+import ProjectCard from "../components/ProjectCard";
 
 export default function Dashboard() {
 
@@ -9,89 +10,88 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [clients,setClients]=useState([]);
-    const [clientsLoading,setClientsLoading]=useState(true);
+    const [clients, setClients] = useState([]);
+    const [clientsLoading, setClientsLoading] = useState(true);
 
-    const [projects,setProject]=useState([]);
-    const [projectLoading,setProjectLoading]=useState(true);
+    const [projects, setProject] = useState([]);
+    const [projectLoading, setProjectLoading] = useState(true);
 
-    const [title,setTitle]=useState("");
-    const [clientId,setClientId]=useState("");
-    const [budget,setBudget]=useState("");
-    const [startDate,setStartDate]=useState("");
-    const [dueDate,setDueDate]=useState("");
-    const [description,setDescription]=useState("");
-    const [submiting,setSubmiting]=useState(false);
-    const [status,setStatus]=useState("planned");
+    const [title, setTitle] = useState("");
+    const [clientId, setClientId] = useState("");
+    const [budget, setBudget] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [dueDate, setDueDate] = useState("");
+    const [description, setDescription] = useState("");
+    const [submiting, setSubmiting] = useState(false);
+    const [status, setStatus] = useState("planned");
 
-    const [editingProject,setEditingProject]=useState(null);
+    const [editingProject, setEditingProject] = useState(null);
 
     //  states related to task
-    const [taskByProjectId,setTaskByProjectId]=useState({});
-    const [taskLoading,setTaskLoading]=useState({});
-    const [expandedProjectId,setExpandedProjectId]=useState(null);
+    const [taskByProjectId, setTaskByProjectId] = useState({});
+    const [taskLoading, setTaskLoading] = useState({});
+    const [expandedProjectId, setExpandedProjectId] = useState(null);
 
     const [newTaskTitle, setNewTaskTitle] = useState("");
     const [newTaskPriority, setNewTaskPriority] = useState("medium");
     const [newTaskDueDate, setNewTaskDueDate] = useState("");
     const [taskSubmitting, setTaskSubmitting] = useState(false);
 
-    const fetchTasksForProject=async (projectId)=>{
-        if(!projectId)
+    const fetchTasksForProject = async (projectId) => {
+        if (!projectId)
             return;
 
-        setTaskLoading(prev=>({...prev,[projectId]:true}));
+        setTaskLoading(prev => ({ ...prev, [projectId]: true }));
 
         try {
-            const res=await api.get("/task",{params:{projectId}});
+            const res = await api.get("/task", { params: { projectId } });
 
-            const task=res?.data ?? res?.task ?? [];
+            const task = res.data?.data ?? res.data?.task ?? [];
 
-            setTaskByProjectId(prev=>({...prev,[projectId]:task}));
-            
+            setTaskByProjectId(prev => ({ ...prev, [projectId]: task }));
+
         } catch (error) {
             toast.error("Failed to load the task");
-        }finally{
-            setTaskLoading(prev=>({...prev,[projectId]:false}));
+        } finally {
+            setTaskLoading(prev => ({ ...prev, [projectId]: false }));
         }
     }
 
-    const toggleProjectExpand=async (projectId)=>{
-        if(expandedProjectId===projectId)
-        {
+    const toggleProjectExpand = async (projectId) => {
+        if (expandedProjectId === projectId) {
             setExpandedProjectId(null);
             return;
         }
         setExpandedProjectId(projectId);
 
-        if(!taskByProjectId[projectId])
+        if (!taskByProjectId[projectId])
             fetchTasksForProject(projectId);
     }
 
-    const handleCreateTask=async (projectId)=>{
-        if(!projectId)
+    const handleCreateTask = async (projectId) => {
+        if (!projectId)
             return;
         setTaskSubmitting(true);
 
         try {
-            const res=await api.post("/task",{
+            const res = await api.post("/task", {
                 projectId,
-                title:newTaskTitle,
-                priority:newTaskPriority,
-                dueDate:newTaskDueDate || undefined
+                title: newTaskTitle,
+                priority: newTaskPriority,
+                dueDate: newTaskDueDate || undefined
             });
 
             toast.success("Task created");
 
             await fetchTasksForProject(projectId);
-            
-            
+
+
         } catch (error) {
 
-            const mess=error?.response?.data?.message ?? error?.message ?? "Failed to create task";
+            const mess = error?.response?.data?.message ?? error?.message ?? "Failed to create task";
             toast.error(mess);
-            
-        }finally{
+
+        } finally {
             setTaskSubmitting(false);
             setNewTaskTitle("");
             setNewTaskPriority("medium");
@@ -99,22 +99,22 @@ export default function Dashboard() {
         }
     };
 
-    const handleUpdateTask=async (taskId,updates,projectId)=>{
-        if(!taskId)
+    const handleUpdateTask = async (taskId, updates, projectId) => {
+        if (!taskId)
             return;
 
         try {
-            const res=api.put(`/task/${taskId}`,updates);
+            const res = api.put(`/task/${taskId}`, updates);
             await fetchTasksForProject(projectId);
         } catch (error) {
-            
+
         }
     }
 
-    const handleDeleteTask=async (taskId,projectId)=>{
-        if(!taskId)
+    const handleDeleteTask = async (taskId, projectId) => {
+        if (!taskId)
             return;
-        if(!confirm("Delete this task?"))
+        if (!confirm("Delete this task?"))
             return;
 
         try {
@@ -129,14 +129,14 @@ export default function Dashboard() {
 
         const fetchUser = async () => {
             setLoading(true);
-           
+
             try {
-                
-                const res=await api.get("/users/me");
+
+                const res = await api.get("/users/me");
                 setUser(res.data.user);
 
             } catch (error) {
-                 setError("❌ Failed to fetch user. Please try later.");
+                setError("❌ Failed to fetch user. Please try later.");
             } finally {
                 setLoading(false);
             }
@@ -146,19 +146,19 @@ export default function Dashboard() {
 
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
 
-        const fetchClients=async ()=>{
+        const fetchClients = async () => {
             try {
-                const res=await api.get("/client");
+                const res = await api.get("/client");
                 // console.log(res.data);
 
                 setClients(res.data.clients);
-                
+
             } catch (error) {
                 toast.error("❌ Failed to fetch clients.")
-                
-            }finally{
+
+            } finally {
                 setClientsLoading(false);
 
             }
@@ -167,7 +167,7 @@ export default function Dashboard() {
 
         fetchClients();
 
-    },[]);
+    }, []);
     const fetchProject = async () => {
         setProjectLoading(true);
 
@@ -186,10 +186,10 @@ export default function Dashboard() {
     }
 
 
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         fetchProject();
-    },[]);//note-> dependecy list empty means only will run 1 time when dashboard is rendered
+    }, []);//note-> dependecy list empty means only will run 1 time when dashboard is rendered
 
     if (loading)
         return <div className="p-4">⏳ Loading your dashboard...</div>
@@ -197,36 +197,36 @@ export default function Dashboard() {
     if (error)
         return <div className="p-4 text-red-600">{error}</div>
 
-    
+
     const formatDate = (dateString) => {
         if (!dateString) return "-";
         return new Date(dateString).toISOString().split("T")[0]; // YYYY-MM-DD
     };
 
-    const handleSubmit=async (e)=>{
-       
+    const handleSubmit = async (e) => {
+
         e.preventDefault();
         setSubmiting(true);
 
         try {
-            const res=await api.post("/project",{
+            const res = await api.post("/project", {
                 clientId,
                 title,
                 description,
                 startDate,
                 dueDate,
                 status,
-                budget:Number(budget)
+                budget: Number(budget)
             });
 
             toast.success("✅ Project created succesfully !");
 
             await fetchProject();
-            
+
         } catch (error) {
-            toast.error(error?.message || "Failed to create project.");   
+            toast.error(error?.message || "Failed to create project.");
         }
-        finally{
+        finally {
             setSubmiting(false);
         }
         setTitle("");
@@ -251,22 +251,22 @@ export default function Dashboard() {
             </p>
 
             <button
-                onClick={()=>{
-                    
-                    toast.success("Logged out!");
-                    
-                    setTimeout(()=>{
-                        
-                        localStorage.removeItem("devmate-token");
-                        window.location.href="/login" ;
+                onClick={() => {
 
-                    },300);
+                    toast.success("Logged out!");
+
+                    setTimeout(() => {
+
+                        localStorage.removeItem("devmate-token");
+                        window.location.href = "/login";
+
+                    }, 300);
                 }
 
                 }
 
                 className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-                >
+            >
                 🚪 Logout
             </button>
 
@@ -275,278 +275,214 @@ export default function Dashboard() {
             {
                 (clientsLoading) ? (<p>⏳ Loading clients...</p>)
                     : (clients.length == 0) ? (<p>No clients yet.</p>)
-                    :(
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{
-                            clients.map(client=>(
-                                <div key={client._id} className="p-4 border rounded shadow-sm hover:shadow-md transition">
-                                    <h3 className="font-bold">{client.name}</h3>
-                                    <p className="text-gray-600">{client.email}</p>
-                                    <p className="text-gray-500 text-sm"> Phone :{client.phone || "N/A"}</p>
-                                </div>
-                            ))
-                        }
+                        : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{
+                                clients.map(client => (
+                                    <div key={client._id} className="p-4 border rounded shadow-sm hover:shadow-md transition">
+                                        <h3 className="font-bold">{client.name}</h3>
+                                        <p className="text-gray-600">{client.email}</p>
+                                        <p className="text-gray-500 text-sm"> Phone :{client.phone || "N/A"}</p>
+                                    </div>
+                                ))
+                            }
 
-                        </div>
-                    )
+                            </div>
+                        )
             }
 
             <h2 className="text-xl font-semibold mt-6 mb-2">Projects </h2>
-                {
-                    (projectLoading) ? (<p>⏳ Loading projects...</p>)
-                    : (projects.length==0)?(<p>No Projects yet</p>)
-                    :(
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {
-                    projects.map(project => (
-                        <div key={project._id} className="p-4 border rounded shadow-sm hover:shadow-md transition">
-                            <h3 className="font-bold">Title:{project.title}</h3>
-                            <p>Budget: {project.budget != null ? project.budget.toLocaleString() : "-"}</p>
-                            <p className="text-gray-500">Start: {formatDate(project.startDate)}</p>
-                            <p className="text-gray-500">Due: {formatDate(project.dueDate)}</p>
-                            <p className="text-gray-700">Description: {project.description || "No description"}</p>
-
-                            <div className="flex-gap-2">
-                                <button
-                                onClick={()=>toggleProjectExpand(project._id)}
-                                className="mt-2 px-3 py-1 bg-gray-200 rounded text-sm">
-                                    {expandedProjectId===project._id?"Hide tasks":"Show tasks"}
-                                </button>
-                                <button onClick={()=> setEditingProject(project)}
-                                className="mt-2 px-3 py-1 bg-yellow-500 text-white-rounded"
-                                >
-                                    ✏️ Edit
-                                </button>
-
-                                <button type="button"
-                                className="mt-3 px-3 py-1 bg-red-500 text-white-rounded"
-                                onClick={async (e)=>{
-
-                                    try {
-                                        const res=await api.delete(`/project/${project._id}`);
-                                        await fetchProject();
-                                        toast.success(" Project deleted succefully");
-                                        
-                                    } catch (error) {
-                                        toast.error(error?.data?.message || "❌ Failed to delete the project");
-                                    }
-
-                                }}>
-                                    Delete
-                                </button>
+            {
+                (projectLoading) ? (<p>⏳ Loading projects...</p>)
+                    : (projects.length == 0) ? (<p>No Projects yet</p>)
+                        : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {
-                                    expandedProjectId===project._id && (
-                                        <div className="border-t mt-3 pt-3 space-y-3">
-                                            {taskLoading[project._id] ? (<p>⏳ Loading tasks...</p>)
-                                                :(taskByProjectId[project._id] || []).length == 0?(<p className="text-sm text-gray-500">No tasks yet for this project.</p>)
-                                                :(
-                                                    <ul className="space-y-2">
+                                    projects.map(project => (
+                                        <ProjectCard
+                                            key={project._id}
+                                            project={project}
+                                            formatDate={formatDate}
+                                            taskByProjectId={taskByProjectId}
+                                            expandedProjectId={expandedProjectId}
+                                            handleUpdateTask={handleUpdateTask}
+                                            handleDeleteTask={handleDeleteTask}
+                                            toggleProjectExpand={toggleProjectExpand}
+                                            newTaskTitle={newTaskTitle}
+                                            setNewTaskTitle={setNewTaskTitle}
+                                            newTaskPriority={newTaskPriority}
+                                            setNewTaskPriority={setNewTaskPriority}
+                                            newTaskDueDate={newTaskDueDate}
+                                            setNewTaskDueDate={setNewTaskDueDate}
+                                            handleCreateTask={handleCreateTask}
+                                            taskSubmitting={taskSubmitting}
+                                            taskLoading={taskLoading}
+                                            setEditingProject={setEditingProject}
+                                            
+                                        />
 
-                                                        {
-                                                            taskByProjectId[project._id].map(task=>(
-                                                                <li key={task._id} 
-                                                                className="p-2 border rounded flex justify-between item-start">
-                                                                    <div className="font-medium">
-                                                                        {task.title}
-                                                                    </div>
 
-                                                                    <div className="text-xs text-gray-500">
-                                                                        {task.priority} Due {formatDate(task.dueDate)}
-                                                                    </div>
-                                                                    <div className="flex item-centre gap-2">
-
-                                                                        <select value={task.status}
-                                                                        onChange={(e)=>{handleUpdateTask(task._id,{status:e.target.value},project._id)}}
-                                                                        className="p-1 border rounded text-sm">
-                                                                            <option value="todo">todo</option>
-                                                                            <option value="in-progress">in-progress</option>
-                                                                            <option value="done">done</option>
-                                                                        </select>
-
-                                                                        <button onClick={()=>handleDeleteTask(task._id,project._id)}
-                                                                            className="px-2 py-1 bg-red-500 text-white rounded text-sm">
-                                                                                Delete
-                                                                        </button>
-
-                                                                    </div>
-
-                                                                </li>
-                                                            ))
-
-                                                        }
-
-                                                    </ul>
-                                                )
-                                                 }
-
-                                        </div>
-                                    )
+                                    ))
                                 }
-
                             </div>
+                        )
+            }
 
-                        </div>
-                    ))
-                    }
-                    </div>
-                    )
-                }
+            <div>
+                <h2 className="text-xl font-semibold mt-10 mb-4">Create New Project</h2>
 
-                <div>
-                    <h2 className="text-xl font-semibold mt-10 mb-4">Create New Project</h2>
+                <form className="grid  grid-cols-1 gap-4 max-w-md" onSubmit={handleSubmit}>
 
-                    <form className="grid  grid-cols-1 gap-4 max-w-md" onSubmit={handleSubmit}>
-
-                        <input type="text" placeholder="Project Title"
-                        value={title} onChange={(e)=>setTitle(e.target.value)}
+                    <input type="text" placeholder="Project Title"
+                        value={title} onChange={(e) => setTitle(e.target.value)}
                         required
                         className="p-2 border-rounded"
 
-                        />
+                    />
 
-                        <select value={status}
-                        onChange={(e)=>setStatus(e.target.value)}
+                    <select value={status}
+                        onChange={(e) => setStatus(e.target.value)}
                         className="p-2 border rounded"
                         required
-                        >
-                            <option value="">Select status</option>
+                    >
+                        <option value="">Select status</option>
                         <option value="planned">Planned</option>
                         <option value="in-progress">Active</option>
                         <option value="on-hold">On hold</option>
                         <option value="completed">Completed</option>
-                        
 
-                        </select>
 
-                        <select value={clientId}
-                        onChange={(e)=>setClientId(e.target.value)}
+                    </select>
+
+                    <select value={clientId}
+                        onChange={(e) => setClientId(e.target.value)}
                         className="p-2 border rounded"
                         required
-                        >
-                            <option value="">Select Client</option>
-                            {
-                                clients.map(client=>(
-                                    <option key={client._id} value={client._id}>
+                    >
+                        <option value="">Select Client</option>
+                        {
+                            clients.map(client => (
+                                <option key={client._id} value={client._id}>
                                     {client.name}
-                                    </option>
-                                ))
-                            }
+                                </option>
+                            ))
+                        }
 
-                        </select>
+                    </select>
 
-                        <input type="number" 
+                    <input type="number"
                         placeholder="Budget"
                         value={budget}
-                        onChange={(e)=>setBudget(e.target.value)}
+                        onChange={(e) => setBudget(e.target.value)}
                         className="p-2 border rounded"
-                        />
+                    />
 
-                        <input type="date"
+                    <input type="date"
                         value={startDate}
                         placeholder="Start Date"
-                        onChange={(e)=>setStartDate(e.target.value)}
-                        className="p-2 border rounded" 
-                        />
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="p-2 border rounded"
+                    />
 
-                        <input type="date"
-                        value={dueDate} 
+                    <input type="date"
+                        value={dueDate}
                         placeholder="Due date"
-                        onChange={(e)=>setDueDate(e.target.value)}
+                        onChange={(e) => setDueDate(e.target.value)}
                         className="p-2 border rounded" />
 
-                        <textarea placeholder="Description" 
+                    <textarea placeholder="Description"
                         value={description}
-                        onChange={(e)=>setDescription(e.target.value)}
+                        onChange={(e) => setDescription(e.target.value)}
                         className="p-2 border rounded"
-                        ></textarea>
+                    ></textarea>
 
-                        <button type="submit"
+                    <button type="submit"
                         className="px-4 py-2 bg-blue-500 text-white rounded" disabled={submiting}
-                        >{submiting?"Creating project":"Create Project"}</button>
+                    >{submiting ? "Creating project" : "Create Project"}</button>
 
 
-                    </form>
-                </div>
+                </form>
+            </div>
 
-                { editingProject && (
-                    <div className="fixed inset-0 bg-black bg-opacity flex item-center justify-center">
-                        <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
-                            <h2 className="text-xl font-semibold mb-4">
-                                Edit Project
-                            </h2>
+            {editingProject && (
+                <div className="fixed inset-0 bg-black bg-opacity flex item-center justify-center">
+                    <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
+                        <h2 className="text-xl font-semibold mb-4">
+                            Edit Project
+                        </h2>
 
-                            <form onSubmit={async (e)=>{
-                                e.preventDefault();
+                        <form onSubmit={async (e) => {
+                            e.preventDefault();
 
-                                try {
-                                    const res=await api.put(`/project/${editingProject._id}`,editingProject);
-                                    toast.success("✅ Project updated!");
-                                    
-                                    await fetchProject();
-                                } catch (error) {
-                                    toast.error("❌ Failed to update project.");
-                                    console.log(error);
-                                    
-                                }finally{
-                                    setEditingProject(null);
-                                }
-                            }}
+                            try {
+                                const res = await api.put(`/project/${editingProject._id}`, editingProject);
+                                toast.success("✅ Project updated!");
+
+                                await fetchProject();
+                            } catch (error) {
+                                toast.error("❌ Failed to update project.");
+                                console.log(error);
+
+                            } finally {
+                                setEditingProject(null);
+                            }
+                        }}
                             className="grid grid-cols-1 gap-4">
 
-                                <input
-                                 type="text"
-                                 value={editingProject.title}
-                                 onChange={(e)=>{setEditingProject({...editingProject,title:e.target.value})}}
-                                 className="p-2 border rounded"
-                                 />
+                            <input
+                                type="text"
+                                value={editingProject.title}
+                                onChange={(e) => { setEditingProject({ ...editingProject, title: e.target.value }) }}
+                                className="p-2 border rounded"
+                            />
 
-                                 <textarea 
-                                 value={editingProject.description}
-                                 onChange={(e)=>{setEditingProject({...editingProject,description:e.target.value})}}
-                                 className="p-2 border rounded "
-                                 ></textarea>
+                            <textarea
+                                value={editingProject.description}
+                                onChange={(e) => { setEditingProject({ ...editingProject, description: e.target.value }) }}
+                                className="p-2 border rounded "
+                            ></textarea>
 
-                                 <input 
-                                 type="number"
-                                 value={editingProject.budget || ""}
-                                 onChange={(e)=>{
-                                    setEditingProject({...editingProject,budget:e.target.value});
-                                 }}
-                                 className="p-2 border rounded" />
+                            <input
+                                type="number"
+                                value={editingProject.budget || ""}
+                                onChange={(e) => {
+                                    setEditingProject({ ...editingProject, budget: e.target.value });
+                                }}
+                                className="p-2 border rounded" />
 
-                                 <select
+                            <select
                                 value={editingProject.status}
-                                  onChange={(e)=>{
-                                    setEditingProject({...editingProject,status:e.target.value})
+                                onChange={(e) => {
+                                    setEditingProject({ ...editingProject, status: e.target.value })
 
-                                  }}
-                                  className="p-2 border rounded"
-                                  >
+                                }}
+                                className="p-2 border rounded"
+                            >
                                 <option value="">Select status</option>
                                 <option value="planned">Planned</option>
                                 <option value="in-progress">Active</option>
                                 <option value="completed">Completed</option>
                                 <option value="on-hold">On Hold</option>
-                                  </select>
+                            </select>
 
-                                  <div className="flex-gap-2">
-                                    <button type="submit"
+                            <div className="flex-gap-2">
+                                <button type="submit"
                                     className="px-4 py-2 bg-green-500 text-white rounded">
-                                        Save
-                                    </button>
+                                    Save
+                                </button>
 
-                                    <button 
+                                <button
                                     type="button"
-                                    onClick={()=>{
+                                    onClick={() => {
                                         setEditingProject(null);
 
                                     }}
                                     className="px-4 py-2 bg-red-300 rounded">Cancel</button>
-                                  </div>
+                            </div>
 
-                            </form>
+                        </form>
 
-                        </div>
                     </div>
-                )} 
+                </div>
+            )}
         </div>);
 }
