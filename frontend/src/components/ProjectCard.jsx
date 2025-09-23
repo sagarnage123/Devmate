@@ -1,4 +1,5 @@
 import React from "react";
+import TaskList from "./TaskList";
 
 export default function ProjectCard({
     project,
@@ -50,7 +51,7 @@ export default function ProjectCard({
                         try {
                             const res = await api.delete(`/project/${project._id}`);
                             await fetchProject();
-                            toast.success(" Project deleted succefully");
+                            toast.success("Project deleted succefully");
 
                         } catch (error) {
                             toast.error(error?.data?.message || "❌ Failed to delete the project");
@@ -61,85 +62,24 @@ export default function ProjectCard({
                 </button>
                 {
                     expandedProjectId === project._id && (
-                        <div className="border-t mt-3 pt-3 space-y-3">
-                            {taskLoading[project._id] ? (<p>⏳ Loading tasks...</p>)
-                                : (taskByProjectId[project._id] || []).length == 0 ? (<p className="text-sm text-gray-500">No tasks yet for this project.</p>)
-                                    : (
-                                        <ul className="space-y-2">
+                        <TaskList
+                        tasks={taskByProjectId[project._id] || []}
+                        projectId={project._id}
+                        handleCreateTask={handleCreateTask}
+                        handleDeleteTask={handleDeleteTask}
+                        handleUpdateTask={handleUpdateTask}
+                        formatDate={formatDate}
+                        setNewTaskDueDate={setNewTaskDueDate}
+                        setNewTaskPriority={setNewTaskPriority}
+                        setNewTaskTitle={setNewTaskTitle}
+                        newTaskDueDate={newTaskDueDate}
+                        newTaskPriority={newTaskPriority}
+                        newTaskTitle={newTaskTitle}
+                        taskSubmitting={taskSubmitting} 
+                        taskLoading={taskLoading[project._id]} />
 
-                                            {
-                                                (taskByProjectId[project._id] || []).map(task => (
-                                                    <li key={task._id}
-                                                        className="p-2 border rounded flex justify-between item-start">
-                                                        <div className="font-medium">
-                                                            {task.title}
-                                                        </div>
-
-                                                        <div className="text-xs text-gray-500">
-                                                            Priority {"=>"} {task.priority} Due {formatDate(task.dueDate)}
-                                                        </div>
-                                                        <div className="flex item-centre gap-2">
-
-                                                            <select value={task.status}
-                                                                onChange={(e) => { handleUpdateTask(task._id, { status: e.target.value }, project._id) }}
-                                                                className="p-1 border rounded text-sm">
-                                                                <option value="todo">todo</option>
-                                                                <option value="in-progress">in-progress</option>
-                                                                <option value="done">done</option>
-                                                            </select>
-
-                                                            <button onClick={() => handleDeleteTask(task._id, project._id)}
-                                                                className="px-2 py-1 bg-red-500 text-white rounded text-sm">
-                                                                Delete
-                                                            </button>
-
-                                                        </div>
-
-                                                    </li>
-                                                ))
-
-                                            }
-
-                                        </ul>
-                                    )
-                            }
-
-                            <div className="mt-2 p-2 border rounded">
-
-                                <h4 className="font-semibold text-sm mb-2">Add a task</h4>
-                                <input type="text"
-                                    value={newTaskTitle}
-                                    placeholder="Task title"
-                                    onChange={(e) => { setNewTaskTitle(e.target.value) }}
-                                    className="w-full p-2 border rounded mb-2" />
-
-                                <div className="flex-gap-2 mb-2">
-                                    <select
-                                        value={newTaskPriority}
-                                        onChange={(e) => { setNewTaskPriority(e.target.value) }}
-                                    >
-                                        <option value="low">low</option>
-                                        <option value="medium">medium</option>
-                                        <option value="high">high</option>
-                                    </select>
-                                    <input type="date"
-                                        value={newTaskDueDate}
-                                        onChange={(e) => { setNewTaskDueDate(e.target.value) }} />
-
-                                </div>
-                                <div className="flex gap-2">
-                                    <button onClick={() => handleCreateTask(project._id)} disabled={taskSubmitting} className="px-3 py-1 bg-green-500 text-white rounded">
-                                        {taskSubmitting ? "Creating..." : "Add Task"}
-                                    </button>
-                                    <button onClick={() => { setNewTaskTitle(""); setNewTaskPriority("medium"); setNewTaskDueDate(""); }} className="px-3 py-1 bg-gray-200 rounded">
-                                        Reset
-                                    </button>
-                                </div>
-
-                            </div>
-
-                        </div>
                     )
+       
                 }
 
             </div>

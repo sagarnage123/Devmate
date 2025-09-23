@@ -1,127 +1,50 @@
-const Note = require("../models/Note");
-const { asyncHandler } = require("../utils/asyncHandler");
-const { createError } = require("../utils/createError");
+const Note=require("../models/Note");
 
 
-const createNote = asyncHandler(async (req, res, next) => {
+ const createNote = async (req, res) => {
+    try {
+        const { projectId, content } = req.body;
 
-    const { title, content ,tags} = req.body;
+        if (!projectId || !content) {
+            return res.status(400).json({ message: "ProjectId and content are required" });
+        }
 
-    if (!title || !content)
-        return next(createError("Title and Content are required", 400));
-
-    const formatTag=Array.isArray(tags)?tags.map((tag)=>tag.toLowerCase()):
-    tags?[tags.toLowerCase()]:[];
-
-    const note = await Note.create({
-        user: req.user._id,
-        title: title,
-        content: content,
-        tags:formatTag
-    });
-
-    return res.status(201).json(note);
-
-});
-
-const getUserNotes = asyncHandler(async (req, res, next) => {
-
-    const filter={user:req.user._id};
-
-    if(req.query.tag)
-    {
-        filter.tags={$in:[req.query.tag.toLowerCase()]};
-        
+        const note = await Note.create({ projectId, content });
+        res.status(201).json(note);
+    } catch (error) {
+        console.error("Error creating note:", error);
+        res.status(500).json({ message: "Server error" });
     }
-
-    let sortParamiter="updatedAt";
-    let order=-1;
-
-    if(req.query.sort)
-    {
-        sortParamiter = req.query.sort;
-        order = req.query.order?.toLowerCase() === "asc" ? 1 : -1;
-
-    }
+};
 
 
-
-    if(req.query.search)
-    {
-        filter.$or=[
-            {title:{$regex:req.query.search,$options:"i"}},
-            {content:{$regex:req.query.search,$options:"i"}}
-        ];
-
-    }
-
+ const getNotesByProject = async (req, res) => {
     
-    const pages = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-    const skip = (pages - 1) * limit;
-
-    const notes = await Note.find(filter)
-        .sort({ [sortParamiter]: order })
-        .skip(skip)
-        .limit(limit);
-
-    const total = await Note.countDocuments(filter);
-
-    const test = await Note.find(filter);
-   
-
-    return res.status(200).json(
-        {
-            success: true,
-            count: notes.length,
-            total:total,
-            pages:Math.ceil(total/limit),
-            notes
-        });
-
-});
-
-const updateNote = asyncHandler(async (req, res, next) => {
-    
-    const note = await Note.findById(req.params.id);
-
-    if (!note)
-        return next(createError("Note don't exists", 404));
-
-    if (note.user.toString() !== req.user._id.toString())
-        return next(createError("Non authenticated user update", 404));
-
-    const { title, content } = req.body;
-    if (title)
-        note.title = title;
-
-    if (content)
-        note.content = content;
-
-    await note.save();
-
-    res.status(200).json(note);
+    try {
+        const { projectId } = req.params;
+        const notes = await Note.find({ projectId }).sort({ createdAt: -1 });
+        res.json(notes);
+    } catch (error) {
+        console.error("Error fetching notes:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
 
 
-});
+ const deleteNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const note = await Note.findByIdAndDelete(id);
 
-const deleteNote = asyncHandler(async (req, res, next) => {
+        if (!note) {
+            return res.status(404).json({ message: "Note not found" });
+        }
 
+        res.json({ message: "Note deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting note:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
 
-    const note = await Note.findById(req.params.id);
-
-    if (!note || !note.user)
-        return next(createError("Bad request", 404));
-
-    if (note.user.toString() !== req.user._id.toString())
-        return next(createError("Non authenticated access tried", 403));
-
-    await Note.deleteOne({ _id: note._id });
-
-    return res.status(200).json({
-        message: "Note deleted successfully"
-    });
-
-});
-
-module.exports = { createNote, getUserNotes, updateNote, deleteNote };
+module.exports={createNote,deleteNote,getNotesByProject};
