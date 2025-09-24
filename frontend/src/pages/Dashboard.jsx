@@ -58,7 +58,7 @@ export default function Dashboard() {
     }
 
     const toggleProjectExpand = async (projectId) => {
-        if (expandedProjectId === projectId) {
+        if (expandedProjectId === projectId || !projectId) {
             setExpandedProjectId(null);
             return;
         }
