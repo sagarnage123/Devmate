@@ -5,90 +5,6 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import NoteList from "./NoteList";
 
-// const [noteProjectId,setNoteProjectId]=useState(null);
-// const [notes,setNotes]=useState([]);
-// const [loadingNotes,setLoadingNotes]=useState(false);
-// const [content,setContent]=useState("");
-// const [noteCreating,setNoteCreating]=useState(false);
-
-// const fetchNotes=async (projectId)=>{
-
-//     if(!projectId)
-//         return;
-//     setLoadingNotes(true);
-
-//     try {
-//         const res=await api.get(`/notes/${projectId}`);
-//         const data=res.data?.notes ?? res?.data  ?? [];
-//         console.log(res);
-//         setNotes(data);
-        
-//     } catch (error) {
-//         toast.error("Failed to load the notes");
-//     }
-//     finally{
-//         setLoadingNotes(false);
-//     }
-// }
-
-// const handelCreateNote=async (projectId)=>{
-//     if(!projectId || content)
-//     {
-//         toast.error("Failed to add note");
-//         return;
-//     }
-//     setNoteCreating(true);
-
-//     try {
-//         const res=await api.post("/notes",{
-//             projectId,
-//             content
-//         });
-//         toast.success("Note added succesfuly")
-//         fetchNotes();
-        
-//     } catch (error) {
-//         toast.error("Failed to add note");
-//     }
-//     finally{
-//         setNoteCreating(false);
-//     }
-// }
-
-// const handelDeleteNote=async (noteId)=>{
-//     if(!noteId)
-//         return;
-
-//     try {
-//         await api.delete(`/notes/${noteId}`);
-//         toast.success("Note deleted");
-        
-//     } catch (error) {
-//         toast.error("Failed to delete the note");
-        
-//     }
-// }
-
-
-// const toggleNoteProjectId=async (projectId)=>{
-
-//     if(!projectId)
-//         return ;
-
-//     toggleProjectExpand(null);
-//     if(projectId===noteProjectId)
-//     {
-//         setNoteProjectId(null);
-//         return;
-//     }
-   
-//     setNoteProjectId(projectId);
-//     console.log(projectId);
-
-//     if(!notes || notes.length==0)
-//         fetchNotes(projectId);
-
-// }
 
 export default function ProjectCard({
     project,
@@ -124,7 +40,7 @@ export default function ProjectCard({
         try {
             const res = await api.get(`/notes/${projectId}`);
             const data = res.data?.notes ?? res?.data ?? [];
-            console.log(res);
+           
             setNotes(data);
 
         } catch (error) {
@@ -152,10 +68,11 @@ export default function ProjectCard({
 
         } catch (error) {
             toast.error("Failed to add note");
-            console.log(error.message || "Hey");
+          
         }
         finally {
             setNoteCreating(false);
+            setContent("");
         }
     }
 
@@ -207,7 +124,7 @@ export default function ProjectCard({
 
             <div className="flex-gap-2">
                 <button
-                    onClick={() => toggleProjectExpand(project._id)}
+                    onClick={() => {toggleProjectExpand(project._id) , setNoteProjectId(null)}}
                     className="mt-2 px-3 py-1 bg-gray-200 rounded text-sm">
                     {expandedProjectId === project._id ? "Hide tasks" : "Show tasks"}
                 </button>

@@ -5,7 +5,7 @@ export default function NoteList({handelCreateNote,handelDeleteNote,setContent,l
     return(
         <div className="border-3 mt-3 pt-3 space-y-3">
             {
-                loading ? (<p>⏳ Loading tasks...</p>)
+                loading ? (<p>⏳ Loading notes...</p>)
                     : (notes || []).length == 0 ? (<p className="text-sm text-gray-500">No notes yet for this project.</p>)
                     :(
                         <ol className="space-y-2">
@@ -13,7 +13,7 @@ export default function NoteList({handelCreateNote,handelDeleteNote,setContent,l
                                 notes.map(note=>(
                                     <li className="p-2 border rounded flex justify-between item-start">
                                         <div className="text-xs text-gray-500">
-                                          { note.content || "-"};
+                                          { note.content || "-"}
                                         </div>
 
                                         <button onClick={()=>{handelDeleteNote(note._id)}}

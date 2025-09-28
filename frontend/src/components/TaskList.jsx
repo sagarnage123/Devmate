@@ -1,5 +1,7 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { LoaderIcon } from "react-hot-toast";
+import TaskEditModal from "./TaskEditModal";
+
 
 export default function TaskList({
         projectId,
@@ -18,7 +20,10 @@ export default function TaskList({
         taskLoading
 
 }){
+    const [editingTask, setEditingTask] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
     return(
+
     <div className="border-t mt-3 pt-3 space-y-3">
         {taskLoading ? (<p>⏳ Loading tasks...</p>)
             : (tasks || []).length == 0 ? (<p className="text-sm text-gray-500">No tasks yet for this project.</p>)
@@ -33,8 +38,15 @@ export default function TaskList({
                                         {task.title}
                                     </div>
 
-                                    <div className="text-xs text-gray-500">
-                                        Priority {"=>"} {task.priority} Due {formatDate(task.dueDate)}
+                                    {task.description && (
+                                        <div className="text-sm text-gray-600">Description :{task.description}</div>
+                                    )}
+
+
+                                    <div className="text-xs text-gray-500 flex flex-wrap gap-4">
+                                        <span>Priority: {task.priority} </span>
+                                        <span>Due: {formatDate(task.dueDate)} </span>
+                                        {task.completedAt && <span>Completed: {formatDate(task.completedAt)} </span>}
                                     </div>
                                     <div className="flex items-center gap-2">
 
@@ -50,6 +62,17 @@ export default function TaskList({
                                             className="px-2 py-1 bg-red-500 text-white rounded text-sm">
                                             Delete
                                         </button>
+
+                                        <button
+                                            onClick={() => {
+                                                setEditingTask(task);
+                                                setModalOpen(true);
+                                            }}
+                                            className="px-2 py-1 bg-yellow-500 text-white rounded"
+                                        >
+                                            ✏️
+                                        </button>
+
 
                                     </div>
 
@@ -95,6 +118,22 @@ export default function TaskList({
             </div>
 
         </div>
+
+        <TaskEditModal 
+        task={editingTask}
+        isOpen={modalOpen}
+        onClose={()=>setModalOpen(false)}
+        onSave={async (updatedData)=>{
+            
+                await handleUpdateTask(editingTask._id, updatedData, projectId);
+                setModalOpen(false);
+                setEditingTask(null);
+            
+        }}
+        
+        />
+
+        
 
     </div>
     );
