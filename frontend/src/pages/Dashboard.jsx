@@ -317,6 +317,7 @@ export default function Dashboard() {
                                             taskSubmitting={taskSubmitting}
                                             taskLoading={taskLoading}
                                             setEditingProject={setEditingProject}
+                                            fetchTasksForProject={fetchTasksForProject}
                                             
                                         />
 

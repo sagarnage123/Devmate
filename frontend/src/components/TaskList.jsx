@@ -17,15 +17,17 @@ export default function TaskList({
         newTaskPriority,
         newTaskTitle,
         taskSubmitting,
-        taskLoading
+        taskLoading,
+        fetchTasksForProject
 
 }){
     const [editingTask, setEditingTask] = useState(null);
+
     const [modalOpen, setModalOpen] = useState(false);
     return(
 
     <div className="border-t mt-3 pt-3 space-y-3">
-        {taskLoading ? (<p>⏳ Loading tasks...</p>)
+        {(taskLoading) ? (<p>⏳ Loading tasks...</p>)
             : (tasks || []).length == 0 ? (<p className="text-sm text-gray-500">No tasks yet for this project.</p>)
                 : (
                     <ul className="space-y-2">
@@ -126,6 +128,8 @@ export default function TaskList({
         onSave={async (updatedData)=>{
             
                 await handleUpdateTask(editingTask._id, updatedData, projectId);
+                await fetchTasksForProject(projectId);
+
                 setModalOpen(false);
                 setEditingTask(null);
             

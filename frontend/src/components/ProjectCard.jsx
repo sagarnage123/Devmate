@@ -23,7 +23,8 @@ export default function ProjectCard({
     handleCreateTask,
     taskSubmitting,
     taskLoading,
-    setEditingProject
+    setEditingProject,
+    fetchTasksForProject
 }) {
     const [noteProjectId, setNoteProjectId] = useState(null);
     const [notes, setNotes] = useState([]);
@@ -174,7 +175,8 @@ export default function ProjectCard({
                         newTaskPriority={newTaskPriority}
                         newTaskTitle={newTaskTitle}
                         taskSubmitting={taskSubmitting} 
-                        taskLoading={taskLoading[project._id]} />
+                        taskLoading={taskLoading[project._id]}
+                        fetchTasksForProject={fetchTasksForProject} />
 
                     )
        
