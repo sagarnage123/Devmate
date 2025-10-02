@@ -5,11 +5,12 @@ import Register from "./pages/Register.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
+
 export default function App() {
     // console.log("Hey app route got called");
     return (
         <Routes>
-            <Route path="/" element={<h1>Welcome to the home page</h1>} />
+            <Route path="/" element={<h1 className="text-justify text-balance">Welcome to the home page</h1>} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={
                 <ProtectedRoute>
