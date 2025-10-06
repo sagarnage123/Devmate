@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios, { formToJSON } from "axios";
+import toast from "react-hot-toast";
 
 export default function Register(){
 
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
+    const [confirmPassword,setConfirmPassword]=useState("");
     const [name,setName]=useState("");
     const navigate=useNavigate();
 
@@ -14,12 +16,23 @@ export default function Register(){
 
         e.preventDefault();
 
+        if(password !==confirmPassword)
+        {
+            toast.error("Password and confirm passsword are not same");
+            return;
+        }
+
         try {
             const res = await axios.post("/api/users/register",{
                 name,
                 email,
                 password
             }, { withCredentials:true});
+
+            const token = res.data.token;
+
+            if (token)
+                localStorage.setItem("devmate-token", token);
 
            
             navigate("/dashboard");
@@ -48,7 +61,7 @@ export default function Register(){
                             placeholder="Enter your name"
                             onChange={(e) => setName(e.target.value)}
                             required
-                            className="w-full text-gray-500 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue"
+                            className="w-full text-gray-500 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
             </div>
 
@@ -63,7 +76,7 @@ export default function Register(){
             setEmail(e.target.value)
         }
         required
-        className="w-full rounded-lg px-4 py-2 text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue border"
+        className="w-full rounded-lg px-4 py-2 text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 border"
         />
         </div>
 
@@ -76,14 +89,26 @@ export default function Register(){
           placeholder="Enter the password"
           onChange={(e)=>setPassword(e.target.value)}
           required
-          className="border w-full rounded-lg text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue px-4 py-2"
+          className="border w-full rounded-lg text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 px-4 py-2"
           />
 
 
           </div>
-    </form>
+
+          <div>
+                        <label className="block text-gray-700 mb-2">Confirm Password</label>
+            <input type="password"
+            value={confirmPassword}
+            onChange={(e)=>{setConfirmPassword(e.target.value)}} 
+            placeholder="Confirm Password"
+            required
+            className="w-full border rounded-lg text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 px-4 py-2"
+            />
+          </div>
+
            <button type="submit"
            className="w-full border rounded-lg bg-blue-500 text-white px-4 py-2 mt-6 hover:bg-blue-700 transition-all" >Submit</button>
+    </form>
     <p className=" text-sm text-gray-700 text-center mt-4">Already have an account?
         
                     <Link to="/login" className="hover:text-black hover:underline"> Login</Link>

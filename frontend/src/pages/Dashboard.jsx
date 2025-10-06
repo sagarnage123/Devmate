@@ -3,6 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import api from "../api/axios"
 import ProjectCard from "../components/ProjectCard";
+import ClientCard from "../components/ClientCard";
 
 export default function Dashboard() {
 
@@ -145,27 +146,25 @@ export default function Dashboard() {
         fetchUser();
 
     }, []);
+    
+    const fetchClients = async () => {
+        try {
+            const res = await api.get("/client");
+            // console.log(res.data);
 
-    useEffect(() => {
+            setClients(res.data.clients);
 
-        const fetchClients = async () => {
-            try {
-                const res = await api.get("/client");
-                // console.log(res.data);
+        } catch (error) {
+            toast.error("❌ Failed to fetch clients.")
 
-                setClients(res.data.clients);
-
-            } catch (error) {
-                toast.error("❌ Failed to fetch clients.")
-
-            } finally {
-                setClientsLoading(false);
-
-            }
+        } finally {
+            setClientsLoading(false);
 
         }
 
-        fetchClients();
+    }
+    useEffect(() => {
+         fetchClients();
 
     }, []);
     const fetchProject = async () => {
@@ -242,14 +241,9 @@ export default function Dashboard() {
     return (
         <div className="p-6 max-w-2xl mx-auto">
 
-            <h1 className="text-2xl font-bold mb-2">📋 Welcome back!</h1>
-            <h1 className="text-2xl font-bold mb-2">
-                Welcome {user?.name}
-            </h1>
-            <p className="text-gray-700">
-                Email is .......<span className="font-semibold">{user?.email}</span>
-            </p>
-
+            <h1 className="text-2xl font-bold mb-2">📋 Welcome back! {user?.name}</h1>
+        
+           
             <button
                 onClick={() => {
 
@@ -270,25 +264,12 @@ export default function Dashboard() {
                 🚪 Logout
             </button>
 
-            <h2 className="text-xl font-semibold mt-6 mb-2">Clients</h2>
+            <ClientCard
+            clientsLoading={clientsLoading}
+            clients={clients}
+            fetchClients={fetchClients}
+            />
 
-            {
-                (clientsLoading) ? (<p>⏳ Loading clients...</p>)
-                    : (clients.length == 0) ? (<p>No clients yet.</p>)
-                        : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{
-                                clients.map(client => (
-                                    <div key={client._id} className="p-4 border rounded shadow-sm hover:shadow-md transition">
-                                        <h3 className="font-bold">{client.name}</h3>
-                                        <p className="text-gray-600">{client.email}</p>
-                                        <p className="text-gray-500 text-sm"> Phone :{client.phone || "N/A"}</p>
-                                    </div>
-                                ))
-                            }
-
-                            </div>
-                        )
-            }
 
             <h2 className="text-xl font-semibold mt-6 mb-2">Projects </h2>
             {

@@ -24,6 +24,7 @@ export default function TaskList({
     const [editingTask, setEditingTask] = useState(null);
 
     const [modalOpen, setModalOpen] = useState(false);
+    
     return(
 
     <div className="border-t mt-3 pt-3 space-y-3">
