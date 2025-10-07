@@ -5,6 +5,8 @@ import api from "../api/axios"
 import ProjectCard from "../components/ProjectCard";
 import ClientCard from "../components/ClientCard";
 
+import CreateProjectModal from "../components/CreateProjectModal";
+
 export default function Dashboard() {
 
     const [user, setUser] = useState(null);
@@ -25,6 +27,7 @@ export default function Dashboard() {
     const [description, setDescription] = useState("");
     const [submiting, setSubmiting] = useState(false);
     const [status, setStatus] = useState("planned");
+    const [isModalOpen, setOpenProjectModal] = useState(false);
 
     const [editingProject, setEditingProject] = useState(null);
 
@@ -237,6 +240,9 @@ export default function Dashboard() {
         setStatus("planned")
     }
 
+    
+    
+
 
     return (
         <div className="p-6 max-w-2xl mx-auto">
@@ -272,6 +278,33 @@ export default function Dashboard() {
 
 
             <h2 className="text-xl font-semibold mt-6 mb-2">Projects </h2>
+            <div>
+                <button onClick={()=>setOpenProjectModal(true)}
+                    className="px-4 py-2 mt-3 mb-4 rounded-lg text-white bg-blue-500 hover:bg-blue-700">
+                        + Add Project
+                </button>
+                <CreateProjectModal
+                    isOpen={isModalOpen}
+                    onClose={()=>{setOpenProjectModal(false)}}
+                    handleSubmit={handleSubmit}
+                    title={title}
+                    setTitle={setTitle}
+                    status={status}
+                    setStatus={setStatus}
+                    clientId={clientId}
+                    setClientId={setClientId}
+                    clients={clients}
+                    budget={budget}
+                    setBudget={setBudget}
+                    startDate={startDate}
+                    setStartDate={setStartDate}
+                    dueDate={dueDate}
+                    setDueDate={setDueDate}
+                    description={description}
+                    setDescription={setDescription}
+                    submitting={submiting}
+                />
+            </div>
             {
                 (projectLoading) ? (<p>⏳ Loading projects...</p>)
                     : (projects.length == 0) ? (<p>No Projects yet</p>)
@@ -308,82 +341,6 @@ export default function Dashboard() {
                             </div>
                         )
             }
-
-            <div>
-                <h2 className="text-xl font-semibold mt-10 mb-4">Create New Project</h2>
-
-                <form className="grid  grid-cols-1 gap-4 max-w-md" onSubmit={handleSubmit}>
-
-                    <input type="text" placeholder="Project Title"
-                        value={title} onChange={(e) => setTitle(e.target.value)}
-                        required
-                        className="p-2 border-rounded"
-
-                    />
-
-                    <select value={status}
-                        onChange={(e) => setStatus(e.target.value)}
-                        className="p-2 border rounded"
-                        required
-                    >
-                        <option value="">Select status</option>
-                        <option value="planned">Planned</option>
-                        <option value="in-progress">Active</option>
-                        <option value="on-hold">On hold</option>
-                        <option value="completed">Completed</option>
-
-
-                    </select>
-
-                    <select value={clientId}
-                        onChange={(e) => setClientId(e.target.value)}
-                        className="p-2 border rounded"
-                        required
-                    >
-                        <option value="">Select Client</option>
-                        {
-                            clients.map(client => (
-                                <option key={client._id} value={client._id}>
-                                    {client.name}
-                                </option>
-                            ))
-                        }
-
-                    </select>
-
-                    <input type="number"
-                        placeholder="Budget"
-                        value={budget}
-                        onChange={(e) => setBudget(e.target.value)}
-                        className="p-2 border rounded"
-                    />
-
-                    <input type="date"
-                        value={startDate}
-                        placeholder="Start Date"
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="p-2 border rounded"
-                    />
-
-                    <input type="date"
-                        value={dueDate}
-                        placeholder="Due date"
-                        onChange={(e) => setDueDate(e.target.value)}
-                        className="p-2 border rounded" />
-
-                    <textarea placeholder="Description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="p-2 border rounded"
-                    ></textarea>
-
-                    <button type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded" disabled={submiting}
-                    >{submiting ? "Creating project" : "Create Project"}</button>
-
-
-                </form>
-            </div>
 
             {editingProject && (
                 <div className="fixed inset-0 bg-black bg-opacity flex item-center justify-center">
