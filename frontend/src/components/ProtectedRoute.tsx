@@ -1,7 +1,12 @@
 import { Navigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { ReactNode } from "react";
 
-export default function ProtectedRoute({children}){
+interface ProtectedRouteProps{
+    children:ReactNode;
+}
+
+export default function ProtectedRoute({children}:ProtectedRouteProps){
     const token=localStorage.getItem("devmate-token");
     
     if(!token)
@@ -11,5 +16,5 @@ export default function ProtectedRoute({children}){
         return <Navigate to="/login" replace />
     }
 
-    return children;
+    return <>{children}</>;
 }

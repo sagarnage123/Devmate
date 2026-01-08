@@ -22,8 +22,8 @@ export default function CreateProjectModal({
     submiting
 
 }){
-    if(!isOpen)
-        return ;
+    // if(!isOpen)
+    //     return null;
 
     const onFormSubmit = (e) => {
         e.preventDefault();
@@ -31,11 +31,17 @@ export default function CreateProjectModal({
     };
 
     return (
-        <div className="flex justify-center items-center fixed inset-0 bg-black bg-opacity-50">
+        <div 
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+            className={`flex justify-center items-center fixed inset-0 backdrop-blur-sm bg-black transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen? `pointer-events-auto bg-opacity-50`:`opacity-0 pointer-events-none`}`}>
 
         
-        <div className="bg-white p-6 rounded-md max-w-md shadow-md">
-            <h2 className="text-xl font-semibold mt-3 mb-4">Create New Project</h2>
+            <div className={`bg-white p-6 rounded-md max-w-md shadow-md w-full transform transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen?'scale-100 translate-y-0 opacity-100':`scale-95 opacity-0 -translate-y-3`}`} >
+            <h2
+            id="modal-title"
+             className="text-xl font-semibold mt-3 mb-4">Create New Project</h2>
 
                 <form onSubmit={onFormSubmit} className="space-y-3">
 

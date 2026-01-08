@@ -1,5 +1,23 @@
 import React from "react";
+import { Dispatch, SetStateAction } from "react";
 
+interface CreateClientModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+
+    clientName: string;
+    setClientName: Dispatch<SetStateAction<string>>;
+
+    clientEmail: string;
+    setClientEmail: Dispatch<SetStateAction<string>>;
+
+    clientPhone: string;
+    setClientPhone: Dispatch<SetStateAction<string>>;
+
+    creatingClient: boolean;
+    handleCreateClient: () => Promise<void>;
+}
+    
 export default function CreateClientModal({
     isOpen,
     onClose,
@@ -12,13 +30,17 @@ export default function CreateClientModal({
     creatingClient,
     handleCreateClient
 
-}){
-    if(!isOpen)
-        return;
+}:CreateClientModalProps){
+    // if(!isOpen)
+    //     return;
 
     return(
-        <div className="flex items-center justify-center fixed inset-0 bg-black bg-opacity-50 z-50 transition-all">
-            <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
+        <div className={`flex items-center justify-center fixed inset-0  bg-black   backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen?"bg-opacity-50 opacity-100 pointer-events-auto":"bg-opacity-0  opacity-0 pointer-events-none"}`}>
+
+            <div className={`bg-white p-6 rounded-2xl shadow-lg transform transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen
+                ? 'scale-100 translate-y-0 opacity-100'
+                : 'scale-95 -translate-y-4 opacity-0'}`}>
+
                 <h2 className="text-xl font-semibold mb-4">Add New Client</h2>
 
                 <div className="grid gap-4">

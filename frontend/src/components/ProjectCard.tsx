@@ -1,11 +1,58 @@
 import React from "react";
 import TaskList from "./TaskList";
 import api from "../api/axios";
-import { useState } from "react";
+import { useState,Dispatch,SetStateAction } from "react";
 import toast from "react-hot-toast";
 import NoteList from "./NoteList";
 
+interface Project {
+    _id: string;
+    title: string;
+    budget?: number | null;
+    startDate: string;
+    dueDate: string;
+    description?: string;
+}
 
+interface Note {
+    _id: string;
+    content: string;
+    projectId: string;
+}
+
+type Task = unknown;
+
+interface ProjectCardProps {
+    project: Project;
+
+    formatDate: (date: string) => string;
+
+    taskByProjectId: Record<string, Task[]>;
+    expandedProjectId: string | null;
+
+    handleUpdateTask: (...args: any[]) => void;
+    handleDeleteTask: (...args: any[]) => void;
+    handleCreateTask: (...args: any[]) => void;
+
+    toggleProjectExpand: (projectId: string | null) => void;
+    fetchProject: () => Promise<void>;
+
+    newTaskTitle: string;
+    setNewTaskTitle: Dispatch<SetStateAction<string>>;
+
+    newTaskPriority: string;
+    setNewTaskPriority: Dispatch<SetStateAction<string>>;
+
+    newTaskDueDate: string;
+    setNewTaskDueDate: Dispatch<SetStateAction<string>>;
+
+    taskSubmitting: boolean;
+    taskLoading: Record<string, boolean>;
+
+    setEditingProject: Dispatch<SetStateAction<Project | null>>;
+
+    fetchTasksForProject: (projectId: string) => Promise<void>;
+}
 export default function ProjectCard({
     project,
     formatDate,
@@ -24,15 +71,16 @@ export default function ProjectCard({
     taskSubmitting,
     taskLoading,
     setEditingProject,
-    fetchTasksForProject
-}) {
-    const [noteProjectId, setNoteProjectId] = useState(null);
+    fetchTasksForProject,
+    fetchProject
+}: ProjectCardProps) {
+    const [noteProjectId, setNoteProjectId] = useState<string | null>(null);
     const [notes, setNotes] = useState([]);
     const [loadingNotes, setLoadingNotes] = useState(false);
     const [content, setContent] = useState("");
     const [noteCreating, setNoteCreating] = useState(false);
 
-    const fetchNotes = async (projectId) => {
+    const fetchNotes = async (projectId:string | null):Promise<void> => {
 
         if (!projectId)
             return;
@@ -52,7 +100,7 @@ export default function ProjectCard({
         }
     }
 
-    const handelCreateNote = async (projectId,content) => {
+    const handelCreateNote = async (projectId:string,content:string) : Promise<void> => {
         if (!projectId || !content) {
             toast.error("Failed to add note");
             return;
@@ -77,7 +125,7 @@ export default function ProjectCard({
         }
     }
 
-    const handelDeleteNote = async (noteId) => {
+    const handelDeleteNote = async (noteId:string | null):Promise<void> => {
 
         if (!noteId)
             return;
@@ -94,7 +142,7 @@ export default function ProjectCard({
     }
 
 
-    const toggleNoteProjectId = async (projectId) => {
+    const toggleNoteProjectId = async (projectId:string | null):Promise<void> => {
 
         if (!projectId)
             return;
@@ -106,7 +154,7 @@ export default function ProjectCard({
         }
 
         setNoteProjectId(projectId);
-        console.log(projectId);
+        // console.log(projectId);
 
         if (!notes || notes.length == 0)
             fetchNotes(projectId);
@@ -152,7 +200,7 @@ export default function ProjectCard({
                             await fetchProject();
                             toast.success("Project deleted succefully");
 
-                        } catch (error) {
+                        } catch (error:any) {
                             toast.error(error?.data?.message || "❌ Failed to delete the project");
                         }
 
