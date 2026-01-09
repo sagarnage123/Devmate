@@ -1,9 +1,11 @@
-import React from "react";
+
 import TaskList from "./TaskList";
 import api from "../api/axios";
 import { useState,Dispatch,SetStateAction } from "react";
 import toast from "react-hot-toast";
 import NoteList from "./NoteList";
+import { Task ,TaskPriority} from "../types/Task";
+
 
 interface Project {
     _id: string;
@@ -20,19 +22,19 @@ interface Note {
     projectId: string;
 }
 
-type Task = unknown;
+
 
 interface ProjectCardProps {
     project: Project;
 
-    formatDate: (date: string) => string;
+    formatDate: (date?: string) => string;
 
     taskByProjectId: Record<string, Task[]>;
     expandedProjectId: string | null;
 
-    handleUpdateTask: (...args: any[]) => void;
-    handleDeleteTask: (...args: any[]) => void;
-    handleCreateTask: (...args: any[]) => void;
+    handleUpdateTask: (taskId: string, updatedData: Partial<Task>, projectId: string) => Promise<void>;
+    handleDeleteTask: (taskId:string, projectId: string) => Promise<void>;
+    handleCreateTask: (projectId: string) => Promise<void>;
 
     toggleProjectExpand: (projectId: string | null) => void;
     fetchProject: () => Promise<void>;
@@ -40,8 +42,8 @@ interface ProjectCardProps {
     newTaskTitle: string;
     setNewTaskTitle: Dispatch<SetStateAction<string>>;
 
-    newTaskPriority: string;
-    setNewTaskPriority: Dispatch<SetStateAction<string>>;
+    newTaskPriority: TaskPriority;
+    setNewTaskPriority: Dispatch<SetStateAction<TaskPriority>>;
 
     newTaskDueDate: string;
     setNewTaskDueDate: Dispatch<SetStateAction<string>>;
@@ -75,7 +77,7 @@ export default function ProjectCard({
     fetchProject
 }: ProjectCardProps) {
     const [noteProjectId, setNoteProjectId] = useState<string | null>(null);
-    const [notes, setNotes] = useState([]);
+    const [notes, setNotes] = useState<Note[]>([]);
     const [loadingNotes, setLoadingNotes] = useState(false);
     const [content, setContent] = useState("");
     const [noteCreating, setNoteCreating] = useState(false);
@@ -87,7 +89,7 @@ export default function ProjectCard({
         setLoadingNotes(true);
 
         try {
-            const res = await api.get(`/notes/${projectId}`);
+            const res = await api.get<{ notes: Note[] }>(`/notes/${projectId}`);
             const data = res.data?.notes ?? res?.data ?? [];
            
             setNotes(data);
@@ -157,7 +159,7 @@ export default function ProjectCard({
         // console.log(projectId);
 
         if (!notes || notes.length == 0)
-            fetchNotes(projectId);
+            await fetchNotes(projectId);
 
     }
 
@@ -173,7 +175,11 @@ export default function ProjectCard({
 
             <div className="flex-gap-2">
                 <button
-                    onClick={() => {toggleProjectExpand(project._id) , setNoteProjectId(null)}}
+                    onClick={() => {
+                        toggleProjectExpand(project._id);
+                         setNoteProjectId(null)
+                        }
+                    }
                     className="mt-2 px-3 py-1 bg-gray-200 rounded text-sm">
                     {expandedProjectId === project._id ? "Hide tasks" : "Show tasks"}
                 </button>

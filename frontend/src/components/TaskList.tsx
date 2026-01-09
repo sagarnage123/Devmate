@@ -1,7 +1,32 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,Dispatch,SetStateAction} from "react";
 import { LoaderIcon } from "react-hot-toast";
 import TaskEditModal from "./TaskEditModal";
+import { Task ,TaskPriority,TaskStatus} from "./../types/Task";
+import { isValidPriority } from "../utils/taskGuard";
+interface TaskListProps {
+    projectId:string;
+    tasks: Task[];
+    handleCreateTask: (projectId:string) => Promise<void>;
+    handleDeleteTask: (taskId:string, projectId:string) => Promise<void>;
+    handleUpdateTask: (
+        taskId:string, 
+        updatedData:Partial<Task>,
+        projectId:string) => Promise<void>;
+    formatDate: (dateStr?:string) => string;
+    setNewTaskDueDate: Dispatch<SetStateAction<string>>;
+    setNewTaskPriority: Dispatch<SetStateAction<TaskPriority>>;
+    setNewTaskTitle: Dispatch<SetStateAction<string>>;
 
+    newTaskDueDate: string;
+    newTaskPriority: TaskPriority;
+    newTaskTitle: string;
+
+    taskSubmitting: boolean;
+    taskLoading: boolean;
+
+    fetchTasksForProject: (projectId:string) => Promise<void>;
+
+}
 
 export default function TaskList({
         projectId,
@@ -20,10 +45,13 @@ export default function TaskList({
         taskLoading,
         fetchTasksForProject
 
-}){
-    const [editingTask, setEditingTask] = useState(null);
+}: TaskListProps) {
+    const [editingTask, setEditingTask] = useState<Task | null>(null);
 
     const [modalOpen, setModalOpen] = useState(false);
+
+    const isTaskStatus = (v: string): v is TaskStatus =>
+        v === "To Do" || v === "in-progress" || v === "done";
     
     return(
 
@@ -54,9 +82,11 @@ export default function TaskList({
                                     <div className="flex items-center gap-2">
 
                                         <select value={task.status}
-                                            onChange={(e) => { handleUpdateTask(task._id, { status: e.target.value }, projectId) }}
+                                            onChange={(e) => {
+                                                if(!isTaskStatus(e.target.value)) return;
+                                                 handleUpdateTask(task._id, { status: e.target.value}, projectId) }}
                                             className="p-1 border rounded text-sm">
-                                            <option value="todo">todo</option>
+                                            <option value="To Do">To Do</option>
                                             <option value="in-progress">in-progress</option>
                                             <option value="done">done</option>
                                         </select>
@@ -100,11 +130,15 @@ export default function TaskList({
             <div className="flex gap-2 mb-2">
                 <select
                     value={newTaskPriority}
-                    onChange={(e) => { setNewTaskPriority(e.target.value) }}
+                    onChange={(e) => { 
+                        if(!isValidPriority(e.target.value))
+                            return;
+
+                        setNewTaskPriority(e.target.value) }}
                 >
-                    <option value="low">low</option>
-                    <option value="medium">medium</option>
-                    <option value="high">high</option>
+                    <option value="Low">low</option>
+                    <option value="Medium">medium</option>
+                    <option value="High">high</option>
                 </select>
                 <input type="date"
                     value={newTaskDueDate}
@@ -115,7 +149,7 @@ export default function TaskList({
                 <button onClick={() => handleCreateTask(projectId)} disabled={taskSubmitting} className="px-3 py-1 bg-green-500 text-white rounded">
                     {taskSubmitting ? "Creating..." : "Add Task"}
                 </button>
-                <button onClick={() => { setNewTaskTitle(""); setNewTaskPriority("medium"); setNewTaskDueDate(""); }} className="px-3 py-1 bg-gray-200 rounded">
+                <button onClick={() => { setNewTaskTitle(""); setNewTaskPriority("Medium" as TaskPriority); setNewTaskDueDate(""); }} className="px-3 py-1 bg-gray-200 rounded">
                     Reset
                 </button>
             </div>
@@ -126,9 +160,19 @@ export default function TaskList({
         task={editingTask}
         isOpen={modalOpen}
         onClose={()=>setModalOpen(false)}
-        onSave={async (updatedData)=>{
-            
-                await handleUpdateTask(editingTask._id, updatedData, projectId);
+        onSave={async (formData)=>{
+
+                if(!editingTask) return;
+
+            const updates: Partial<Task> = {
+                title: formData.title,
+                description: formData.description || undefined,
+                priority: isValidPriority(formData.priority)
+                    ? formData.priority
+                    : undefined,
+                dueDate: formData.dueDate || undefined,
+            };
+                await handleUpdateTask(editingTask._id, updates, projectId);
                 await fetchTasksForProject(projectId);
 
                 setModalOpen(false);
@@ -137,9 +181,6 @@ export default function TaskList({
         }}
         
         />
-
-        
-
     </div>
     );
 }
