@@ -1,6 +1,32 @@
-import React from "react";
+import {Dispatch, SetStateAction } from "react";
 
-export default function NoteList({handelCreateNote,handelDeleteNote,setContent,loading,notes,content,projectId,noteCreating}){
+export interface Note {
+    _id: string;
+    content: string;
+    projectId: string;
+}
+
+interface NoteListProps {
+    handelCreateNote: (projectId: string, content: string) => Promise<void>;
+    handelDeleteNote: (noteId: string | null) => Promise<void>;
+    setContent:Dispatch<SetStateAction<string>>;
+    loading: boolean;
+    notes: Array<Note>;
+    content: string;
+    projectId: string;
+    noteCreating: boolean;
+}
+
+export default function NoteList({
+    handelCreateNote,
+    handelDeleteNote,
+    setContent,
+    loading,
+    notes,
+    content,
+    projectId,
+    noteCreating
+}: NoteListProps) {
 
     return(
         <div className="border-3 mt-3 pt-3 space-y-3">
@@ -11,7 +37,9 @@ export default function NoteList({handelCreateNote,handelDeleteNote,setContent,l
                         <ol className="space-y-2">
                             {
                                 notes.map(note=>(
-                                    <li className="p-2 border rounded flex justify-between item-start">
+                                    <li
+                                    key={note._id}
+                                     className="p-2 border rounded flex justify-between item-start">
                                         <div className="text-xs text-gray-500">
                                           { note.content || "-"}
                                         </div>

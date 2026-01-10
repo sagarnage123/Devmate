@@ -5,6 +5,7 @@ import { useState,Dispatch,SetStateAction } from "react";
 import toast from "react-hot-toast";
 import NoteList from "./NoteList";
 import { Task ,TaskPriority} from "../types/Task";
+import { Note } from "./NoteList";
 
 
 interface Project {
@@ -15,13 +16,6 @@ interface Project {
     dueDate: string;
     description?: string;
 }
-
-interface Note {
-    _id: string;
-    content: string;
-    projectId: string;
-}
-
 
 
 interface ProjectCardProps {
@@ -79,7 +73,7 @@ export default function ProjectCard({
     const [noteProjectId, setNoteProjectId] = useState<string | null>(null);
     const [notes, setNotes] = useState<Note[]>([]);
     const [loadingNotes, setLoadingNotes] = useState(false);
-    const [content, setContent] = useState("");
+    const [content, setContent] = useState<string>("");
     const [noteCreating, setNoteCreating] = useState(false);
 
     const fetchNotes = async (projectId:string | null):Promise<void> => {
