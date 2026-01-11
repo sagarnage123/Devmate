@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import toast from "react-hot-toast";
 
 const api=axios.create({
@@ -7,7 +7,7 @@ const api=axios.create({
 });
 
 api.interceptors.request.use(
-    (config)=>{
+    (config: InternalAxiosRequestConfig)=>{
         const token=localStorage.getItem("devmate-token");
 
         if(token)
@@ -18,7 +18,7 @@ api.interceptors.request.use(
     }
         ,
    
-    (error)=>{
+    (error:AxiosError)=>{
 
         return Promise.reject(error);
 
@@ -29,7 +29,7 @@ api.interceptors.response.use(
     (response)=>{
         return response;
     },
-    (error)=>{
+    (error:AxiosError)=>{
         if(error.response?.status===401)
         {
             localStorage.removeItem("devmate-token");

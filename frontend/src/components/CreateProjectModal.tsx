@@ -1,4 +1,41 @@
-import React from "react";
+import { Dispatch ,SetStateAction} from "react";
+import {ProjectStatus } from "../types/Project";
+interface Client {
+    _id: string;
+    name: string;
+}
+
+interface CreateProjectModalProps {
+
+    isOpen: boolean;
+    onClose: () => void;    
+    handleSubmit: () => Promise<void>;
+
+    setTitle: Dispatch<SetStateAction<string>>;
+    title: string;
+
+    setStatus: Dispatch<SetStateAction<ProjectStatus>>;
+    status: ProjectStatus;
+
+    setClientId: Dispatch<SetStateAction<string>>;
+    clientId: string;
+    clients: Array<Client>;
+
+    budget?: number | string;
+    setBudget: Dispatch<SetStateAction<number | string | undefined>>;
+
+    startDate: string;
+    setStartDate: Dispatch<SetStateAction<string>>;
+
+    dueDate: string;
+    setDueDate: Dispatch<SetStateAction<string>>;
+
+    description: string;
+    setDescription: Dispatch<SetStateAction<string>>;
+
+    submiting: boolean;
+
+}
 
 export default function CreateProjectModal({
     isOpen,
@@ -21,14 +58,18 @@ export default function CreateProjectModal({
     setDescription,
     submiting
 
-}){
+}: CreateProjectModalProps) {
     // if(!isOpen)
     //     return null;
 
-    const onFormSubmit = (e) => {
+    const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         handleSubmit();
     };
+
+    const isProjectStatus=(status: string): status is ProjectStatus => {
+        return ["planned", "in-progress", "on-hold", "completed"].includes(status);
+    }
 
     return (
         <div 
@@ -54,7 +95,10 @@ export default function CreateProjectModal({
 
                 
                 <select value={status}
-                    onChange={(e) => setStatus(e.target.value)}
+                    onChange={(e) => {
+                        if (!isProjectStatus(e.target.value)) return;
+                        setStatus(e.target.value);
+                    }}
                     className="p-2 border rounded w-full mt-3 "
                     required
                 >

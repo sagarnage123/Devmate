@@ -1,96 +1,107 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+
 import toast from "react-hot-toast";
 import api from "../api/axios"
 import ProjectCard from "../components/ProjectCard";
 import ClientCard from "../components/ClientCard";
+import { createTask,getTasksByProject,deleteTask,updateTask } from "../api/tasks";
+import { Task,TaskPriority } from "../types/Task";
+
+import { ProjectStatus,Project,isProjectStatus } from "../types/Project";
 
 import CreateProjectModal from "../components/CreateProjectModal";
 
+interface User{
+    _id: string;
+    name: string;
+}
+
 export default function Dashboard() {
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     const [clients, setClients] = useState([]);
     const [clientsLoading, setClientsLoading] = useState(true);
 
-    const [projects, setProject] = useState([]);
+    const [projects, setProject] = useState<Project[]>([]);
     const [projectLoading, setProjectLoading] = useState(true);
 
     const [title, setTitle] = useState("");
     const [clientId, setClientId] = useState("");
-    const [budget, setBudget] = useState("");
+    const [budget, setBudget] = useState<number | string | undefined>("");
     const [startDate, setStartDate] = useState("");
     const [dueDate, setDueDate] = useState("");
     const [description, setDescription] = useState("");
     const [submiting, setSubmiting] = useState(false);
-    const [status, setStatus] = useState("planned");
+    const [status, setStatus] = useState<ProjectStatus>("planned");
     const [isModalOpen, setOpenProjectModal] = useState(false);
 
-    const [editingProject, setEditingProject] = useState(null);
+    const [editingProject, setEditingProject] = useState<Project | null>(null);
 
     //  states related to task
-    const [taskByProjectId, setTaskByProjectId] = useState({});
-    const [taskLoading, setTaskLoading] = useState({});
-    const [expandedProjectId, setExpandedProjectId] = useState(null);
+        const [taskByProjectId, setTaskByProjectId] = useState<Record<string, Task[]>>({});
+        const [taskLoading, setTaskLoading] = useState<Record<string, boolean>>({});
+        const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null);
 
-    const [newTaskTitle, setNewTaskTitle] = useState("");
-    const [newTaskPriority, setNewTaskPriority] = useState("medium");
-    const [newTaskDueDate, setNewTaskDueDate] = useState("");
-    const [taskSubmitting, setTaskSubmitting] = useState(false);
+        const [newTaskTitle, setNewTaskTitle] = useState("");
+        const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority>("Medium");
+        const [newTaskDueDate, setNewTaskDueDate] = useState("");
+        const [taskSubmitting, setTaskSubmitting] = useState(false);
 
-    const fetchTasksForProject = async (projectId) => {
-        if (!projectId)
-            return;
+        const fetchTasksForProject = async (projectId:string):Promise<void> => {
+            if (!projectId)
+                return;
 
-        setTaskLoading(prev => ({ ...prev, [projectId]: true }));
+            setTaskLoading(prev => ({ ...prev, [projectId]: true }));
 
-        try {
-            const res = await api.get("/task", { params: { projectId } });
+            try {
+                // const res = await api.get("/task", { params: { projectId } });
 
-            const task = res.data?.data ?? res.data?.task ?? [];
+                // const task = res.data?.data ?? res.data?.task ?? [];
 
-            setTaskByProjectId(prev => ({ ...prev, [projectId]: task }));
+                const task = await getTasksByProject(projectId);
 
-        } catch (error) {
-            toast.error("Failed to load the task");
-        } finally {
-            setTaskLoading(prev => ({ ...prev, [projectId]: false }));
+                setTaskByProjectId(prev => ({ ...prev, [projectId]: task }));
+
+            } catch (error) {
+                toast.error("Failed to load the task");
+            } finally {
+                setTaskLoading(prev => ({ ...prev, [projectId]: false }));
+            }
         }
-    }
 
-    const toggleProjectExpand = async (projectId) => {
-        if (expandedProjectId === projectId || !projectId) {
-            setExpandedProjectId(null);
-            return;
+        const toggleProjectExpand = async (projectId:string | null):Promise<void> => {
+            if (expandedProjectId === projectId || !projectId) {
+                setExpandedProjectId(null);
+                return;
+            }
+            setExpandedProjectId(projectId);
+
+            if (!taskByProjectId[projectId])
+                fetchTasksForProject(projectId);
         }
-        setExpandedProjectId(projectId);
 
-        if (!taskByProjectId[projectId])
-            fetchTasksForProject(projectId);
-    }
+        const handleCreateTask = async (projectId:string) => {
+            if (!projectId)
+                return;
+            setTaskSubmitting(true);
 
-    const handleCreateTask = async (projectId) => {
-        if (!projectId)
-            return;
-        setTaskSubmitting(true);
+            try {
+                await createTask({
+                    projectId,
+                    title: newTaskTitle,
+                    priority: newTaskPriority,
+                    dueDate: newTaskDueDate || undefined,
+                });
 
-        try {
-            const res = await api.post("/task", {
-                projectId,
-                title: newTaskTitle,
-                priority: newTaskPriority,
-                dueDate: newTaskDueDate || undefined
-            });
+                toast.success("Task created");
 
-            toast.success("Task created");
-
-            await fetchTasksForProject(projectId);
+                await fetchTasksForProject(projectId);
 
 
-        } catch (error) {
+        } catch (error: any) {
 
             const mess = error?.response?.data?.message ?? error?.message ?? "Failed to create task";
             toast.error(mess);
@@ -98,31 +109,31 @@ export default function Dashboard() {
         } finally {
             setTaskSubmitting(false);
             setNewTaskTitle("");
-            setNewTaskPriority("medium");
+            setNewTaskPriority("Medium");
             setNewTaskDueDate("");
         }
     };
 
-    const handleUpdateTask = async (taskId, updates, projectId) => {
+    const handleUpdateTask = async (taskId:string, updates:Partial<Task>, projectId:string):Promise<void> => {
         if (!taskId)
             return;
 
         try {
-            const res = api.put(`/task/${taskId}`, updates);
+            await updateTask(taskId, updates);
             await fetchTasksForProject(projectId);
         } catch (error) {
 
         }
     }
 
-    const handleDeleteTask = async (taskId, projectId) => {
+    const handleDeleteTask = async (taskId:string, projectId:string) => {
         if (!taskId)
             return;
         if (!confirm("Delete this task?"))
             return;
 
         try {
-            await api.delete(`/task/${taskId}`);
+            await deleteTask(taskId);
             await fetchTasksForProject(projectId);
         } catch (error) {
             toast.error("Failed to delete the task")
@@ -200,18 +211,17 @@ export default function Dashboard() {
         return <div className="p-4 text-red-600">{error}</div>
 
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString?:string):string => {
         if (!dateString) return "-";
         return new Date(dateString).toISOString().split("T")[0]; // YYYY-MM-DD
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (): Promise<void> => {
 
-        e.preventDefault();
-        setSubmiting(true);
+     setSubmiting(true);
 
         try {
-            const res = await api.post("/project", {
+            await api.post("/project", {
                 clientId,
                 title,
                 description,
@@ -226,7 +236,9 @@ export default function Dashboard() {
             await fetchProject();
 
         } catch (error) {
-            toast.error(error?.message || "Failed to create project.");
+            const message =
+                error instanceof Error ? error.message : "Failed to create Project";
+            toast.error(message);
         }
         finally {
             setSubmiting(false);
@@ -302,7 +314,7 @@ export default function Dashboard() {
                     setDueDate={setDueDate}
                     description={description}
                     setDescription={setDescription}
-                    submitting={submiting}
+                    submiting={submiting}
                 />
             </div>
             {
@@ -332,7 +344,7 @@ export default function Dashboard() {
                                             taskLoading={taskLoading}
                                             setEditingProject={setEditingProject}
                                             fetchTasksForProject={fetchTasksForProject}
-                                            
+                                            fetchProject={fetchProject}  
                                         />
 
 
@@ -384,14 +396,14 @@ export default function Dashboard() {
                                 type="number"
                                 value={editingProject.budget || ""}
                                 onChange={(e) => {
-                                    setEditingProject({ ...editingProject, budget: e.target.value });
+                                    setEditingProject({ ...editingProject, budget: e.target.value ? Number(e.target.value) : undefined });
                                 }}
                                 className="p-2 border rounded" />
 
                             <select
                                 value={editingProject.status}
                                 onChange={(e) => {
-                                    setEditingProject({ ...editingProject, status: e.target.value })
+                                    setEditingProject({ ...editingProject, status:isProjectStatus(e.target.value) ? e.target.value : "planned" });
 
                                 }}
                                 className="p-2 border rounded"

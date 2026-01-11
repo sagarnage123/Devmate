@@ -6,16 +6,7 @@ import toast from "react-hot-toast";
 import NoteList from "./NoteList";
 import { Task ,TaskPriority} from "../types/Task";
 import { Note } from "./NoteList";
-
-
-interface Project {
-    _id: string;
-    title: string;
-    budget?: number | null;
-    startDate: string;
-    dueDate: string;
-    description?: string;
-}
+import { Project } from "../types/Project";
 
 
 interface ProjectCardProps {
@@ -30,7 +21,7 @@ interface ProjectCardProps {
     handleDeleteTask: (taskId:string, projectId: string) => Promise<void>;
     handleCreateTask: (projectId: string) => Promise<void>;
 
-    toggleProjectExpand: (projectId: string | null) => void;
+    toggleProjectExpand: (projectId: string | null) => Promise<void>;
     fetchProject: () => Promise<void>;
 
     newTaskTitle: string;
