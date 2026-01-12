@@ -8,21 +8,20 @@ import { createTask,getTasksByProject,deleteTask,updateTask } from "../api/tasks
 import { Task,TaskPriority } from "../types/Task";
 
 import { ProjectStatus,Project,isProjectStatus } from "../types/Project";
+import { getProjects,createProject,updateProject } from "../api/projects";
+import { getClients } from "../api/clients";
 
 import CreateProjectModal from "../components/CreateProjectModal";
-
-interface User{
-    _id: string;
-    name: string;
-}
-
+import { Client } from "../types/Client";
+import { User } from "../types/User";
+import { getCurrentUser } from "../api/user";
 export default function Dashboard() {
 
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const [clients, setClients] = useState([]);
+    const [clients, setClients] = useState<Client[]>([]);
     const [clientsLoading, setClientsLoading] = useState(true);
 
     const [projects, setProject] = useState<Project[]>([]);
@@ -57,9 +56,6 @@ export default function Dashboard() {
             setTaskLoading(prev => ({ ...prev, [projectId]: true }));
 
             try {
-                // const res = await api.get("/task", { params: { projectId } });
-
-                // const task = res.data?.data ?? res.data?.task ?? [];
 
                 const task = await getTasksByProject(projectId);
 
@@ -147,8 +143,8 @@ export default function Dashboard() {
 
             try {
 
-                const res = await api.get("/users/me");
-                setUser(res.data.user);
+                const res = await getCurrentUser()
+                setUser(res);
 
             } catch (error) {
                 setError("❌ Failed to fetch user. Please try later.");
@@ -163,10 +159,8 @@ export default function Dashboard() {
     
     const fetchClients = async () => {
         try {
-            const res = await api.get("/client");
-            // console.log(res.data);
-
-            setClients(res.data.clients);
+            const res = await getClients();
+            setClients(res);
 
         } catch (error) {
             toast.error("❌ Failed to fetch clients.")
@@ -185,9 +179,8 @@ export default function Dashboard() {
         setProjectLoading(true);
 
         try {
-            const res = await api.get("/project");
-
-            setProject(res.data.projects);
+            const projects=await getProjects();
+            setProject(projects);
 
         } catch (error) {
             toast.error("Error occured");
@@ -221,15 +214,16 @@ export default function Dashboard() {
      setSubmiting(true);
 
         try {
-            await api.post("/project", {
+            await createProject({
                 clientId,
                 title,
                 description,
                 startDate,
                 dueDate,
                 status,
-                budget: Number(budget)
+                budget: Number(budget),
             });
+   
 
             toast.success("✅ Project created succesfully !");
 
@@ -365,7 +359,8 @@ export default function Dashboard() {
                             e.preventDefault();
 
                             try {
-                                const res = await api.put(`/project/${editingProject._id}`, editingProject);
+                                await updateProject(editingProject._id, editingProject);
+
                                 toast.success("✅ Project updated!");
 
                                 await fetchProject();

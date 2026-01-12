@@ -2,34 +2,29 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios, { formToJSON } from "axios";
 import { Link } from "react-router-dom";
+import { login } from "../api/auth";
+import { toast } from "react-hot-toast";
 
 
 export default function Login(){
 
-    const [email,setEmail]=useState("");
-    const [password,setPassword]=useState("");
+    const [email,setEmail]=useState<string>("");
+    const [password,setPassword]=useState<string>("");
    
     const navigate=useNavigate();
 
-    const handleLogin=async (e)=>{
+    const handleLogin=async (e:React.FormEvent<HTMLFormElement>):Promise<void>=>{
 
         e.preventDefault();
 
-        try {
-            const res = await axios.post("/api/users/login",{
-                email,
-                password
-            }, { withCredentials:true});
-            const token=res.data.token;
-
-            if(token)
-            localStorage.setItem("devmate-token", token);
-
-            // console.log(res?.data);
+       try {
+            await login({ email, password });
+            toast.success("Logged in successfully");
             navigate("/dashboard");
-            
         } catch (error) {
-            console.log(error.response?.data?.message || "Login Failed");
+            const message =
+                error instanceof Error ? error.message : "Login failed";
+            toast.error(message);
         }
 
     };

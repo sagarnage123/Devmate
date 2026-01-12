@@ -1,12 +1,14 @@
 
 import TaskList from "./TaskList";
-import api from "../api/axios";
+
 import { useState,Dispatch,SetStateAction } from "react";
 import toast from "react-hot-toast";
 import NoteList from "./NoteList";
 import { Task ,TaskPriority} from "../types/Task";
 import { Note } from "./NoteList";
 import { Project } from "../types/Project";
+import { getNotesByProject,createNote,deleteNote} from "../api/notes";
+import { deleteProject } from "../api/projects";
 
 
 interface ProjectCardProps {
@@ -74,8 +76,7 @@ export default function ProjectCard({
         setLoadingNotes(true);
 
         try {
-            const res = await api.get<{ notes: Note[] }>(`/notes/${projectId}`);
-            const data = res.data?.notes ?? res?.data ?? [];
+           const data = await getNotesByProject(projectId);
            
             setNotes(data);
 
@@ -95,10 +96,12 @@ export default function ProjectCard({
         setNoteCreating(true);
 
         try {
-            const res = await api.post("/notes", {
-                projectId,
-                content
-            });
+            await createNote(
+                {
+                    projectId,
+                    content
+                });
+
             toast.success("Note added succesfuly")
             await fetchNotes(projectId);
 
@@ -118,7 +121,7 @@ export default function ProjectCard({
             return;
 
         try {
-            await api.delete(`/notes/${noteId}`);
+            await deleteNote(noteId);
             toast.success("Note deleted");
             if(noteProjectId)
                 fetchNotes(noteProjectId);
@@ -161,7 +164,7 @@ export default function ProjectCard({
             <div className="flex-gap-2">
                 <button
                     onClick={() => {
-                        toggleProjectExpand(project._id);
+                         toggleProjectExpand(project._id);
                          setNoteProjectId(null)
                         }
                     }
@@ -187,12 +190,14 @@ export default function ProjectCard({
                             return;
 
                         try {
-                            const res = await api.delete(`/project/${project._id}`);
+                            await deleteProject(project._id);
                             await fetchProject();
                             toast.success("Project deleted succefully");
 
-                        } catch (error:any) {
-                            toast.error(error?.data?.message || "❌ Failed to delete the project");
+                        } catch (error) {
+                            const message =
+                                error instanceof Error ? error.message : "❌ Failed to delete the project";
+                            toast.error(message);
                         }
 
                     }}>
