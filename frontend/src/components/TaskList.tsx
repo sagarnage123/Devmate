@@ -1,5 +1,5 @@
-import React,{useState,Dispatch,SetStateAction} from "react";
-import { LoaderIcon } from "react-hot-toast";
+import {useState,Dispatch,SetStateAction} from "react";
+
 import TaskEditModal from "./TaskEditModal";
 import { Task ,TaskPriority,TaskStatus} from "./../types/Task";
 import { isValidPriority } from "../utils/taskGuard";

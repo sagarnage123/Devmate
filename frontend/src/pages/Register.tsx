@@ -123,6 +123,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { register } from "../api/auth";
+import { getApiErrorMessage } from "../utils/getApiErrorMessage";
 
 export default function Register() {
     const [name, setName] = useState<string>("");
@@ -146,11 +147,9 @@ export default function Register() {
             await register({ name, email, password });
             toast.success("Account created successfully");
             navigate("/dashboard");
-        } catch (error) {
-            const message =
-                error instanceof Error ? error.message : "Register failed";
-            toast.error(message);
-        }
+        } catch (error: unknown) {
+            toast.error(getApiErrorMessage(error));
+        } 
     };
 
     return (

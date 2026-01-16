@@ -1,6 +1,7 @@
 import api from "./axios";
 import type { Project, ProjectStatus } from "../types/Project";
 import { isProjectStatus } from "../types/Project";
+import { apiCall } from "./apiCall";
 
 
 function extractProjects(data: unknown): Project[] {
@@ -24,11 +25,11 @@ function extractProjects(data: unknown): Project[] {
 
 
 export async function getProjects(): Promise<Project[]> {
-    const res = await api.get("/project");
-    return extractProjects(res.data);
+    return apiCall(async () => {
+        const response = await api.get("/projects");
+        return extractProjects(response.data);
+    });
 }
-
-
 
 export interface CreateProjectPayload {
     title: string;
@@ -40,23 +41,20 @@ export interface CreateProjectPayload {
     description?: string;
 }
 
-export async function createProject(
+export function createProject(
     payload: CreateProjectPayload
 ): Promise<void> {
-    await api.post("/project", payload);
+    return apiCall(() => api.post("/project", payload));
 }
 
 
-
-export async function updateProject(
+export function updateProject(
     projectId: string,
     updates: Partial<Project>
 ): Promise<void> {
-    await api.put(`/project/${projectId}`, updates);
+    return apiCall(() => api.put(`/project/${projectId}`, updates));
 }
 
-
-
-export async function deleteProject(projectId: string): Promise<void> {
-    await api.delete(`/project/${projectId}`);
+export function deleteProject(projectId: string): Promise<void> {
+    return apiCall(() => api.delete(`/project/${projectId}`));
 }

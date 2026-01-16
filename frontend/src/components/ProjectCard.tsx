@@ -9,6 +9,7 @@ import { Note } from "./NoteList";
 import { Project } from "../types/Project";
 import { getNotesByProject,createNote,deleteNote} from "../api/notes";
 import { deleteProject } from "../api/projects";
+import { getApiErrorMessage } from "../utils/getApiErrorMessage";
 
 
 interface ProjectCardProps {
@@ -80,8 +81,8 @@ export default function ProjectCard({
            
             setNotes(data);
 
-        } catch (error) {
-            toast.error("Failed to load the notes");
+        } catch (error: unknown) {
+            toast.error(getApiErrorMessage(error));
         }
         finally {
             setLoadingNotes(false);
@@ -105,9 +106,8 @@ export default function ProjectCard({
             toast.success("Note added succesfuly")
             await fetchNotes(projectId);
 
-        } catch (error) {
-            toast.error("Failed to add note");
-          
+        }catch(error: unknown) {
+            toast.error(getApiErrorMessage(error));
         }
         finally {
             setNoteCreating(false);
@@ -126,8 +126,8 @@ export default function ProjectCard({
             if(noteProjectId)
                 fetchNotes(noteProjectId);
             
-        } catch (error) {
-            toast.error("Failed to delete the note");
+        } catch (error:unknown) {
+            toast.error(getApiErrorMessage(error));
         }
     }
 

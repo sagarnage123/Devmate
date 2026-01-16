@@ -1,5 +1,6 @@
 import api from "./axios";
 import type { Note } from "../types/Note";
+import { apiCall } from "./apiCall";
 
 function extractNotes(data: unknown): Note[] {
     if (
@@ -16,8 +17,10 @@ function extractNotes(data: unknown): Note[] {
 export async function getNotesByProject(
     projectId: string
 ): Promise<Note[]> {
-    const res = await api.get(`/notes/${projectId}`);
-    return extractNotes(res.data);
+    return apiCall(async () => {
+        const response = await api.get(`/notes/project/${projectId}`);
+        return extractNotes(response.data);
+    });
 }
 
 export interface CreateNotePayload {
@@ -28,9 +31,9 @@ export interface CreateNotePayload {
 export async function createNote(
     payload: CreateNotePayload
 ): Promise<void> {
-    await api.post("/notes", payload);
+    return apiCall(() => api.post("/notes", payload));
 }
 
 export async function deleteNote(noteId: string): Promise<void> {
-    await api.delete(`/notes/${noteId}`);
+    return apiCall(() => api.delete(`/notes/${noteId}`));
 }

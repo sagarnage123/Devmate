@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios, { formToJSON } from "axios";
 import { Link } from "react-router-dom";
 import { login } from "../api/auth";
 import { toast } from "react-hot-toast";
+import { getApiErrorMessage } from "../utils/getApiErrorMessage";
 
 
 export default function Login(){
@@ -21,11 +21,9 @@ export default function Login(){
             await login({ email, password });
             toast.success("Logged in successfully");
             navigate("/dashboard");
-        } catch (error) {
-            const message =
-                error instanceof Error ? error.message : "Login failed";
-            toast.error(message);
-        }
+        } catch (error: unknown) {
+            toast.error(getApiErrorMessage(error));
+        } 
 
     };
 

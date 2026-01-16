@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
-import api from "../api/axios"
+
 import ProjectCard from "../components/ProjectCard";
 import ClientCard from "../components/ClientCard";
 import { createTask,getTasksByProject,deleteTask,updateTask } from "../api/tasks";
@@ -15,6 +15,8 @@ import CreateProjectModal from "../components/CreateProjectModal";
 import { Client } from "../types/Client";
 import { User } from "../types/User";
 import { getCurrentUser } from "../api/user";
+
+import { getApiErrorMessage } from "../utils/getApiErrorMessage";
 export default function Dashboard() {
 
     const [user, setUser] = useState<User | null>(null);
@@ -62,7 +64,7 @@ export default function Dashboard() {
                 setTaskByProjectId(prev => ({ ...prev, [projectId]: task }));
 
             } catch (error) {
-                toast.error("Failed to load the task");
+                toast.error(getApiErrorMessage(error));
             } finally {
                 setTaskLoading(prev => ({ ...prev, [projectId]: false }));
             }
@@ -97,12 +99,9 @@ export default function Dashboard() {
                 await fetchTasksForProject(projectId);
 
 
-        } catch (error: any) {
-
-            const mess = error?.response?.data?.message ?? error?.message ?? "Failed to create task";
-            toast.error(mess);
-
-        } finally {
+            } catch (error: unknown) {
+                toast.error(getApiErrorMessage(error));
+            } finally {
             setTaskSubmitting(false);
             setNewTaskTitle("");
             setNewTaskPriority("Medium");
@@ -117,8 +116,8 @@ export default function Dashboard() {
         try {
             await updateTask(taskId, updates);
             await fetchTasksForProject(projectId);
-        } catch (error) {
-
+        } catch (error: unknown) {
+            toast.error(getApiErrorMessage(error));
         }
     }
 
@@ -131,8 +130,8 @@ export default function Dashboard() {
         try {
             await deleteTask(taskId);
             await fetchTasksForProject(projectId);
-        } catch (error) {
-            toast.error("Failed to delete the task")
+        } catch (error: unknown) {
+            toast.error(getApiErrorMessage(error));
         }
     }
 
@@ -146,8 +145,8 @@ export default function Dashboard() {
                 const res = await getCurrentUser()
                 setUser(res);
 
-            } catch (error) {
-                setError("❌ Failed to fetch user. Please try later.");
+            } catch (error: unknown) {
+                setError(getApiErrorMessage(error));
             } finally {
                 setLoading(false);
             }
@@ -162,9 +161,8 @@ export default function Dashboard() {
             const res = await getClients();
             setClients(res);
 
-        } catch (error) {
-            toast.error("❌ Failed to fetch clients.")
-
+        } catch (error: unknown) {
+            setError(getApiErrorMessage(error));
         } finally {
             setClientsLoading(false);
 
@@ -182,10 +180,8 @@ export default function Dashboard() {
             const projects=await getProjects();
             setProject(projects);
 
-        } catch (error) {
-            toast.error("Error occured");
-            setProjectLoading(false);
-
+        } catch (error: unknown) {
+            toast.error(getApiErrorMessage(error));
         } finally {
             setProjectLoading(false);
         }
@@ -229,10 +225,8 @@ export default function Dashboard() {
 
             await fetchProject();
 
-        } catch (error) {
-            const message =
-                error instanceof Error ? error.message : "Failed to create Project";
-            toast.error(message);
+        } catch (error: unknown) {
+            toast.error(getApiErrorMessage(error));
         }
         finally {
             setSubmiting(false);
@@ -364,10 +358,8 @@ export default function Dashboard() {
                                 toast.success("✅ Project updated!");
 
                                 await fetchProject();
-                            } catch (error) {
-                                toast.error("❌ Failed to update project.");
-                                console.log(error);
-
+                            } catch (error: unknown) {
+                                toast.error(getApiErrorMessage(error));
                             } finally {
                                 setEditingProject(null);
                             }

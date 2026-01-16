@@ -1,5 +1,6 @@
 import api from "./axios";
 import type { Client } from "../types/Client";
+import { apiCall } from "./apiCall";
 
 
 
@@ -17,16 +18,19 @@ function extractClients(data: unknown): Client[] {
 
 
 export async function getClients(): Promise<Client[]> {
-    const res = await api.get("/client");
+    return apiCall(
+       async () => {
+            const res = await api.get("/client");
     return extractClients(res.data);
+})
 }
 
 export async function createClient(
     payload: Pick<Client, "name" | "email" | "phone">
 ): Promise<void> {
-    await api.post("/client", payload);
+   return apiCall(()=> api.post("/client", payload));
 }
 
 export async function deleteClient(clientId: string): Promise<void> {
-    await api.delete(`/client/${clientId}`);
+    return apiCall(()=> api.delete(`/client/${clientId}`));
 }

@@ -1,9 +1,11 @@
-import React from "react";
+
 import { useState } from "react";
 import CreateClientModal from "./CreateClientModal";
 import toast from "react-hot-toast";
-import api from "../api/axios";
+
 import type { Client } from "../types/Client";
+import { getApiErrorMessage } from "../utils/getApiErrorMessage";
+import { createClient } from "../api/clients";
 
 interface ClientCardProps{
     clientsLoading:boolean;
@@ -33,11 +35,11 @@ export default function ClientCard({
         setCreatingClient(true);
 
         try {
-            const res = await api.post("/client", {
+            await createClient({
                 name: clientName,
                 email: clientEmail,
                 phone: clientPhone || undefined
-            });
+            })
 
             toast.success("✅ Client created!");
 
@@ -50,10 +52,9 @@ export default function ClientCard({
             setClientPhone("");
             setIsModalOpen(false);
             
-        } catch (error:any) {
-            toast.error(error?.response?.data?.message || "Failed to create client");
+        } catch (error: unknown) {
+            toast.error(getApiErrorMessage(error));
         } finally {
-            
             setCreatingClient(false);
         }
     }
@@ -100,7 +101,5 @@ export default function ClientCard({
             
         </div>
        
-       
-        
     )
 }
