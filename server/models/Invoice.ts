@@ -1,4 +1,29 @@
-const mongoose=require("mongoose");
+import mongoose,{Schema,Model,Document} from "mongoose";
+
+interface IInvoiceLineItem {
+    description: string
+    quantity: number
+    rate: number
+    total: number
+}
+
+
+export interface IInvoice {
+    userId: mongoose.Types.ObjectId;    
+    clientId: mongoose.Types.ObjectId;
+    projectId: mongoose.Types.ObjectId;
+    invoiceNumber: string;
+    issueDate: Date;
+    dueDate?: Date;
+    lineItems: IInvoiceLineItem[];
+    subtotal: number;
+    tax?: number;
+    total: number;
+    status: "draft" | "sent" | "paid" | "overdue";
+    notes?: string;
+}
+
+interface IInvoiceDocument extends IInvoice, Document {}
 
 const invoiceSchema=new mongoose.Schema(
     {
@@ -68,4 +93,6 @@ const invoiceSchema=new mongoose.Schema(
 invoiceSchema.index({clientId:1,status:1});
 invoiceSchema.index({userId:1,invoiceNumber:1},{unique:true});
 
-module.exports=mongoose.model("Invoice",invoiceSchema);
+const Invoice: Model<IInvoiceDocument> =
+ mongoose.models.Invoice || mongoose.model<IInvoiceDocument>("Invoice", invoiceSchema);
+export default Invoice

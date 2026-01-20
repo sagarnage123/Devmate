@@ -1,6 +1,17 @@
-const mongoose=require("mongoose");
+import mongoose,{Document,Model,Schema} from "mongoose";
 
-const taskSchema=new mongoose.Schema(
+export interface ITask {
+    userId: mongoose.Types.ObjectId;    
+    projectId: mongoose.Types.ObjectId;
+    title: string;
+    description?: string;   
+    status: "todo" | "in-progress" | "done";
+    priority: "Low" | "Medium" | "High";
+    dueDate?: Date;
+    completedAt?: Date;
+}
+interface ITaskDocument extends ITask, Document {}
+const taskSchema=new Schema(
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -28,8 +39,8 @@ const taskSchema=new mongoose.Schema(
         },
         priority: {
             type: String,
-            enum: ["low", "medium", "high"],
-            default: "medium"
+            enum: ["Low", "Medium", "High"],
+            default: "Medium"
         },
         dueDate: {
             type: Date
@@ -44,4 +55,7 @@ const taskSchema=new mongoose.Schema(
 taskSchema.index({projectId:1,status:1});
 taskSchema.index({userId:1,dueDate:1});
 
-module.exports=mongoose.model("Task",taskSchema);
+const Task: Model<ITaskDocument> =
+ mongoose.models.Task || mongoose.model<ITaskDocument>("Task", taskSchema);
+
+export default Task;

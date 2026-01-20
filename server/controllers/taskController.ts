@@ -1,10 +1,20 @@
-const Task=require("../models/Task");
-const Project=require("../models/Project");
-const {asyncHandler}=require("../utils/asyncHandler");
-const {createError}=require("../utils/createError");
-const { findOneAndUpdate } = require("../models/Client");
+import { Request, Response, NextFunction } from "express";
+import Task from "../models/Task";
+import Project from "../models/Project";
+import {asyncHandler} from"../utils/asyncHandler";
+import {createError} from "../utils/createError";
+import { mongo, Types } from "mongoose";
 
-const createTask=asyncHandler(async (req,res,next)=>{
+interface createTaskPayload {
+    projectId: string;
+    title: string;
+    description?: string;
+    status?: string;
+    priority?: string;
+    dueDate?: Date;
+}
+const createTask=asyncHandler(async (req: Request<{}, {}, createTaskPayload>,
+    res:Response,next:NextFunction)=>{
     if(!req.user)
         return next(createError("Unauthorized",401));
 
@@ -14,7 +24,7 @@ const createTask=asyncHandler(async (req,res,next)=>{
         return next(createError("Project required for creating task",400));
 
     if(!title)
-        return next(createError("Title is required for the task"),400);
+        return next(createError("Title is required for the task",400));
 
     const project=await Project.findOne({_id:projectId,userId:req.user._id});
    
@@ -35,7 +45,17 @@ const createTask=asyncHandler(async (req,res,next)=>{
     res.status(201).json({ succes:true,data:newTask});
 });
 
-const updateTask=asyncHandler(async (req,res,next)=>{
+interface updateTaskPayload {
+    title?: string;
+    description?: string;
+    status?: string;
+    priority?: string;
+    dueDate?: Date;
+    completedAt?: Date | null;
+}
+
+const updateTask=asyncHandler(async (req: Request<{id:string}, {}, updateTaskPayload>,
+    res:Response,next:NextFunction)=>{
     if(!req.user)
         return next(createError("Unautorized",401));
 
@@ -43,11 +63,13 @@ const updateTask=asyncHandler(async (req,res,next)=>{
     if(!id)
         return next(createError("Not found",404));
 
-    const allowedUpdates = ["title", "description", "status", "priority", "dueDate", "completedAt"];
+    const allowedUpdates = ["title", "description", "status", "priority", "dueDate", "completedAt"] as const;
 
-    const updates={}
+    type allowedKey=typeof allowedUpdates[number];
 
-    for(key of allowedUpdates)
+    const updates: Partial<Record<allowedKey,updateTaskPayload[allowedKey]>>={};
+
+    for(const key of allowedUpdates)
     {
         if(req.body[key]!==undefined)
             updates[key]=req.body[key];
@@ -62,14 +84,21 @@ const updateTask=asyncHandler(async (req,res,next)=>{
 
     res.status(200).json({succes:true,data:task});
 })
+interface TaskFilter {
+    userId: Types.ObjectId;
+    projectId?: string;
+    status?: string;
+    priority?: string;
+}
 
-const getTask=asyncHandler(async (req,res,next)=>{
+const getTask=asyncHandler(async (req:Request<{}, {}, {}, {projectId?: string, status?: string, priority?: string}>,
+    res:Response,next:NextFunction)=>{
     if(!req.user)
         return next(createError("Unathorized",401));
 
     const {projectId,status,priority}=req.query;
 
-    const filter={userId:req.user._id};
+    const filter:TaskFilter={userId:req.user._id};
 
     if(projectId)
         filter.projectId=projectId;
@@ -84,7 +113,8 @@ const getTask=asyncHandler(async (req,res,next)=>{
     res.status(200).json({succes:true,data:tasks});
 });
 
-const deleteTask=asyncHandler(async (req,res,next)=>{
+const deleteTask=asyncHandler(async (req:Request<{id:string}, {}, {}, {}>,
+    res:Response,next:NextFunction)=>{
     if(!req.user)
         return next(createError("Unauthorized",401));
 
@@ -101,4 +131,9 @@ const deleteTask=asyncHandler(async (req,res,next)=>{
     res.status(200).json({succes:true,message:"Task deleted succesfuly"})
 });
 
-module.exports={createTask,updateTask,deleteTask,getTask};
+export {
+    createTask,
+    updateTask,
+    getTask,
+    deleteTask
+};
