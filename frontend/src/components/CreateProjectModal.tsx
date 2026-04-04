@@ -1,7 +1,7 @@
 import { Dispatch ,SetStateAction} from "react";
 import {ProjectStatus } from "../types/Project";
 interface Client {
-    _id: string;
+    id: string;
     name: string;
 }
 
@@ -119,7 +119,7 @@ export default function CreateProjectModal({
                     <option value="">Select Client</option>
                     {
                         clients.map(client => (
-                            <option key={client._id} value={client._id}>
+                            <option key={client.id} value={client.id}>
                                 {client.name}
                             </option>
                         ))

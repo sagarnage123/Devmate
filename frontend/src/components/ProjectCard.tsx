@@ -65,7 +65,7 @@ export default function ProjectCard({
     fetchProject
 }: ProjectCardProps) {
     const [noteProjectId, setNoteProjectId] = useState<string | null>(null);
-    const [notes, setNotes] = useState<Note[]>([]);
+    const [notes, setNotes] = useState<Array<Note>>([]);
     const [loadingNotes, setLoadingNotes] = useState(false);
     const [content, setContent] = useState<string>("");
     const [noteCreating, setNoteCreating] = useState(false);
@@ -78,15 +78,16 @@ export default function ProjectCard({
 
         try {
            const data = await getNotesByProject(projectId);
-           
             setNotes(data);
 
         } catch (error: unknown) {
             toast.error(getApiErrorMessage(error));
+            
         }
         finally {
             setLoadingNotes(false);
         }
+
     }
 
     const handelCreateNote = async (projectId:string,content:string) : Promise<void> => {

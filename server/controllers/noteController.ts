@@ -27,6 +27,7 @@ interface CreateNoteBody {
       next: NextFunction): Promise<void> => {
         const { projectId } = req.params;
         const notes = await Note.find({ projectId }).sort({ createdAt: -1 });
+        console.log("Notes found for projectId", projectId, notes);
         res.json(notes);
 });
 

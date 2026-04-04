@@ -165,13 +165,13 @@ export default function Dashboard() {
             setError(getApiErrorMessage(error));
         } finally {
             setClientsLoading(false);
+            console.log(clients);
 
         }
 
     }
     useEffect(() => {
          fetchClients();
-
     }, []);
     const fetchProject = async () => {
         setProjectLoading(true);
@@ -208,7 +208,7 @@ export default function Dashboard() {
     const handleSubmit = async (): Promise<void> => {
 
      setSubmiting(true);
-
+    
         try {
             await createProject({
                 clientId,

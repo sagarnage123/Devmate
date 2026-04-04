@@ -19,6 +19,7 @@ const createProject=asyncHandler(async (req: Request<{}, {}, createProjectPayloa
     res: Response, next: NextFunction)=>{
 
     const {clientId,budget,dueDate,startDate,description,status,title}=req.body;
+    console.log("Creating project with data:", {clientId,budget,dueDate,startDate,description,status,title});
 
     if(!req.user)
         return next(createError("Unauthorized",401));
@@ -30,6 +31,7 @@ const createProject=asyncHandler(async (req: Request<{}, {}, createProjectPayloa
 
     if(!client)
         return next(createError("Client not found",404));
+
 
     const newProject=await Project.create({
         userId:req.user._id,

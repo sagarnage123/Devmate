@@ -5,6 +5,7 @@
             "DOM",
             "ES2020"
         ],
+        "ignoreDeprecations": "6.0",
         "module": "ESNext",
         "moduleResolution": "Node",
         "jsx": "react-jsx",
@@ -17,7 +18,14 @@
         "resolveJsonModule": true,
         "allowJs": true,
         "checkJs": false,
-        "outDir": "dist"
+        "rootDir": "src",
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ]
+        }
     },
     "include": [
         "src"

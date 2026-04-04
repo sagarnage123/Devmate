@@ -18,7 +18,8 @@ export async function getNotesByProject(
     projectId: string
 ): Promise<Note[]> {
     return apiCall(async () => {
-        const response = await api.get(`/notes/project/${projectId}`);
+       
+        const response = await api.get(`/notes/${projectId}`);
         return extractNotes(response.data);
     });
 }
