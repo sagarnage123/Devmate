@@ -25,7 +25,7 @@ export function useProject(projectId: string) {
                     status: "in-progress",
                     startDate: new Date().toISOString(),
                     dueDate: new Date().toISOString(),
-                    clientId: "client_123",
+                    clientId: `client-${projectId}`,
                     budget: 50000,
                     description: "UI refactor for project workspace",
                 });

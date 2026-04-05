@@ -14,12 +14,14 @@ export default function ProjectLayout() {
     if (error || !project) return <div>{error ?? "Project not found"}</div>;
 
     return (
-        <div className="space-y-4">
-            <ProjectProvider project={project}>
-                <ProjectHeader project={project} />
-                <ProjectTabs projectId={project._id} />
-                <Outlet />
-            </ProjectProvider>
-        </div>
+        <ProjectProvider project={project}>
+            <div className="bg-slate-50 min-h-screen text-slate-900">
+                <div className="max-w-6xl mx-auto px-6 py-8 space-y-7">
+                    <ProjectHeader project={project} />
+                    <ProjectTabs projectId={project._id} />
+                    <Outlet />
+                </div>
+            </div>
+        </ProjectProvider>
     );
 }

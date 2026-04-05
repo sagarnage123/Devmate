@@ -32,10 +32,16 @@ export interface CreateTaskPayload {
 
 export async function createTask(
     payload: CreateTaskPayload
-): Promise<void> {
-    await api.post("/task", payload);
-}
+): Promise<Task> {
+    const res = await api.post("/task", payload);
 
+    const data = res.data;
+
+    if (data?.task) return data.task;
+    if (data?.data) return data.data;
+
+    throw new Error("Invalid createTask response");
+}
 export async function updateTask(
     taskId: string,
     updates: Partial<Task>
