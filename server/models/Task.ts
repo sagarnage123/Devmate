@@ -5,7 +5,7 @@ export interface ITask {
     projectId: mongoose.Types.ObjectId;
     title: string;
     description?: string;   
-    status: "todo" | "in-progress" | "done";
+    status: "To Do" | "In Progress" | "Done";
     priority: "Low" | "Medium" | "High";
     dueDate?: Date;
     completedAt?: Date;
@@ -34,8 +34,8 @@ const taskSchema=new Schema(
         },
         status: {
             type: String,
-            enum: ["todo", "in-progress", "done"],
-            default: "todo"
+            enum: ["To Do", "In Progress", "Done"],
+            default: "To Do"
         },
         priority: {
             type: String,

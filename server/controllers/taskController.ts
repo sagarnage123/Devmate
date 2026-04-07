@@ -75,11 +75,13 @@ const updateTask=asyncHandler(async (req: Request<{id:string}, {}, updateTaskPay
             updates[key]=req.body[key];
         
     }
+    
     const task=await Task.findOneAndUpdate({_id:id,userId:req.user._id},
         updates,
         {new:true,runValidators:true}
     );
 
+    
     if (!task) return next(createError("Task not found", 404));
 
     res.status(200).json({succes:true,data:task});
