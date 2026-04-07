@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { Task } from "@/types/Task";
-import { getTasksByProject } from "@/api/tasks";
+import type { Task ,TaskStatus} from "@/types/Task";
+import { deleteTask, getTasksByProject, updateTask } from "@/api/tasks";
 import { toast } from "react-hot-toast";
 import { getApiErrorMessage } from "@/utils/getApiErrorMessage";
 import { createTask } from "@/api/tasks";
@@ -12,6 +12,37 @@ export function useProjectTasks(projectId: string) {
     const [error, setError] = useState<string | null>(null);
 
     const [taskSubmitting, setTaskSubmitting] = useState(false);
+
+    async function deleteTaskHandler(taskId: string) {
+        try {
+            await deleteTask(taskId);
+
+            setTasks((prev) => prev.filter((task) => task._id !== taskId));
+        } catch (err) {
+            console.error("Failed to delete task", err);
+        }
+    }
+
+    async function updateTaskStatus(taskId: string, currentStatus: TaskStatus) {
+        const nextStatus =
+            currentStatus === "To Do"
+                ? "In Progress"
+                : currentStatus === "In Progress"
+                    ? "Done"
+                    : "To Do";
+
+        try {
+            await updateTask(taskId, { status: nextStatus });
+
+            setTasks((prev) =>
+                prev.map((task) =>
+                    task._id === taskId ? { ...task, status: nextStatus } : task
+                )
+            );
+        } catch (err) {
+            console.error("Failed to update status", err);
+        }
+    }
     
     const createTaskHandler = async (data: {
         title: string;
@@ -66,5 +97,5 @@ export function useProjectTasks(projectId: string) {
         };
     }, [projectId]);
 
-    return { tasks, loading, error, createTask: createTaskHandler, taskSubmitting };
+    return { tasks, loading, error, createTask: createTaskHandler, taskSubmitting ,updateTaskStatus, deleteTask: deleteTaskHandler};
 }
