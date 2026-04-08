@@ -43,6 +43,19 @@ export function useProjectTasks(projectId: string) {
             console.error("Failed to update status", err);
         }
     }
+    async function updateTaskHandler(taskId: string, updates: Partial<Task>) {
+        try {
+            await updateTask(taskId, updates);
+
+            setTasks((prev) =>
+                prev.map((task) =>
+                    task._id === taskId ? { ...task, ...updates } : task
+                )
+            );
+        } catch (err) {
+            console.error("Failed to update task", err);
+        }
+    }
     
     const createTaskHandler = async (data: {
         title: string;
@@ -97,5 +110,5 @@ export function useProjectTasks(projectId: string) {
         };
     }, [projectId]);
 
-    return { tasks, loading, error, createTask: createTaskHandler, taskSubmitting ,updateTaskStatus, deleteTask: deleteTaskHandler};
+    return { tasks, loading, error, createTask: createTaskHandler, taskSubmitting ,updateTaskStatus, deleteTask: deleteTaskHandler, updateTask: updateTaskHandler};
 }
