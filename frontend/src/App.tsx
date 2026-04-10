@@ -10,6 +10,7 @@ import ProjectTasks from "./pages/projects/ProjectWorkspace/ProjectTasks";
 import ProjectNotes from "./pages/projects/ProjectWorkspace/ProjectNotes";
 import ProjectInvoices from "./pages/projects/ProjectWorkspace/ProjectInvoices";
 import ProjectSettings from "./pages/projects/ProjectWorkspace/ProjectSettings";
+import ProjectKanban from "./components/project/ProjectKanban.js";
 
 export default function App() {
     
@@ -33,6 +34,7 @@ export default function App() {
                 <Route path="notes" element={<ProjectNotes />} />
                 <Route path="invoices" element={<ProjectInvoices />} />
                 <Route path="settings" element={<ProjectSettings />} />
+                <Route path="kanban" element={<ProjectKanban />} />
             </Route>
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
