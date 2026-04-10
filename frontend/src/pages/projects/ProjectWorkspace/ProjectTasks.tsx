@@ -1,9 +1,11 @@
 import { useProjectContext } from "@/context/ProjectContext";
 import { useProjectTasks } from "@/hooks/useProjectTasks";
 import { cardStyles, sectionPadding, titleText } from "@/components/ui/styles";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TaskEditModal from "@/components/TaskEditModal";
 import { Task } from "@/types/Task";
+
+
 export default function ProjectTasks() {
     const project = useProjectContext();
     const { tasks, loading, error, createTask, taskSubmitting , updateTaskStatus,deleteTask,updateTask} =
@@ -14,6 +16,12 @@ export default function ProjectTasks() {
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        inputRef.current?.focus();
+        }, []);
+      
     function openEditModal(task: Task) {
         setEditingTask(task);
         setIsModalOpen(true);
@@ -55,6 +63,7 @@ export default function ProjectTasks() {
                 <input
                     type="text"
                     value={title}
+                    ref={inputRef}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Add a task and press Enter..."
                     className="w-full text-sm bg-transparent outline-none placeholder:text-slate-400"
@@ -75,6 +84,11 @@ export default function ProjectTasks() {
                     }}
                 />
             </div>
+            {taskSubmitting && (
+                <div className="text-xs text-slate-400 mt-1">
+                    Adding task...
+                </div>
+            )}
             
             <div className={`${cardStyles} ${sectionPadding}`}>
 
