@@ -1,98 +1,115 @@
-import mongoose,{Schema,Model,Document} from "mongoose";
+import mongoose, { Schema, Model, Document } from "mongoose";
 
 interface IInvoiceLineItem {
-    description: string
-    quantity: number
-    rate: number
-    total: number
+    description: string;
+    quantity: number;
+    rate: number;
+    total: number;
 }
 
-
 export interface IInvoice {
-    userId: mongoose.Types.ObjectId;    
+    userId: mongoose.Types.ObjectId;
     clientId: mongoose.Types.ObjectId;
-    projectId: mongoose.Types.ObjectId;
+    projectId?: mongoose.Types.ObjectId;
+
     invoiceNumber: string;
+
     issueDate: Date;
     dueDate?: Date;
+    paidAt?: Date;
+
+    currency: string;
+
     lineItems: IInvoiceLineItem[];
+
     subtotal: number;
-    tax?: number;
+    taxRate: number; 
+    taxAmount: number;
     total: number;
+
     status: "draft" | "sent" | "paid" | "overdue";
+
     notes?: string;
 }
 
-interface IInvoiceDocument extends IInvoice, Document {}
+interface IInvoiceDocument extends IInvoice, Document { }
 
-const invoiceSchema=new mongoose.Schema(
+const invoiceSchema = new Schema(
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
+            required: true,
         },
+
         clientId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Client",
-            required: true
+            required: true,
         },
+
         projectId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Project",
-            required:true
         },
+
         invoiceNumber: {
             type: String,
             required: true,
-            trim: true
+            trim: true,
         },
+
         issueDate: {
             type: Date,
-            required: true
+            required: true,
         },
+
         dueDate: {
-            type: Date
+            type: Date,
         },
+
+        paidAt: {
+            type: Date,
+        },
+
+        currency: {
+            type: String,
+            default: "INR",
+        },
+
         lineItems: [
             {
                 description: { type: String, required: true, trim: true },
                 quantity: { type: Number, required: true, min: 1 },
                 rate: { type: Number, required: true, min: 0 },
-                total: { type: Number, required: true, min: 0 }
-            }
+                total: { type: Number, required: true, min: 0 },
+            },
         ],
-        subtotal: {
-            type: Number,
-            required: true,
-            min: 0
-        },
-        tax: {
-            type: Number,
-            default: 0,
-            min: 0
-        },
-        total: {
-            type: Number,
-            required: true,
-            min: 0
-        },
+
+        subtotal: { type: Number, required: true, min: 0 },
+
+        taxRate: { type: Number, default: 0, min: 0 },
+        taxAmount: { type: Number, default: 0, min: 0 },
+
+        total: { type: Number, required: true, min: 0 },
+
         status: {
             type: String,
             enum: ["draft", "sent", "paid", "overdue"],
-            default: "draft"
+            default: "draft",
         },
-        notes: {
-            type: String,
-            trim: true
-        }
+
+        notes: { type: String, trim: true },
     },
-    {timestamps:true}
+    { timestamps: true }
 );
 
-invoiceSchema.index({clientId:1,status:1});
-invoiceSchema.index({userId:1,invoiceNumber:1},{unique:true});
+
+invoiceSchema.index({ clientId: 1, status: 1 });
+invoiceSchema.index({ userId: 1, invoiceNumber: 1 }, { unique: true });
 
 const Invoice: Model<IInvoiceDocument> =
- mongoose.models.Invoice || mongoose.model<IInvoiceDocument>("Invoice", invoiceSchema);
-export default Invoice
+    mongoose.models.Invoice ||
+    mongoose.model<IInvoiceDocument>("Invoice", invoiceSchema);
+
+export default Invoice;
