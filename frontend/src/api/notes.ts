@@ -35,6 +35,13 @@ export async function createNote(
     return apiCall(() => api.post("/notes", payload));
 }
 
+export async function updateNote(
+    noteId: string,
+    updates: Partial<Note>
+): Promise<void> {
+    await api.put(`/notes/${noteId}`, updates);
+}
+
 export async function deleteNote(noteId: string): Promise<void> {
     return apiCall(() => api.delete(`/notes/${noteId}`));
 }
