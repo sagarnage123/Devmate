@@ -237,3 +237,42 @@ export const duplicateInvoiceService = async (
 
     return duplicated;
 };
+
+export const getInvoiceForPDFService = async (
+    userId: Types.ObjectId,
+    invoiceId: string
+) => {
+    if (!Types.ObjectId.isValid(invoiceId)) {
+        throw new Error("Invalid invoice ID");
+    }
+
+    const invoice = await Invoice.findOne({
+        _id: invoiceId,
+        userId,
+    })
+        .populate("clientId", "name email")
+        .lean();
+
+    if (!invoice) {
+        throw new Error("Invoice not found");
+    }
+
+    return {
+        invoiceNumber: invoice.invoiceNumber,
+        issueDate: invoice.issueDate,
+        dueDate: invoice.dueDate,
+
+        client: {
+            name: (invoice.clientId as any).name,
+            email: (invoice.clientId as any).email,
+        },
+
+        lineItems: invoice.lineItems,
+
+        subtotal: invoice.subtotal,
+        taxAmount: invoice.taxAmount,
+        total: invoice.total,
+
+        notes: invoice.notes,
+    };
+};

@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { createInvoiceService, duplicateInvoiceService, getInvoiceByIdService, sendInvoiceService, updateDraftInvoiceService ,markInvoicePaidService} from "./invoice.service";
+import { createInvoiceService, duplicateInvoiceService, getInvoiceByIdService, sendInvoiceService, updateDraftInvoiceService ,markInvoicePaidService, getInvoiceForPDFService} from "./invoice.service";
 import { validateCreateInvoice } from "../validations/invoice.validation";
 import { getInvoicesService } from "./invoice.service";
 import { InvoiceParams, InvoiceQuery } from "../types/invoice.types";
+import { generateInvoicePDF } from "../utils/invoice.pdf";
 
 export const createInvoice = async (req: Request, res: Response) => {
     try {
@@ -190,6 +191,34 @@ export const markInvoicePaid = async (req: Request, res: Response) => {
             success: true,
             data: invoice,
         });
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
+        }
+
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+};
+
+export const downloadInvoicePDF = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const userId = req.user!._id;
+
+        const data = await getInvoiceForPDFService(
+            userId,
+            req.params.id as string
+        );
+
+        generateInvoicePDF(data, res);
     } catch (error: unknown) {
         if (error instanceof Error) {
             return res.status(400).json({

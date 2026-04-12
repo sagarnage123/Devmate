@@ -12,5 +12,9 @@
     "auto": "^11.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@types/pdfkit": "^0.17.5",
+    "pdfkit": "^0.18.0"
   }
 }

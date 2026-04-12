@@ -1,6 +1,6 @@
 import express from "express";
-import { createInvoice, duplicateInvoice, getInvoiceById, getInvoices, markInvoicePaid, sendInvoice, updateDraftInvoice } from "../controllers/invoice.controller";
-import { updateDraftInvoiceService } from "../controllers/invoice.service";
+import { createInvoice, downloadInvoicePDF, duplicateInvoice, getInvoiceById, getInvoices, markInvoicePaid, sendInvoice, updateDraftInvoice } from "../controllers/invoice.controller";
+
 
 
 const router = express.Router();
@@ -14,6 +14,6 @@ router.post("/:id/send", sendInvoice);
 router.post("/:id/pay", markInvoicePaid);
 
 router.post("/:id/duplicate", duplicateInvoice);
+router.get("/:id/pdf", downloadInvoicePDF);
 
-router.post("/:id/pay", duplicateInvoice);
 export default router;
