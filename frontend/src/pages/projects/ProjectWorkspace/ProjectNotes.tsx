@@ -13,14 +13,16 @@ export default function ProjectNotes() {
         <div className="space-y-6">
 
            
-            <div className="w-full text-sm outline-none resize-none placeholder:text-slate-400">
+            <div className="w-full text-sm outline-none resize-none placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-lg border border-slate-200 p-3 bg-white/80 backdrop-blur-sm shadow-sm transition-colors">
                 <textarea
-                    placeholder="Note content..."
-                    className="w-full text-sm outline-none"
+                    placeholder="Add note..."
+                    className="w-full text-sm border-none p-3 outline-none resize-none  transition-colors"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     onKeyDown={async (e) => {
                         if (e.key !== "Enter" || e.shiftKey) return;
+
+                       
                         
                         e.preventDefault();
                         
@@ -45,9 +47,7 @@ export default function ProjectNotes() {
                     No notes yet. Add one above.
                 </p>
             ) : (
-                notes.map(note => (
-                   
-                     
+                notes.map(note => ( 
                     <div
                         key={note._id}
                         
@@ -56,7 +56,7 @@ export default function ProjectNotes() {
                             <textarea
                                 value={editingContent}
                                 onChange={(e) => setEditingContent(e.target.value)}
-                                className="w-full text-sm outline-none resize-none"
+                                className="w-full text-sm border border-slate-200 rounded-lg p-3 outline-none resize-none  transition-colors"
                                 rows={2}
                                 autoFocus
                                 onKeyDown={async (e) => {
@@ -83,9 +83,19 @@ export default function ProjectNotes() {
                                     setEditingId(note._id);
                                     setEditingContent(note.content);
                                 }}
-                                className="border border-slate-200 rounded-lg p-3 text-sm text-slate-700 hover:border-slate-300 transition-colors cursor-pointer"
+                                className="group border border-slate-200 rounded-lg p-3 text-sm text-slate-700 hover:border-slate-300 transition-colors cursor-pointer flex justify-between items-start"
                             >
-                                {note.content}
+                                    <span>{note.content}</span>
+
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteNote(note._id);
+                                        }}
+                                        className="opacity-0 group-hover:opacity-100 text-xs text-red-500 border bg-red-100 border-red-500 rounded-lg px-2 py-0.5 transition-opacity"
+                                    >
+                                        Delete
+                                    </button>
                             </div>
                         )}
                     </div>
