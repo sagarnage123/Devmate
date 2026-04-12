@@ -29,10 +29,14 @@ export interface CreateNotePayload {
     content: string;
 }
 
-export async function createNote(
-    payload: CreateNotePayload
-): Promise<void> {
-    return apiCall(() => api.post("/notes", payload));
+export async function createNote(payload: {
+    projectId: string;
+    content: string;
+}): Promise<Note> {
+    const res = await api.post("/notes", payload);
+
+    const data = res.data;
+    return data;
 }
 
 export async function updateNote(

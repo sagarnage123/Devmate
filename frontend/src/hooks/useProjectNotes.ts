@@ -38,13 +38,13 @@ export function useProjectNotes(projectId: string) {
 
     
     async function createNoteHandler(data: {
-        title: string;
         content: string;
     }) {
         const newNote = await createNote({
             projectId,
             ...data,
         });
+        console.log("Created note:", newNote);
 
         setNotes((prev) => [newNote, ...prev]);
     }
@@ -63,7 +63,7 @@ export function useProjectNotes(projectId: string) {
         );
     }
 
-    // ✅ DELETE
+    
     async function deleteNoteHandler(noteId: string) {
         await deleteNote(noteId);
 

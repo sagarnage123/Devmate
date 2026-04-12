@@ -46,9 +46,28 @@ interface CreateNoteBody {
         res.json({ message: "Note deleted successfully" });
 
 });
+const updateNote = asyncHandler(async (req: Request<{id:string},{},Partial<CreateNoteBody> & {content?:string}>,
+    res: Response
+    , next: NextFunction): Promise<void> => {
+        const { id } = req.params;
+        const updates = req.body;
+
+        if (Object.keys(updates).length === 0) {
+            return next(createError("No updates provided", 400));
+        }
+
+        const note = await Note.findByIdAndUpdate(id, updates, { new: true });
+
+        if (!note) {
+            return next(createError("Note not found", 404));
+        }
+
+        res.json(note);
+});
 
 export {
     createNote,
     getNotesByProject,
-    deleteNote
+    deleteNote,
+    updateNote  
 };
