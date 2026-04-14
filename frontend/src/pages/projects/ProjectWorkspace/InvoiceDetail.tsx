@@ -78,7 +78,7 @@ export default function InvoiceDetail() {
                                 </button>
 
                                 <a
-                                    href={`/edit-invoice/${invoice._id}`}
+                                    href={`invoices/edit-invoice/${invoice._id}`}
                                     className="bg-gray-600 px-4 py-2 rounded-lg"
                                 >
                                     Edit

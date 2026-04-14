@@ -68,7 +68,7 @@ export default function ClientCard({
                         : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{
                                     clients.map(client => (
-                                        <div key={client._id} className="p-4 border rounded shadow-sm hover:shadow-md transition">
+                                        <div key={client.id} className="p-4 border rounded shadow-sm hover:shadow-md transition">
                                             <h3 className="font-bold">{client.name}</h3>
                                             <p className="text-gray-600">{client.email}</p>
                                             <p className="text-gray-500 text-sm"> Phone :{client.phone || "N/A"}</p>

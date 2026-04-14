@@ -1,21 +1,13 @@
 import { useState } from "react";
-
+import  { Client } from "@/types/Client";
+// import ClientCard from "@/components/ClientCard";
+import clientServices from "@/services/client.services";
 interface LineItem {
     description: string;
     quantity: number;
     rate: number;
     total: number;
 }
-
-interface Client {
-    id: string;
-    name: string;
-}
-
-const mockClients: Client[] = [
-    { id: "1", name: "Acme Corp" },
-    { id: "2", name: "Dev Studio" },
-];
 
 export default function CreateInvoice() {
     const [clientQuery, setClientQuery] = useState("");
@@ -25,9 +17,8 @@ export default function CreateInvoice() {
     const [lineItems, setLineItems] = useState<LineItem[]>([]);
     const [taxRate, setTaxRate] = useState<number>(0);
 
-    const filteredClients = mockClients.filter((c) =>
-        c.name.toLowerCase().includes(clientQuery.toLowerCase())
-    );
+    const filteredClients : Client[] = [];
+  
 
     const updateItem = (
         index: number,
