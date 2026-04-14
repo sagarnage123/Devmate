@@ -43,7 +43,7 @@ export default function Invoices() {
                     <h1 className="text-2xl font-semibold">Invoices</h1>
 
                     <a
-                        href="/create-invoice"
+                        href="invoice/create-invoice"
                         className="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-lg"
                     >
                         + New Invoice
