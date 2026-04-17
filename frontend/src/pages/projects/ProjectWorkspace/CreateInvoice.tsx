@@ -2,6 +2,7 @@ import { useState } from "react";
 import  { Client } from "@/types/Client";
 // import ClientCard from "@/components/ClientCard";
 import clientServices from "@/services/client.services";
+import ClientSelector from "@/components/ClientSelector";
 interface LineItem {
     description: string;
     quantity: number;
@@ -16,7 +17,7 @@ export default function CreateInvoice() {
 
     const [lineItems, setLineItems] = useState<LineItem[]>([]);
     const [taxRate, setTaxRate] = useState<number>(0);
-
+   
     const filteredClients : Client[] = [];
   
 
@@ -74,35 +75,10 @@ export default function CreateInvoice() {
                 </div>
 
               
-                <div className="relative mb-10">
-                    <input
-                        placeholder="Search client..."
-                        value={clientQuery}
-                        onChange={(e) => {
-                            setClientQuery(e.target.value);
-                            setShowDropdown(true);
-                        }}
-                        className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-indigo-500"
-                    />
-
-                    {showDropdown && filteredClients.length > 0 && (
-                        <div className="absolute w-full bg-[#1F2937] border border-gray-700 rounded-lg mt-1 z-10">
-                            {filteredClients.map((client) => (
-                                <div
-                                    key={client.id}
-                                    onClick={() => {
-                                        setSelectedClient(client);
-                                        setClientQuery(client.name);
-                                        setShowDropdown(false);
-                                    }}
-                                    className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
-                                >
-                                    {client.name}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                <ClientSelector
+                    selectedClient={selectedClient}
+                    setSelectedClient={setSelectedClient}
+                />
 
                
                 {lineItems.length === 0 && (

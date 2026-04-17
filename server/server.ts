@@ -70,7 +70,7 @@ mongoose
 
 app.listen(PORT, (err?: Error) => {
     if (err) {
-        console.log("Error found while setting up the server", err);
+        console.log("Error found while setting up the server\n", err);
     } else {
         console.log(`Server is running at the PORT ${PORT}`);
     }
