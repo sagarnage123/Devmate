@@ -52,7 +52,7 @@ export default function ClientSelector({
     };
 
     return (
-        <div className={`relative ${isModalOpen ? "pointer-events-none opacity-50" : "" }`} >
+        <div className={`${isModalOpen ? "pointer-events-none opacity-50" : "" }`} >
             
 
             <input
