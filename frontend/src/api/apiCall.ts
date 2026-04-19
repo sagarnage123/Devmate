@@ -9,8 +9,7 @@ export async function apiCall<T>(
         return await fn();
     } catch (error: unknown) {
         const normalized = normalizeApiError(error);
-
-        
+       
         if (!(normalized instanceof ApiError)) {
             throw new Error("API invariant violated: non-ApiError thrown");
         }

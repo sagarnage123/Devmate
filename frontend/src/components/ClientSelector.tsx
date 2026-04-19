@@ -97,16 +97,11 @@ export default function ClientSelector({
             <CreateClientModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                clientName={query}
-                setClientName={() => { }}
-                clientEmail=""
-                setClientEmail={() => { }}
-                clientPhone=""
-                setClientPhone={() => { }}
-                creatingClient={false}
-                handleCreateClient={() =>
-                    handleCreateClient(query, `${query}@mail.com`)
-                }
+                onCreate={async (data) => {
+                    await createClient(data);
+                    toast.success("Client created!");
+                    await fetchClients();
+                }}
             />
         </div>
     );

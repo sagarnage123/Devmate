@@ -13,7 +13,7 @@ import tagRoutes from "./routes/tagRoutes";
 import clientRoutes from "./routes/clientRoutes";
 import projectRoutes from "./routes/projectRoute";
 import taskRoutes from "./routes/taskRoutes";
-
+import invoiceRoutes from "./routes/invoice.routes";
 import { errorHandler } from "./middleware/errorMiddleware";
 
 const allowedOrigins: string[] = [
@@ -46,7 +46,7 @@ app.use("/api/tags", tagRoutes);
 app.use("/api/client", clientRoutes);
 app.use("/api/project", projectRoutes);
 app.use("/api/task", taskRoutes);
-
+app.use("/api/invoices", invoiceRoutes);
 app.get("/", (req: Request, res: Response) => {
     res.send("Hello");
 });

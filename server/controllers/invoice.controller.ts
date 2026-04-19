@@ -8,12 +8,10 @@ import { generateInvoicePDF } from "../utils/invoice.pdf";
 export const createInvoice = async (req: Request, res: Response) => {
     try {
         const userId = req.user!._id;
-        
-
+        console.log("Received invoice creation request with body:At backend", req.body);
         validateCreateInvoice(req.body);
-
         const invoice = await createInvoiceService(userId, req.body);
-
+        // console.log("Created invoice:", invoice);
         res.status(201).json({
             success: true,
             data: invoice,

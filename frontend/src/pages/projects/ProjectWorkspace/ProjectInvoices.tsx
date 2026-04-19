@@ -1,3 +1,5 @@
+import { getInvoices } from "@/api/invoices";
+
 import { useEffect, useState } from "react";
 
 interface Invoice {
@@ -15,10 +17,17 @@ export default function Invoices() {
     const [invoices, setInvoices] = useState<Invoice[]>([]);
 
     useEffect(() => {
-      
-        fetch("/api/invoices")
-            .then((res) => res.json())
-            .then((data) => setInvoices(data.data));
+        async function fetchInvoices() {
+            try {
+                const data=await getInvoices();
+                setInvoices(data);
+            } catch (err) {
+                console.error("Failed to fetch invoices:", err);
+            }
+        }
+
+        fetchInvoices();
+     
     }, []);
 
     const getStatusColor = (status: Invoice["status"]) => {

@@ -4,7 +4,7 @@ import axios from "axios";
 import { ApiError, ApiErrorCode } from "./apiError";
 
 export function normalizeApiError(error: unknown): ApiError {
-   
+    console.error("Normalizing API error:", error);
     if (axios.isAxiosError(error)) {
         const status = error.response?.status;
 

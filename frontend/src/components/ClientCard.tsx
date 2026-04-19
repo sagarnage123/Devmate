@@ -88,15 +88,12 @@ export default function ClientCard({
 
             <CreateClientModal
                 isOpen={isModalOpen}
-                onClose={()=>{setIsModalOpen(false)}}
-                clientName={clientName}
-                setClientName={setClientName}
-                clientEmail={clientEmail}
-                setClientEmail={setClientEmail}
-                clientPhone={clientPhone}
-                setClientPhone={setClientPhone}
-                creatingClient={creatingClient}
-                handleCreateClient={handleCreateClient}
+                onClose={() => setIsModalOpen(false)}
+                onCreate={async (data) => {
+                    await createClient(data);
+                    toast.success("Client created!");
+                    await fetchClients();
+                }}
             />
             
         </div>

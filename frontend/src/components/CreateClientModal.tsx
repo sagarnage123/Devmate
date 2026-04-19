@@ -1,90 +1,98 @@
-
-import { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
-interface CreateClientModalProps {
+interface Props {
     isOpen: boolean;
     onClose: () => void;
-
-    clientName: string;
-    setClientName: Dispatch<SetStateAction<string>>;
-
-    clientEmail: string;
-    setClientEmail: Dispatch<SetStateAction<string>>;
-
-    clientPhone: string;
-    setClientPhone: Dispatch<SetStateAction<string>>;
-
-    creatingClient: boolean;
-    handleCreateClient: () => Promise<void>;
+    onCreate: (data: {
+        name: string;
+        email: string;
+        phone?: string;
+    }) => Promise<void>;
 }
-    
+
 export default function CreateClientModal({
     isOpen,
     onClose,
-    clientName,
-    setClientName,
-    clientEmail,
-    setClientEmail,
-    clientPhone,
-    setClientPhone,
-    creatingClient,
-    handleCreateClient
+    onCreate,
+}: Props) {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [loading, setLoading] = useState(false);
 
-}:CreateClientModalProps){
-    // if(!isOpen)
-    //     return;
+    const handleSubmit = async () => {
+        if (!name || !email) return;
+
+        setLoading(true);
+
+        await onCreate({
+            name,
+            email,
+            phone: phone || undefined,
+        });
+
+        setLoading(false);
+
+       
+        setName("");
+        setEmail("");
+        setPhone("");
+
+        onClose();
+    };
+
+    if(!isOpen) return null;
 
     return createPortal(
-        <div
-            className={`fixed inset-0 z-50 flex items-center justify-center 
-  bg-black backdrop-blur-sm transition-all duration-500
-  ${isOpen ? "bg-opacity-50 opacity-100 pointer-events-auto" : "bg-opacity-0 opacity-0 pointer-events-none"}`}
-        >
+        <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50`}>
+            <div className="bg-white p-6 rounded-2xl w-96">
 
-            <div className={`bg-white p-6 rounded-2xl shadow-lg transform transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen
-                ? 'scale-100 translate-y-0 opacity-100'
-                : 'scale-95 -translate-y-4 opacity-0'}`}>
+                <h2 className="text-xl font-semibold mb-4">
+                    Add Client
+                </h2>
 
-                <h2 className="text-xl font-semibold mb-4">Add New Client</h2>
+                <div className="space-y-3">
+                    <input
+                        placeholder="Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full border p-2 rounded"
+                    />
 
-                <div className="grid gap-4">
-                <input type="text"
-                placeholder="Enter Client Name"
-                value={clientName}
-                onChange={(e)=>setClientName(e.target.value)}
-                required
-                className="p-2 border rounded" />
+                    <input
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full border p-2 rounded"
+                    />
 
-                <input type="email"
-                placeholder="Enter Client Email"
-                value={clientEmail}
-                onChange={(e)=>setClientEmail(e.target.value)}
-                required
-                className="p-2 border rounded" />
-
-                <input type="text"
-                placeholder="Enter Client Phone"
-                value={clientPhone}
-                onChange={(e)=>setClientPhone(e.target.value)}
-                className="p-2 border rounded" />
+                    <input
+                        placeholder="Phone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full border p-2 rounded"
+                    />
+                </div>
 
                 <div className="flex gap-2 mt-4">
-                    <button onClick={handleCreateClient} disabled={creatingClient}
-                    className="px-4 py-2 bg-green-500 text-white rounded-lg">
-                        {creatingClient?"Creating...":"Create Client"}
+                    <button
+                        onClick={handleSubmit}
+                        disabled={loading}
+                        className="bg-green-500 text-white px-4 py-2 rounded"
+                    >
+                        {loading ? "Creating..." : "Create"}
                     </button>
 
-                    <button onClick={onClose}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg">
+                    <button
+                        onClick={onClose}
+                        className="bg-red-500 text-white px-4 py-2 rounded"
+                    >
                         Cancel
                     </button>
-
                 </div>
-                </div>
-
             </div>
-
         </div>
-    , document.body);
-
+        ,
+        document.body
+    );
 }

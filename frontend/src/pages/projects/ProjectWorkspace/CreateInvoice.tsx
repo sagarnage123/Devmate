@@ -1,8 +1,10 @@
 import { useState } from "react";
 import  { Client } from "@/types/Client";
-// import ClientCard from "@/components/ClientCard";
-import clientServices from "@/services/client.services";
 import ClientSelector from "@/components/ClientSelector";
+import { createInvoice } from "@/api/invoices";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 interface LineItem {
     description: string;
     quantity: number;
@@ -11,15 +13,19 @@ interface LineItem {
 }
 
 export default function CreateInvoice() {
-    const [clientQuery, setClientQuery] = useState("");
+    
     const [selectedClient, setSelectedClient] = useState<Client | null>(null);
-    const [showDropdown, setShowDropdown] = useState(false);
-
+    
     const [lineItems, setLineItems] = useState<LineItem[]>([]);
     const [taxRate, setTaxRate] = useState<number>(0);
-   
-    const filteredClients : Client[] = [];
-  
+
+    const [creating, setCreating] = useState(false);
+    const [issueDate, setIssueDate] = useState("");
+    const [dueDate, setDueDate] = useState("");
+    const { projectId } = useParams();
+    const navigate = useNavigate();
+    
+    
 
     const updateItem = (
         index: number,
@@ -69,6 +75,29 @@ export default function CreateInvoice() {
                                 ? "bg-indigo-600 hover:bg-indigo-500"
                                 : "bg-gray-700 cursor-not-allowed"
                             }`}
+                        onClick={async () => {
+                            if (!selectedClient) return;
+
+                            try {
+                                setCreating(true);
+                                
+                                await createInvoice({
+                                    clientId: selectedClient.id,
+                                    lineItems,
+                                    taxRate,
+                                    issueDate:issueDate || Date.now().toString().split("T")[0],
+                                    dueDate: dueDate || undefined,
+                                });
+                                toast.success("Invoice created successfully!", { icon: "✅" });
+                                navigate(`/projects/${projectId}/invoices`);
+
+                            } catch (err) {
+                                console.error(err);
+                                toast.error("Failed to create invoice.", { icon: "❌" });
+                            } finally {
+                                setCreating(false);
+                            }
+                        }}
                     >
                         Save Draft
                     </button>
