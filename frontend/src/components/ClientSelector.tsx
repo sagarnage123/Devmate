@@ -52,7 +52,8 @@ export default function ClientSelector({
     };
 
     return (
-        <div className="relative">
+        <div className={`relative ${isModalOpen ? "pointer-events-none opacity-50" : "" }`} >
+            
 
             <input
                 placeholder="Search or create client..."
@@ -86,9 +87,9 @@ export default function ClientSelector({
                    
                     <div
                         onClick={() => setIsModalOpen(true)}
-                        className="px-4 py-2 text-indigo-400 hover:bg-gray-700 cursor-pointer"
+                        className={`px-4 py-2 hover:bg-gray-700 cursor-pointer text-green-500 font-semibold flex items-center gap-1}`}
                     >
-                        + Create "{query}"
+                        + Create {query}
                     </div>
                 </div>
             )}

@@ -35,7 +35,7 @@ export default function CreateClientModal({
     //     return;
 
     return(
-        <div className={`flex items-center justify-center fixed inset-0  bg-black   backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen?"bg-opacity-50 opacity-100 pointer-events-auto":"bg-opacity-0  opacity-0 pointer-events-none"}`}>
+        <div className={`flex items-center justify-center fixed inset-0  bg-black   backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen?"bg-opacity-50 opacity-100 pointer-events-auto  ":"bg-opacity-0  opacity-0 pointer-events-none"}`}>
 
             <div className={`bg-white p-6 rounded-2xl shadow-lg transform transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen
                 ? 'scale-100 translate-y-0 opacity-100'
