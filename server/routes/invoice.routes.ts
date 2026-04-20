@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post("/",protect, createInvoice);
 router.get("/",protect, getInvoices);
-// router.get("/:id", protect, getInvoiceById);
+router.get("/:id", protect, getInvoiceById);
 
 router.patch("/:id/draft",protect, updateDraftInvoice);
 router.post("/:id/send", protect, sendInvoice);

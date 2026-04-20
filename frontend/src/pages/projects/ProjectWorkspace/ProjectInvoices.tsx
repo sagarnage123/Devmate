@@ -21,6 +21,7 @@ export default function Invoices() {
             try {
                 const data=await getInvoices();
                 setInvoices(data);
+                
             } catch (err) {
                 console.error("Failed to fetch invoices:", err);
             }
@@ -73,7 +74,7 @@ export default function Invoices() {
                     {invoices.map((inv) => (
                         <a
                             key={inv._id}
-                            href={`/invoices/${inv._id}`}
+                            href={`invoices/${inv._id}`}
                             className="grid grid-cols-5 px-6 py-4 border-b border-gray-800 hover:bg-[#1F2937] transition"
                         >
                             <span>{inv.invoiceNumber}</span>

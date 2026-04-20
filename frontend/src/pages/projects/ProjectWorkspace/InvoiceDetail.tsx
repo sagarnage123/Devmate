@@ -1,6 +1,7 @@
+import { downloadInvoicePDF, duplicateInvoice, getInvoiceById, markInvoicePaid,sendInvoice } from "@/api/invoices";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 interface Invoice {
     _id: string;
     invoiceNumber: string;
@@ -23,31 +24,57 @@ interface Invoice {
 }
 
 export default function InvoiceDetail() {
-    const { id } = useParams();
+    const { invoiceId,projectId } = useParams();
+    if(!invoiceId) {
+        return <div>Invalid invoice ID</div>;
+    }
     const [invoice, setInvoice] = useState<Invoice | null>(null);
-
-    const fetchInvoice = async () => {
-        const res = await fetch(`/api/invoices/${id}`);
-        const data = await res.json();
-        setInvoice(data.data);
-    };
+    const Navigate = useNavigate();
+    
 
     useEffect(() => {
+        const fetchInvoice = async () => {
+
+            try {
+                const res = await getInvoiceById(invoiceId);
+                setInvoice(res.data.data);
+                toast.success("Invoice loaded successfully", {
+                    icon: "✅",
+                });
+            } catch (err) {
+                console.error("Failed to fetch invoice:", err);
+                toast.error("Failed to load invoice");
+            }
+
+        };
         fetchInvoice();
     }, []);
 
-    const sendInvoice = async () => {
-        await fetch(`/api/invoices/${id}/send`, { method: "POST" });
-        fetchInvoice();
+    const handleSend = async () => {
+        await sendInvoice(invoiceId!);
+        toast.success("Invoice sent successfully", {
+            icon: "📤",
+        });
+        
     };
 
     const markPaid = async () => {
-        await fetch(`/api/invoices/${id}/pay`, { method: "POST" });
-        fetchInvoice();
+        await markInvoicePaid(invoiceId!);
+        toast.success("Invoice marked as paid", {
+            icon: "✅",
+        });
+        
     };
 
-    const downloadPDF = () => {
-        window.open(`/api/invoices/${id}/pdf`);
+    const handleDownload = () => {
+        downloadInvoicePDF(invoiceId!);
+        toast.success("PDF downloaded successfully", {
+            icon: "📥"
+            });
+    }
+    const handleDuplicate = async () => {
+        const res = await duplicateInvoice(invoiceId!);
+        Navigate(`projects/${projectId}/invoices/${res.data._id}`);
     };
 
     if (!invoice) return <div>Loading...</div>;
@@ -71,14 +98,14 @@ export default function InvoiceDetail() {
                         {invoice.status === "draft" && (
                             <>
                                 <button
-                                    onClick={sendInvoice}
+                                    onClick={handleSend}
                                     className="bg-blue-600 px-4 py-2 rounded-lg"
                                 >
                                     Send
                                 </button>
 
                                 <a
-                                    href={`invoices/edit-invoice/${invoice._id}`}
+                                    href={`edit-invoice/${invoice._id}`}
                                     className="bg-gray-600 px-4 py-2 rounded-lg"
                                 >
                                     Edit
@@ -97,7 +124,7 @@ export default function InvoiceDetail() {
                             )}
 
                         <button
-                            onClick={downloadPDF}
+                            onClick={handleDownload}
                             className="bg-indigo-600 px-4 py-2 rounded-lg"
                         >
                             PDF

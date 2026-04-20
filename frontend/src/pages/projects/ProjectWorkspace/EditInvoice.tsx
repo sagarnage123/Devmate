@@ -1,33 +1,41 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import InvoiceForm from "@/components/InvoiceForm";
-
+import { getInvoiceById, updateDraftInvoice } from "@/api/invoices";
+import toast from "react-hot-toast";
 export default function EditInvoice() {
-    const { id } = useParams();
+    const { invoiceId, projectId } = useParams();
     const navigate = useNavigate();
 
     const [invoice, setInvoice] = useState<any>(null);
 
     useEffect(() => {
-        fetch(`/api/invoices/${id}`)
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.data.status !== "draft") {
-                    alert("Only draft invoices can be edited");
-                    navigate("/invoices");
+        const fetchInvoice = async () => {
+            try {
+                const res = await getInvoiceById(invoiceId!);
+
+                if(res.data.data.status !== "draft") {  
+                    toast.error("Only draft invoices can be edited");
+                    navigate(`projects/${projectId}/invoices/${invoiceId}`);
+                    return;
                 }
-                setInvoice(data.data);
-            });
+                setInvoice(res.data.data);
+                
+            } catch (err) {
+                console.error("Failed to fetch invoice:", err);
+                toast.error("Failed to load invoice");
+            }
+        };
+        fetchInvoice();
     }, []);
 
     const handleUpdate = async (formData: any) => {
-        await fetch(`/api/invoices/${id}/draft`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
+        await updateDraftInvoice(invoiceId!, formData);
+        toast.success("Invoice updated successfully", {
+            icon: "✅",
         });
 
-        navigate(`/invoices/${id}`);
+        navigate(`/projects/${projectId}/invoices/${invoiceId}`);
     };
 
     if (!invoice) return <div>Loading...</div>;

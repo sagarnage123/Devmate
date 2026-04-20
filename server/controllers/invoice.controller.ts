@@ -8,10 +8,10 @@ import { generateInvoicePDF } from "../utils/invoice.pdf";
 export const createInvoice = async (req: Request, res: Response) => {
     try {
         const userId = req.user!._id;
-        console.log("Received invoice creation request with body:At backend", req.body);
+       
         validateCreateInvoice(req.body);
         const invoice = await createInvoiceService(userId, req.body);
-        // console.log("Created invoice:", invoice);
+        
         res.status(201).json({
             success: true,
             data: invoice,
@@ -51,35 +51,39 @@ export const getInvoices = async (
         });
     }
 };
-
 export const getInvoiceById = async (
-    req: Request<InvoiceParams>,
+    req: Request,
     res: Response
-) => {
+): Promise<void> => {
     try {
         const userId = req.user!._id;
 
-        const invoice = await getInvoiceByIdService(userId, req.params.id);
+        const invoice = await getInvoiceByIdService(
+            userId,
+            req.params.id as string
+        );
 
         res.status(200).json({
             success: true,
             data: invoice,
         });
+
     } catch (error: unknown) {
         if (error instanceof Error) {
-            const message = error.message;
 
-            if (message === "Invoice not found") {
-                return res.status(404).json({
+            if (error.message === "Invoice not found") {
+                res.status(404).json({
                     success: false,
-                    message,
+                    message: error.message,
                 });
+               
             }
 
-            return res.status(400).json({
+            res.status(400).json({
                 success: false,
-                message,
+                message: error.message,
             });
+           
         }
 
         res.status(500).json({

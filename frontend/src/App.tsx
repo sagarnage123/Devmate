@@ -13,6 +13,7 @@ import ProjectSettings from "./pages/projects/ProjectWorkspace/ProjectSettings";
 import ProjectKanban from "./components/project/ProjectKanban.js";
 import CreateInvoice from "./pages/projects/ProjectWorkspace/CreateInvoice.jsx";
 import EditInvoice from "./pages/projects/ProjectWorkspace/EditInvoice.js";
+import InvoiceDetail from "./pages/projects/ProjectWorkspace/InvoiceDetail.js";
 
 export default function App() {
     
@@ -36,7 +37,7 @@ export default function App() {
                 <Route path="notes" element={<ProjectNotes />} />
                 <Route path="invoices" element={<ProjectInvoices />} />
                 <Route path="invoices/create-invoice" element={<CreateInvoice />} />
-                <Route path="invoices/:invoiceId" element={<ProjectInvoices />} />
+                <Route path="invoices/:invoiceId" element={<InvoiceDetail />} />
                 <Route path="invoices/edit-invoice/:invoiceId" element={<EditInvoice />} />
                 <Route path="settings" element={<ProjectSettings />} />
                 <Route path="kanban" element={<ProjectKanban />} />

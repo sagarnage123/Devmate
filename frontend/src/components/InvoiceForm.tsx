@@ -90,7 +90,7 @@ export default function InvoiceForm({
 
                         <input
                             type="number"
-                            className="col-span-2 border border-gray-700 rounded-lg px-3 py-2"
+                            className="col-span-2 border border-gray-700 rounded-lg px-3 py-2 text-black"
                             value={item.quantity}
                             onChange={(e) =>
                                 updateItem(index, "quantity", Number(e.target.value))
@@ -99,7 +99,7 @@ export default function InvoiceForm({
 
                         <input
                             type="number"
-                            className="col-span-2 border border-gray-700 rounded-lg px-3 py-2"
+                            className="col-span-2 border border-gray-700 rounded-lg px-3 py-2 text-black"
                             value={item.rate}
                             onChange={(e) =>
                                 updateItem(index, "rate", Number(e.target.value))

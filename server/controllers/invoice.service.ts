@@ -67,6 +67,7 @@ export const getInvoicesService = async (
 
     const [invoices, total] = await Promise.all([
         Invoice.find(filter)
+            .populate("clientId", "name email")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limitNumber)
@@ -74,6 +75,7 @@ export const getInvoicesService = async (
 
         Invoice.countDocuments(filter),
     ]);
+    
 
     return {
         data: invoices,
@@ -105,7 +107,7 @@ export const getInvoiceByIdService = async (
     if (!invoice) {
         throw new Error("Invoice not found");
     }
-
+    
     return invoice;
 };
 
