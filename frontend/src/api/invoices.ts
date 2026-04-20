@@ -35,7 +35,21 @@ export const updateDraftInvoice = (id: string, data: any) =>
 export const duplicateInvoice = (id: string) =>
     apiCall(() => api.post(`/invoices/${id}/duplicate`));
 
-export const downloadInvoicePDF = (id: string) => {
-    window.open(`/api/invoices/${id}/pdf`);
+export const downloadInvoicePDF= async (id: string) => {
+    const token = localStorage.getItem("token");
+
+    const res = await api.get(`/invoices/${id}/pdf`, {
+        responseType: "blob",
+    });
+    const blob = await res.data;
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `invoice-${id}.pdf`;
+    a.click();
+
+    window.URL.revokeObjectURL(url);
 };
     
