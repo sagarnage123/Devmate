@@ -2,6 +2,7 @@ import { downloadInvoicePDF, duplicateInvoice, getInvoiceById, markInvoicePaid,s
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+
 interface Invoice {
     _id: string;
     invoiceNumber: string;
@@ -30,31 +31,28 @@ export default function InvoiceDetail() {
     }
     const [invoice, setInvoice] = useState<Invoice | null>(null);
     const Navigate = useNavigate();
-    
+    const fetchInvoice = async () => {
+
+        try {
+            const res = await getInvoiceById(invoiceId);
+            setInvoice(res.data.data);
+        } catch (err) {
+            console.error("Failed to fetch invoice:", err);
+            toast.error("Failed to load invoice");
+        }
+
+    };
 
     useEffect(() => {
-        const fetchInvoice = async () => {
-
-            try {
-                const res = await getInvoiceById(invoiceId);
-                setInvoice(res.data.data);
-                toast.success("Invoice loaded successfully", {
-                    icon: "✅",
-                });
-            } catch (err) {
-                console.error("Failed to fetch invoice:", err);
-                toast.error("Failed to load invoice");
-            }
-
-        };
         fetchInvoice();
-    }, []);
+    }, [invoiceId]);
 
     const handleSend = async () => {
         await sendInvoice(invoiceId!);
         toast.success("Invoice sent successfully", {
             icon: "📤",
         });
+        await fetchInvoice();
         
     };
 
@@ -63,10 +61,11 @@ export default function InvoiceDetail() {
         toast.success("Invoice marked as paid", {
             icon: "✅",
         });
+        await fetchInvoice();
         
     };
 
-    const handleDownload = () => {
+    const handleDownload =  () => {
         downloadInvoicePDF(invoiceId!);
         toast.success("PDF downloaded successfully", {
             icon: "📥"
@@ -76,6 +75,7 @@ export default function InvoiceDetail() {
         const res = await duplicateInvoice(invoiceId!);
         Navigate(`projects/${projectId}/invoices/${res.data._id}`);
     };
+    
 
     if (!invoice) return <div>Loading...</div>;
 
@@ -122,6 +122,16 @@ export default function InvoiceDetail() {
                                     Mark Paid
                                 </button>
                             )}
+                      
+
+                        {invoice.status === "paid" && (
+                            <span className="inline-flex items-center gap-2 bg-green-500/10 text-green-400 px-3 py-1 rounded-full text-sm font-medium border border-green-500/20 shadow-[0_0_10px_rgba(34,197,94,0.2)]">
+                                ✓ Paid
+                            </span>
+                        )}
+                        
+
+                       
 
                         <button
                             onClick={handleDownload}

@@ -2,6 +2,9 @@ import { getInvoices } from "@/api/invoices";
 
 import { useEffect, useState } from "react";
 
+type InvoiceStatus = "paid" | "draft" | "sent" | "overdue";
+
+
 interface Invoice {
     _id: string;
     invoiceNumber: string;
@@ -19,16 +22,16 @@ export default function Invoices() {
     useEffect(() => {
         async function fetchInvoices() {
             try {
-                const data=await getInvoices();
+                const data = await getInvoices();
                 setInvoices(data);
-                
+
             } catch (err) {
                 console.error("Failed to fetch invoices:", err);
             }
         }
 
         fetchInvoices();
-     
+
     }, []);
 
     const getStatusColor = (status: Invoice["status"]) => {
@@ -43,12 +46,25 @@ export default function Invoices() {
                 return "bg-red-600";
         }
     };
+    const StatusBadge = ({ status }: { status: InvoiceStatus }) => {
+        const styles = {
+            paid: "bg-green-500/10 text-green-400 border-green-500/20 w-max",
+            draft: "bg-gray-500/10 text-gray-400 border-gray-500/20 w-max",
+            sent: "bg-blue-500/10 text-blue-400 border-blue-500/20 w-max",
+            overdue: "bg-red-500/10 text-red-400 border-red-500/20 w-max",
+        };
 
+        return (
+            <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm border ${styles[status]}`}>
+                {status}
+            </span>
+        );
+    };
     return (
         <div className="min-h-screen bg-[#0B0F19] text-white p-8">
             <div className="max-w-6xl mx-auto">
 
-               
+
                 <div className="flex justify-between mb-8">
                     <h1 className="text-2xl font-semibold">Invoices</h1>
 
@@ -60,7 +76,7 @@ export default function Invoices() {
                     </a>
                 </div>
 
-                
+
                 <div className="bg-[#111827] rounded-2xl overflow-hidden">
 
                     <div className="grid grid-cols-5 px-6 py-3 text-sm text-gray-400 border-b border-gray-700">
@@ -80,15 +96,7 @@ export default function Invoices() {
                             <span>{inv.invoiceNumber}</span>
                             <span>{inv.clientId?.name}</span>
 
-                            <span>
-                                <span
-                                    className={`px-2 py-1 text-xs rounded-full ${getStatusColor(
-                                        inv.status
-                                    )}`}
-                                >
-                                    {inv.status}
-                                </span>
-                            </span>
+                            <StatusBadge status={inv.status} />
 
                             <span>₹{inv.total.toFixed(2)}</span>
                             <span>
