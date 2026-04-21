@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Project } from "@/types/Project";
+import { getProjectById } from "@/api/projects";
 
 export function useProject(projectId: string) {
     const [project, setProject] = useState<Project | null>(null);
@@ -13,22 +14,25 @@ export function useProject(projectId: string) {
             try {
                 setLoading(true);
                 setError(null);
-
+                const project=await getProjectById(projectId);
                 
                 await new Promise(res => setTimeout(res, 500));
 
                 if (!isMounted) return;
+                if(!project)
+                    throw new Error("Project not found");
 
                 setProject({
-                    _id: projectId,
-                    title: "DevMate Core Refactor",
-                    status: "in-progress",
-                    startDate: new Date().toISOString(),
-                    dueDate: new Date().toISOString(),
-                    clientId: `client-${projectId}`,
-                    budget: 50000,
-                    description: "UI refactor for project workspace",
+                    _id: project._id,
+                    title: project.title,
+                    status: project.status,
+                    startDate: project.startDate,
+                    dueDate: project.dueDate,
+                    clientId: project.clientId.name,
+                    budget: project.budget,
+                    description: project.description,
                 });
+              
             } catch (err) {
                 if (!isMounted) return;
                 setError("Failed to load project");

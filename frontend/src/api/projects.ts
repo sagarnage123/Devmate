@@ -1,8 +1,21 @@
 import api from "./axios";
-import type { Project, ProjectStatus } from "../types/Project";
+
 import { isProjectStatus } from "../types/Project";
+import type { ProjectStatus } from "../types/Project";
+export interface Project {
+    _id: string;
+    title: string;
+    budget?: number | null;
+    startDate: string;
+    dueDate: string;
+    description?: string;
+    status: ProjectStatus;
 
-
+    clientId: {
+        _id: string;
+        name: string;
+    };
+}
 function extractProjects(data: unknown): Project[] {
     if (
         typeof data === "object" &&
@@ -26,6 +39,14 @@ function extractProjects(data: unknown): Project[] {
 export async function getProjects(): Promise<Project[]> {
     const res = await api.get("/project");
     return extractProjects(res.data);
+}
+
+export async function getProjectById(projectId:string): Promise<Project>{
+
+    const res = await api.get(`/project/${projectId}`);
+    
+    return res.data.data;
+
 }
 
 

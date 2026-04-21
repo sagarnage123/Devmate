@@ -1,172 +1,143 @@
-import { Dispatch ,SetStateAction} from "react";
-import {ProjectStatus } from "../types/Project";
-interface Client {
-    id: string;
-    name: string;
-}
+import { useState } from "react";
+import type { ProjectStatus } from "../types/Project";
+import { createProject } from "../api/projects";
+import ClientSelector from "./ClientSelector";
+import type { Client } from "../types/Client";
+import toast from "react-hot-toast";
 
-interface CreateProjectModalProps {
-
+interface Props {
     isOpen: boolean;
-    onClose: () => void;    
-    handleSubmit: () => Promise<void>;
-
-    setTitle: Dispatch<SetStateAction<string>>;
-    title: string;
-
-    setStatus: Dispatch<SetStateAction<ProjectStatus>>;
-    status: ProjectStatus;
-
-    setClientId: Dispatch<SetStateAction<string>>;
-    clientId: string;
-    clients: Array<Client>;
-
-    budget?: number | string;
-    setBudget: Dispatch<SetStateAction<number | string | undefined>>;
-
-    startDate: string;
-    setStartDate: Dispatch<SetStateAction<string>>;
-
-    dueDate: string;
-    setDueDate: Dispatch<SetStateAction<string>>;
-
-    description: string;
-    setDescription: Dispatch<SetStateAction<string>>;
-
-    submiting: boolean;
-
+    onClose: () => void;
+    onSuccess: () => Promise<void>;
 }
 
 export default function CreateProjectModal({
     isOpen,
     onClose,
-    handleSubmit,
-    setTitle,
-    title,
-    setStatus,
-    status,
-    setClientId,
-    clientId,
-    clients,
-    budget,
-    setBudget,
-    startDate,
-    dueDate,
-    setStartDate,
-    setDueDate,
-    description,
-    setDescription,
-    submiting
+    onSuccess,
+}: Props) {
+    const [title, setTitle] = useState("");
+    const [status, setStatus] = useState<ProjectStatus>("planned");
+    const [budget, setBudget] = useState<number | "">("");
+    const [description, setDescription] = useState("");
 
-}: CreateProjectModalProps) {
-    // if(!isOpen)
-    //     return null;
+    const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
-    const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        handleSubmit();
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async () => {
+        if (!title || !selectedClient) {
+            toast.error("Title and client are required");
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            await createProject({
+                title,
+                clientId: selectedClient.id,
+                status,
+                budget: budget || undefined,
+                description,
+            });
+
+            toast.success("Project created");
+
+            await onSuccess();
+            onClose();
+
+           
+            setTitle("");
+            setBudget("");
+            setDescription("");
+            setSelectedClient(null);
+
+        } catch (err) {
+            toast.error("Failed to create project");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const isProjectStatus=(status: string): status is ProjectStatus => {
-        return ["planned", "in-progress", "on-hold", "completed"].includes(status);
-    }
+    if (!isOpen) return null;
 
     return (
-        <div 
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
-            className={`flex justify-center items-center fixed inset-0 backdrop-blur-sm bg-black transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen? `pointer-events-auto bg-opacity-50`:`opacity-0 pointer-events-none`}`}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="bg-[#111827] text-white w-full max-w-lg p-6 rounded-2xl shadow-xl">
 
-        
-            <div className={`bg-white p-6 rounded-md max-w-md shadow-md w-full transform transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${isOpen?'scale-100 translate-y-0 opacity-100':`scale-95 opacity-0 -translate-y-3`}`} >
-            <h2
-            id="modal-title"
-             className="text-xl font-semibold mt-3 mb-4">Create New Project</h2>
+                <h2 className="text-xl font-semibold mb-6">
+                    Create Project
+                </h2>
 
-                <form onSubmit={onFormSubmit} className="space-y-3">
+                <div className="space-y-4">
 
-                <input type="text" placeholder="Project Title"
-                    value={title} onChange={(e) => setTitle(e.target.value)}
-                    required
-                    className="p-2 border rounded w-full mt-3 focus:outline-none focus:ring-2 focus:ring-blue-500 "
+                  
+                    <input
+                        placeholder="Project title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                    />
 
-                />
+                   
+                    <ClientSelector
+                        selectedClient={selectedClient}
+                        setSelectedClient={setSelectedClient}
+                    />
 
-                
-                <select value={status}
-                    onChange={(e) => {
-                        if (!isProjectStatus(e.target.value)) return;
-                        setStatus(e.target.value);
-                    }}
-                    className="p-2 border rounded w-full mt-3 "
-                    required
-                >
-                    <option value="">Select status</option>
-                    <option value="planned">Planned</option>
-                    <option value="in-progress">Active</option>
-                    <option value="on-hold">On hold</option>
-                    <option value="completed">Completed</option>
+                    
+                    <select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value as ProjectStatus)}
+                        className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2"
+                    >
+                        <option value="planned">Planned</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="on-hold">On Hold</option>
+                        <option value="completed">Completed</option>
+                    </select>
 
+                    
+                    <input
+                        type="number"
+                        placeholder="Budget (optional)"
+                        value={budget}
+                        onChange={(e) =>
+                            setBudget(e.target.value ? Number(e.target.value) : "")
+                        }
+                        className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                    />
 
-                </select>
-                
-                <select value={clientId}
-                    onChange={(e) => setClientId(e.target.value)}
-                    className="p-2 border rounded w-full mt-3 "
-                    required
-                >
-                    <option value="">Select Client</option>
-                    {
-                        clients.map(client => (
-                            <option key={client.id} value={client.id}>
-                                {client.name}
-                            </option>
-                        ))
-                    }
+                    
+                    <textarea
+                        placeholder="Description (optional)"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                    />
 
-                </select>
+                </div>
 
-                <input type="number"
-                    placeholder="Budget"
-                    value={budget}
-                    onChange={(e) => setBudget(e.target.value)}
-                    className="p-2 border rounded w-full mt-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-
-                <input type="date"
-                    value={startDate}
-                    placeholder="Start Date"
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="p-2 border rounded w-full mt-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-
-                <input type="date"
-                    value={dueDate}
-                    placeholder="Due date"
-                    onChange={(e) => setDueDate(e.target.value)}
-                    className="p-2 border rounded w-full mt-3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-
-                <textarea placeholder="Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="p-2 border rounded w-full mt-3 focus:outline-none focus:ring-2 focus:ring-blue-500 "
-                ></textarea>
-
-                <div className="flex gap-2 mt-2">
-                    <button type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700" disabled={submiting}
-                    >{submiting ? "Creating project" : "Create Project"}</button>
-                    <button 
-                    type="button"
-                    onClick={onClose}
-                        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700">
+               
+                <div className="flex justify-end gap-2 mt-6">
+                    <button
+                        onClick={onClose}
+                        className="px-4 py-2 bg-gray-700 rounded-lg"
+                    >
                         Cancel
                     </button>
-                </div>
-                </form>
 
+                    <button
+                        onClick={handleSubmit}
+                        disabled={loading}
+                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg"
+                    >
+                        {loading ? "Creating..." : "Create"}
+                    </button>
+                </div>
+
+            </div>
         </div>
-        </div>
-    )
+    );
 }

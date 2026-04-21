@@ -89,7 +89,7 @@ export default function CreateInvoice() {
                                     dueDate: dueDate || undefined,
                                 });
                                 toast.success("Invoice created successfully!", { icon: "✅" });
-                                navigate(`/projects/${projectId}/invoices`);
+                                navigate(`/invoices`);
 
                             } catch (err) {
                                 console.error(err);

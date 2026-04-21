@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import InvoiceForm from "@/components/InvoiceForm";
 import { getInvoiceById, updateDraftInvoice } from "@/api/invoices";
 import toast from "react-hot-toast";
+
 export default function EditInvoice() {
     const { invoiceId, projectId } = useParams();
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function EditInvoice() {
 
                 if(res.data.data.status !== "draft") {  
                     toast.error("Only draft invoices can be edited");
-                    navigate(`projects/${projectId}/invoices/${invoiceId}`);
+                    navigate(`/invoices/${invoiceId}`);
                     return;
                 }
                 setInvoice(res.data.data);
@@ -35,7 +36,7 @@ export default function EditInvoice() {
             icon: "✅",
         });
 
-        navigate(`/projects/${projectId}/invoices/${invoiceId}`);
+        navigate(`/invoices/${invoiceId}`);
     };
 
     if (!invoice) return <div>Loading...</div>;

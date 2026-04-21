@@ -4,6 +4,9 @@ import Client from "../models/Client";
 import Project from "../models/Project";
 import{asyncHandler} from"../utils/asyncHandler";
 import {createError} from "../utils/createError";
+import { error } from "node:console";
+import { Error } from "mongoose";
+import { json } from "node:stream/consumers";
 
 interface createProjectPayload {
     clientId: string;
@@ -67,10 +70,27 @@ const getProject=asyncHandler(async (req: Request<{}, {}, {}, {clientId?: string
     if(status)
         filter.status=status;
 
-    const projects=await Project.find(filter);
+    const projects = await Project.find(filter).populate("clientId", "name email").lean();
 
     res.status(200).json({projects});
 });
+
+const getProjectById=asyncHandler(async (req:Request,res:Response,next:NextFunction)=>{
+    const {id}=req.params;
+    if(!id)
+        throw new Error("Id required for project");
+
+    const project = await Project.findOne({ _id: id }).populate("clientId", "name email");
+
+    if(!project)
+        throw new Error("Project not found");
+
+    res.status(200).json({
+        data:project
+    })
+
+})
+
 interface updateProjectPayload {
     title?: string;
     description?: string;
@@ -153,5 +173,6 @@ export {
     createProject,
     getProject, 
     updateProject,
-    deleteProject
+    deleteProject,
+    getProjectById
 };

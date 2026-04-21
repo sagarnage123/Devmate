@@ -6,6 +6,7 @@ const tabs = [
     { label: "Notes", path: "notes" },
     { label: "Invoices", path: "invoices" },
     { label: "Kanban", path: "kanban" },
+    { label: "Settings", path: "settings" },
 ];
 
 export default function ProjectTabs({ projectId }: { projectId: string }) {

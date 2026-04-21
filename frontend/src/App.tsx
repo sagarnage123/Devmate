@@ -8,12 +8,15 @@ import ProjectLayout from "./pages/projects/ProjectWorkspace/ProjectLayout";
 import ProjectOverview from "./pages/projects/ProjectWorkspace/ProjectOverview";
 import ProjectTasks from "./pages/projects/ProjectWorkspace/ProjectTasks";
 import ProjectNotes from "./pages/projects/ProjectWorkspace/ProjectNotes";
-import ProjectInvoices from "./pages/projects/ProjectWorkspace/ProjectInvoices";
+
 import ProjectSettings from "./pages/projects/ProjectWorkspace/ProjectSettings";
 import ProjectKanban from "./components/project/ProjectKanban.js";
-import CreateInvoice from "./pages/projects/ProjectWorkspace/CreateInvoice.jsx";
-import EditInvoice from "./pages/projects/ProjectWorkspace/EditInvoice.js";
-import InvoiceDetail from "./pages/projects/ProjectWorkspace/InvoiceDetail.js";
+
+import Projects from "./pages/projects/Projects.js";
+import Invoices from "./pages/invoices/Invoice.js";
+import CreateInvoice from "./pages/invoices/CreateInvoice.js";
+import InvoiceDetail from "./pages/invoices/InvoiceDetail.js";
+import EditInvoice from "./pages/invoices/EditInvoice.js";
 
 export default function App() {
     
@@ -26,6 +29,31 @@ export default function App() {
                     <Dashboard/>
                 </ProtectedRoute>}
             />
+            <Route path="invoices" element={
+                    <ProtectedRoute>
+                    <Invoices />
+                </ProtectedRoute>
+                } />
+            <Route path="invoices/create-invoice" element={
+                <ProtectedRoute>
+                    <CreateInvoice />
+                </ProtectedRoute>
+            } />
+            <Route path="invoices/:invoiceId" element={
+                <ProtectedRoute>
+                    <InvoiceDetail />
+                </ProtectedRoute>
+            } />
+            <Route path="invoices/edit-invoice/:invoiceId" element={
+                <ProtectedRoute>
+                    <EditInvoice />
+                </ProtectedRoute>
+            } />
+            <Route path="/projects" element={
+                <ProtectedRoute>
+                    <Projects />
+                </ProtectedRoute>
+            } />
             <Route path="/projects/:projectId" element={
                 <ProtectedRoute>
                 <ProjectLayout />
@@ -35,12 +63,10 @@ export default function App() {
                 <Route path="overview" element={<ProjectOverview />} />
                 <Route path="tasks" element={<ProjectTasks />} />
                 <Route path="notes" element={<ProjectNotes />} />
-                <Route path="invoices" element={<ProjectInvoices />} />
-                <Route path="invoices/create-invoice" element={<CreateInvoice />} />
-                <Route path="invoices/:invoiceId" element={<InvoiceDetail />} />
-                <Route path="invoices/edit-invoice/:invoiceId" element={<EditInvoice />} />
                 <Route path="settings" element={<ProjectSettings />} />
                 <Route path="kanban" element={<ProjectKanban />} />
+
+                
             </Route>
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
