@@ -20,7 +20,7 @@ export default function Login(){
        try {
             await login({ email, password });
             toast.success("Logged in successfully");
-            navigate("/dashboard");
+            navigate("/projects");
         } catch (error: unknown) {
             toast.error(getApiErrorMessage(error));
         } 

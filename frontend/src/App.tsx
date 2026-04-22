@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+
 import Register from "./pages/Register.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
@@ -20,21 +20,27 @@ import EditInvoice from "./pages/invoices/EditInvoice.js";
 
 import AppLayout from "./layout/AppLayout.js";
 
+import Clients from "./pages/clients/Clients.js";
+
+
 export default function App() {
 
     return (
         <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={
-                <ProtectedRoute>
-                    <Dashboard />
-                </ProtectedRoute>}
-            />
+           
             <Route path="invoices" element={
                 <ProtectedRoute>
                     <AppLayout>
                         <Invoices />
+                    </AppLayout>
+                </ProtectedRoute>
+            } />
+            <Route path="clients" element={
+                <ProtectedRoute>
+                    <AppLayout>
+                        <Clients />
                     </AppLayout>
                 </ProtectedRoute>
             } />
