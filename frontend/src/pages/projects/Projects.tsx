@@ -47,7 +47,6 @@ export default function Projects() {
                     </a>
                 </div>
 
-                
                 {loading && (
                     <div className="text-gray-400">Loading projects...</div>
                 )}
