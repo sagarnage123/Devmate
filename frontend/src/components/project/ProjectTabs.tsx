@@ -4,7 +4,6 @@ const tabs = [
     { label: "Overview", path: "overview" },
     { label: "Tasks", path: "tasks" },
     { label: "Notes", path: "notes" },
-    { label: "Invoices", path: "invoices" },
     { label: "Kanban", path: "kanban" },
     { label: "Settings", path: "settings" },
 ];

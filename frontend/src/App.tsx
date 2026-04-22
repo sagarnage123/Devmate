@@ -18,55 +18,93 @@ import CreateInvoice from "./pages/invoices/CreateInvoice.js";
 import InvoiceDetail from "./pages/invoices/InvoiceDetail.js";
 import EditInvoice from "./pages/invoices/EditInvoice.js";
 
+import AppLayout from "./layout/AppLayout.js";
+
 export default function App() {
-    
+
     return (
         <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={
                 <ProtectedRoute>
-                    <Dashboard/>
+                    <Dashboard />
                 </ProtectedRoute>}
             />
             <Route path="invoices" element={
-                    <ProtectedRoute>
-                    <Invoices />
+                <ProtectedRoute>
+                    <AppLayout>
+                        <Invoices />
+                    </AppLayout>
                 </ProtectedRoute>
-                } />
+            } />
             <Route path="invoices/create-invoice" element={
                 <ProtectedRoute>
+
                     <CreateInvoice />
+
                 </ProtectedRoute>
             } />
             <Route path="invoices/:invoiceId" element={
                 <ProtectedRoute>
-                    <InvoiceDetail />
+                    <AppLayout>
+                        <InvoiceDetail />
+                    </AppLayout>
                 </ProtectedRoute>
             } />
             <Route path="invoices/edit-invoice/:invoiceId" element={
                 <ProtectedRoute>
-                    <EditInvoice />
+                    <AppLayout>
+                        <EditInvoice />
+                    </AppLayout>
                 </ProtectedRoute>
             } />
             <Route path="/projects" element={
                 <ProtectedRoute>
-                    <Projects />
+                    <AppLayout>
+                        <Projects />
+                    </AppLayout>
                 </ProtectedRoute>
             } />
             <Route path="/projects/:projectId" element={
                 <ProtectedRoute>
-                <ProjectLayout />
+                    <AppLayout>
+                        <ProjectLayout />
+                    </AppLayout>
                 </ProtectedRoute>
-        }>
-                <Route index element={<ProjectOverview />} />
-                <Route path="overview" element={<ProjectOverview />} />
-                <Route path="tasks" element={<ProjectTasks />} />
-                <Route path="notes" element={<ProjectNotes />} />
-                <Route path="settings" element={<ProjectSettings />} />
-                <Route path="kanban" element={<ProjectKanban />} />
+            }>
+                <Route index element={
 
-                
+                    <ProjectOverview />
+
+                } />
+                <Route path="overview" element={
+
+                    <ProjectOverview />
+
+                } />
+                <Route path="tasks" element={
+
+                    <ProjectTasks />
+
+                } />
+                <Route path="notes" element={
+
+                    <ProjectNotes />
+
+                } />
+                <Route path="settings" element={
+
+                    <ProjectSettings />
+
+                } />
+                <Route path="kanban" element={
+
+                    <ProjectKanban />
+
+                } />
+
+
             </Route>
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />

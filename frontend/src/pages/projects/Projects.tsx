@@ -42,9 +42,7 @@ export default function Projects() {
                     >
                         + New Project
                     </button>
-                    <a href="/invoices" className="nav-link">
-                        Invoices
-                    </a>
+                   
                 </div>
 
                 {loading && (
