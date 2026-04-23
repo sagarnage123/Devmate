@@ -16,7 +16,7 @@ export default function Sidebar() {
     };
 
     return (
-        <div className="w-64 bg-slate-950 border-r border-slate-800 flex flex-col p-4">
+        <div className="w-64 bg-[#0B0F19] border-r border-white/10 flex flex-col p-4">
         
             <div>
                 <div className="mt-8 flex items-center gap-2 px-2 mb-6">

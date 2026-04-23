@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ProjectStatus } from "../types/Project";
 import { createProject } from "../api/projects";
 import ClientSelector from "./ClientSelector";
@@ -25,6 +25,29 @@ export default function CreateProjectModal({
 
     const [loading, setLoading] = useState(false);
 
+    const [shouldRender, setShouldRender] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+            setShouldRender(true);
+
+            requestAnimationFrame(() => {
+                setIsVisible(true);
+            });
+        } else {
+            setIsVisible(false);
+
+            const timeout = setTimeout(() => {
+                setShouldRender(false);
+            }, 300); 
+
+            return () => clearTimeout(timeout);
+        }
+    }, [isOpen]);
+
+
+
     const handleSubmit = async () => {
         if (!title || !selectedClient) {
             toast.error("Title and client are required");
@@ -47,7 +70,7 @@ export default function CreateProjectModal({
             await onSuccess();
             onClose();
 
-           
+
             setTitle("");
             setBudget("");
             setDescription("");
@@ -60,29 +83,29 @@ export default function CreateProjectModal({
         }
     };
 
-    if (!isOpen && !loading) return null;
+    if (!shouldRender) return null;
 
+   
     return (
         <div
             className={`
     fixed inset-0 z-50 flex items-center justify-center
-    bg-black/50 backdrop-blur-sm
-    transition-all duration-300 ease-out
-    ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}
+    transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
+    ${isVisible ? "bg-black/60 backdrop-blur-md" : "bg-black/0 backdrop-blur-0"}
 `}
         >
             <div
                 className={`
-        w-full max-w-lg
-        bg-slate-900 border border-slate-800
-        rounded-xl p-6
+        w-full max-w-lg rounded-2xl p-6
+        transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
 
-        transition-all duration-300 ease-out
-
-        ${isOpen
+        ${isVisible
                         ? "opacity-100 translate-y-0 scale-100"
-                        : "opacity-0 translate-y-4 scale-95"
+                        : "opacity-0 translate-y-8 scale-95"
                     }
+
+        bg-[#0F172A] border border-white/10
+        shadow-2xl shadow-black/40
     `}
             >
 
@@ -96,7 +119,7 @@ export default function CreateProjectModal({
                         placeholder="Project title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100
+                        className="w-full bg-[#0F172A] border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100
                 placeholder:text-slate-500
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     />
@@ -109,7 +132,7 @@ export default function CreateProjectModal({
                     <select
                         value={status}
                         onChange={(e) => setStatus(e.target.value as ProjectStatus)}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100
+                        className="w-full bg-[#0F172A] border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     >
                         <option value="planned">Planned</option>
@@ -125,7 +148,7 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                             setBudget(e.target.value ? Number(e.target.value) : "")
                         }
-                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100
+                        className="w-full bg-[#0F172A] border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100
                 placeholder:text-slate-500
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     />
@@ -134,7 +157,7 @@ export default function CreateProjectModal({
                         placeholder="Description (optional)"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100
+                        className="w-full bg-[#0F172A] border border-white/10 rounded-lg px-3 py-2 text-sm text-slate-100
                 placeholder:text-slate-500
                 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     />
