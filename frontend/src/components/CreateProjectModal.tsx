@@ -60,37 +60,57 @@ export default function CreateProjectModal({
         }
     };
 
-    if (!isOpen) return null;
+    if (!isOpen && !loading) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-[#111827] text-white w-full max-w-lg p-6 rounded-2xl shadow-xl">
+        <div
+            className={`
+    fixed inset-0 z-50 flex items-center justify-center
+    bg-black/50 backdrop-blur-sm
+    transition-all duration-300 ease-out
+    ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}
+`}
+        >
+            <div
+                className={`
+        w-full max-w-lg
+        bg-slate-900 border border-slate-800
+        rounded-xl p-6
 
-                <h2 className="text-xl font-semibold mb-6">
+        transition-all duration-300 ease-out
+
+        ${isOpen
+                        ? "opacity-100 translate-y-0 scale-100"
+                        : "opacity-0 translate-y-4 scale-95"
+                    }
+    `}
+            >
+
+                <h2 className="text-lg font-semibold tracking-tight text-slate-100 mb-6">
                     Create Project
                 </h2>
 
                 <div className="space-y-4">
 
-                  
                     <input
                         placeholder="Project title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100
+                placeholder:text-slate-500
+                focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     />
 
-                   
                     <ClientSelector
                         selectedClient={selectedClient}
                         setSelectedClient={setSelectedClient}
                     />
 
-                    
                     <select
                         value={status}
                         onChange={(e) => setStatus(e.target.value as ProjectStatus)}
-                        className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-2"
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100
+                focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     >
                         <option value="planned">Planned</option>
                         <option value="in-progress">In Progress</option>
@@ -98,7 +118,6 @@ export default function CreateProjectModal({
                         <option value="completed">Completed</option>
                     </select>
 
-                    
                     <input
                         type="number"
                         placeholder="Budget (optional)"
@@ -106,24 +125,29 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                             setBudget(e.target.value ? Number(e.target.value) : "")
                         }
-                        className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100
+                placeholder:text-slate-500
+                focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     />
 
-                    
                     <textarea
                         placeholder="Description (optional)"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                        className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100
+                placeholder:text-slate-500
+                focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                     />
 
                 </div>
 
-               
                 <div className="flex justify-end gap-2 mt-6">
+
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 bg-gray-700 rounded-lg"
+                        className="px-4 py-2 rounded-lg text-sm text-slate-400
+                hover:bg-slate-800 hover:text-slate-100
+                transition-all duration-200"
                     >
                         Cancel
                     </button>
@@ -131,10 +155,15 @@ export default function CreateProjectModal({
                     <button
                         onClick={handleSubmit}
                         disabled={loading}
-                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg"
+                        className="px-4 py-2 rounded-lg text-sm font-medium
+                bg-indigo-500 text-white
+                transition-all duration-300 ease-out
+                hover:bg-indigo-400 hover:shadow-lg hover:shadow-indigo-500/20
+                active:scale-[0.97]"
                     >
                         {loading ? "Creating..." : "Create"}
                     </button>
+
                 </div>
 
             </div>

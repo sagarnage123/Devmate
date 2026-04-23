@@ -4,9 +4,10 @@ export default function Sidebar() {
     const navigate = useNavigate();
 
     const linkClass = ({ isActive }: { isActive: boolean }) =>
-        `px-4 py-2 rounded-lg transition ${isActive
-            ? "bg-indigo-600 text-white"
-            : "text-gray-400 hover:bg-gray-800 hover:text-white"
+        `flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
+        ${isActive
+            ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
+            : "text-slate-400 hover:bg-slate-800 hover:text-slate-100"
         }`;
 
     const handleLogout = () => {
@@ -15,17 +16,24 @@ export default function Sidebar() {
     };
 
     return (
-        <div className="w-64 bg-[#111827] border-r border-gray-800 flex flex-col justify-between p-4">
-
+        <div className="w-64 bg-slate-950 border-r border-slate-800 flex flex-col p-4">
+        
             <div>
-                
-                <h1 className="text-xl font-semibold mb-8 px-2">
-                    DevMate
-                </h1>
+                <div className="mt-8 flex items-center gap-2 px-2 mb-6">
 
-               
-                <nav className="flex flex-col gap-2">
+                   
+                    <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                        <span className="text-indigo-400 font-semibold text-sm">D</span>
+                    </div>
 
+                   
+                    <h1 className="text-lg font-semibold tracking-tight text-slate-100">
+                        DevMate
+                    </h1>
+
+                </div>
+
+                <nav className="flex flex-col gap-1">
                     <NavLink to="/projects" className={linkClass}>
                         Projects
                     </NavLink>
@@ -37,15 +45,16 @@ export default function Sidebar() {
                     <NavLink to="/clients" className={linkClass}>
                         Clients
                     </NavLink>
-
                 </nav>
             </div>
 
            
-            <div>
+            <div className="mt-auto mb-4 pt-4">
                 <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 rounded-lg text-red-400 hover:bg-red-500/10"
+                    className="w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium
+    text-slate-400 transition-all duration-200
+    hover:bg-red-500/10 hover:text-red-400"
                 >
                     Logout
                 </button>

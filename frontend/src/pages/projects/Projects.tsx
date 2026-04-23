@@ -4,6 +4,7 @@ import { getProjects } from "@/api/projects";
 import StatusBadge from "@/components/project/ProjectStatusBadge";
 import { ProjectStatus } from "@/types/Project";
 import CreateProjectModal from "@/components/CreateProjectModal";
+
 export interface Project {
     _id: string;
     title: string;
@@ -30,81 +31,121 @@ export default function Projects() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#0B0F19] text-white p-8">
-            <div className="max-w-7xl mx-auto">
+       
+        <div className="max-w-7xl mx-auto space-y-8">
 
-                <div className="flex justify-between items-center mb-10">
-                    <h1 className="text-2xl font-semibold">Projects</h1>
+           
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-semibold tracking-tight text-slate-100">
+                    Projects
+                </h1>
 
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-lg font-medium"
-                    >
-                        + New Project
-                    </button>
-                   
+                <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="relative inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium
+            bg-indigo-500 text-white
+            transition-all duration-300 ease-out
+            hover:bg-indigo-400 hover:shadow-lg hover:shadow-indigo-500/20
+            active:scale-[0.97]"
+                >
+                    + New Project
+                </button>
+            </div>
+
+            
+            {loading && (
+                <div className="text-sm text-slate-400 animate-pulse">
+                    Loading projects...
                 </div>
+            )}
 
-                {loading && (
-                    <div className="text-gray-400">Loading projects...</div>
-                )}
+            
+            {!loading && projects.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-20
+        border border-dashed border-slate-800 rounded-xl text-center
+        transition-all duration-300">
 
-             
-                {!loading && projects.length === 0 && (
-                    <div className="text-center py-20 text-gray-500 border border-dashed border-gray-700 rounded-xl">
-                        No projects yet. Create your first project 🚀
-                    </div>
-                )}
+                    <p className="text-sm text-slate-400">
+                        No projects yet
+                    </p>
 
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {projects.map((project) => (
-                        <a
-                            key={project._id}
-                            href={`/projects/${project._id}`}
-                            className="group bg-[#111827] border border-gray-800 rounded-2xl p-5 hover:border-indigo-500 transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/10"
-                        >
+                    <p className="text-xs text-slate-500 mt-1">
+                        Create your first project to get started
+                    </p>
+                </div>
+            )}
 
-                           
-                            <h2 className="text-lg font-semibold group-hover:text-indigo-400 transition">
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                {projects.map((project) => (
+                    <a
+                        key={project._id}
+                        href={`/projects/${project._id}`}
+                        className="group relative overflow-hidden
+                bg-slate-900 border border-slate-800 rounded-xl p-5
+
+                transition-all duration-300 ease-out
+
+                hover:-translate-y-1
+                hover:border-indigo-500/40
+                hover:shadow-xl hover:shadow-indigo-500/10
+
+                active:scale-[0.99]"
+                    >
+
+                       
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none
+                bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent" />
+
+                       
+                        <div className="relative z-10">
+
+                            <h2 className="text-base font-medium text-slate-100
+                    transition-all duration-300
+                    group-hover:text-indigo-400">
                                 {project.title}
                             </h2>
 
-                            <p className="text-sm text-gray-500 mt-1">
-                                Client : {project.clientId?.name}
-                            </p>
-
-                            <p className="text-sm text-gray-400 mt-2 line-clamp-2">
-                                {project.description || "No description"}
+                            
+                            <p className="text-xs text-slate-500 mt-1">
+                                {project.clientId?.name}
                             </p>
 
                            
-                            <div className="mt-6 flex justify-between items-center">
+                            <p className="text-sm text-slate-400 mt-3 line-clamp-2">
+                                {project.description || "No description"}
+                            </p>
 
-                                
+                            
+                            <div className="mt-5 flex items-center justify-between
+                    transition-all duration-300 group-hover:translate-y-[2px]">
+
                                 <StatusBadge status={project.status} />
 
-                                
                                 {project.budget && (
-                                    <span className="text-sm text-gray-400">
+                                    <span className="text-sm text-slate-400 tabular-nums">
                                         ₹{project.budget}
                                     </span>
                                 )}
                             </div>
-                        </a>
-                    ))}
-                </div>
 
-                <CreateProjectModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    onSuccess={async () => {
-                        const data = await getProjects();
-                        setProjects(data);
-                    }}
-                />
+                        </div>
+                    </a>
+                ))}
 
             </div>
+
+            <CreateProjectModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSuccess={async () => {
+                    const data = await getProjects();
+                    setProjects(data);
+                }}
+            />
+
         </div>
     );
 }
+
