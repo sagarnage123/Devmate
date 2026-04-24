@@ -1,5 +1,6 @@
 import { useProjectContext } from "@/context/ProjectContext";
 import { cardInteractiveStyles,sectionPadding } from "@/components/ui/styles";
+import ProjectHeader from "@/components/project/ProjectHeader";
 function formatDate(date: string) {
     return new Date(date).toLocaleDateString(undefined, {
         day: "2-digit",
@@ -12,6 +13,8 @@ export default function ProjectOverview() {
     const project = useProjectContext();
 
     return (
+       
+
         <div className="grid gap-6 md:grid-cols-2 items-stretch">
 
             
@@ -76,5 +79,6 @@ export default function ProjectOverview() {
                 </p>
             </div>
         </div>
+
     );
 }

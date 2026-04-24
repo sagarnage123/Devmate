@@ -7,34 +7,60 @@ const tabs = [
     { label: "Kanban", path: "kanban" },
     { label: "Settings", path: "settings" },
 ];
-
 export default function ProjectTabs({ projectId }: { projectId: string }) {
     return (
-        <div className="border-b border-slate-200">
-            <div className="flex gap-8 text-sm">
-                {tabs.map(tab => (
-                    <NavLink
-                        key={tab.path}
-                        to={`/projects/${projectId}/${tab.path}`}
-                    >
-                        {({ isActive }) => (
-                            <div
-                                className={`relative pb-3 transition-all duration-200 ease-out ${isActive
-                                        ? "text-slate-900 font-medium"
-                                        : "text-slate-500 hover:text-slate-900"
-                                    }`}
-                            >
-                                {tab.label}
+       
+        <div className="
+sticky top-0 z-40
+bg-[#0B0F19]/60 backdrop-blur-sm
+border-b border-white/5
+">
 
-                              
-                                <span
-                                    className={`absolute left-0 bottom-0 h-[1.5px] w-full rounded-full transition-all ${isActive ? "bg-slate-900/80" : "bg-transparent"
-                                        }`}
-                                />
-                            </div>
-                        )}
-                    </NavLink>
-                ))}
+            <div className="flex justify-center py-3">
+
+                <div className="
+        inline-flex items-center gap-1
+        bg-[#0F172A] border border-white/10
+        rounded-lg p-1
+        ">
+
+                    {tabs.map(tab => (
+                        <NavLink
+                            key={tab.path}
+                            to={`/projects/${projectId}/${tab.path}`}
+                        >
+                            {({ isActive }) => (
+                                <div
+                                    className={`
+                            relative px-4 py-2 text-sm rounded-md
+                            transition-all duration-200 ease-out
+
+                            ${isActive
+                                            ? "text-white"
+                                            : "text-slate-400 hover:text-slate-200"
+                                        }
+                            `}
+                                >
+                                    {isActive && (
+                                        <span className="
+                                absolute inset-0 rounded-md
+                                bg-indigo-500/10
+                                border border-indigo-500/20
+                                shadow-sm shadow-indigo-500/10
+                                " />
+                                    )}
+
+                                    <span className="relative z-10">
+                                        {tab.label}
+                                    </span>
+
+                                </div>
+                            )}
+                        </NavLink>
+                    ))}
+
+                </div>
+
             </div>
         </div>
     );
