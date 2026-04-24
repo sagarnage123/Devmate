@@ -113,7 +113,7 @@ export default function Projects() {
                             </p>
 
                            
-                            <p className="text-sm text-slate-400 mt-3 line-clamp-2">
+                            <p className="text-sm text-slate-400 mt-3 line-clamp-2 mb-auto">
                                 {project.description || "No description"}
                             </p>
 

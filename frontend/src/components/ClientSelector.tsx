@@ -52,9 +52,9 @@ export default function ClientSelector({
     };
 
     return (
-        <div className={`${isModalOpen ? "pointer-events-none opacity-50" : "" }`} >
-            
+        <div className={`relative ${isModalOpen ? "pointer-events-none opacity-50" : ""}`}>
 
+            
             <input
                 placeholder="Search or create client..."
                 value={query}
@@ -63,34 +63,63 @@ export default function ClientSelector({
                     setShowDropdown(true);
                 }}
                 onChange={(e) => setQuery(e.target.value)}
-                className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                className="w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+        placeholder:text-slate-500
+        focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40
+        transition-all duration-200"
             />
 
            
             {showDropdown && (
-                <div className="absolute w-full bg-[#1F2937] border border-gray-700 rounded-lg mt-1 z-10">
+                <div
+                    className="absolute left-0 right-0 mt-2 z-20
+            bg-[#0F172A] border border-white/10 rounded-xl
+            shadow-xl shadow-black/30
+            overflow-hidden
+            animate-in fade-in zoom-in-95 duration-200"
+                >
 
-                    {filtered.map((client) => (
-                        <div
-                            key={client.id}
-                            onClick={() => {
-                                setSelectedClient(client);
-                                setQuery(client.name);
-                                setShowDropdown(false);
-                            }}
-                            className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
-                        >
-                            {client.name}
-                        </div>
-                    ))}
+                   
+                    <div className="max-h-56 overflow-y-auto no-scrollbar">
+
+                        {filtered.length > 0 ? (
+                            filtered.map((client) => (
+                                <div
+                                    key={client.id}
+                                    onClick={() => {
+                                        setSelectedClient(client);
+                                        setQuery(client.name);
+                                        setShowDropdown(false);
+                                    }}
+                                    className="px-3 py-2 text-sm text-slate-300
+                            hover:bg-[#111827] hover:text-white
+                            cursor-pointer transition-all duration-150"
+                                >
+                                    {client.name}
+                                </div>
+                            ))
+                        ) : (
+                            <div className="px-3 py-2 text-sm text-slate-500">
+                                No clients found
+                            </div>
+                        )}
+
+                    </div>
+
+                  
+                    <div className="border-t border-white/10" />
 
                    
                     <div
                         onClick={() => setIsModalOpen(true)}
-                        className={`px-4 py-2 hover:bg-gray-700 cursor-pointer text-green-500 font-semibold flex items-center gap-1}`}
+                        className="px-3 py-2 text-sm font-medium
+                text-indigo-400 hover:text-indigo-300
+                hover:bg-indigo-500/10
+                cursor-pointer transition-all duration-150 flex items-center gap-1"
                     >
-                        + Create {query}
+                        + Create "{query || "new client"}"
                     </div>
+
                 </div>
             )}
 

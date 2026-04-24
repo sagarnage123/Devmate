@@ -4,7 +4,7 @@ import { createProject } from "../api/projects";
 import ClientSelector from "./ClientSelector";
 import type { Client } from "../types/Client";
 import toast from "react-hot-toast";
-
+import { motion, AnimatePresence } from "framer-motion";
 interface Props {
     isOpen: boolean;
     onClose: () => void;
@@ -25,28 +25,7 @@ export default function CreateProjectModal({
 
     const [loading, setLoading] = useState(false);
 
-    const [shouldRender, setShouldRender] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
-
-    useEffect(() => {
-        if (isOpen) {
-            setShouldRender(true);
-
-            requestAnimationFrame(() => {
-                setIsVisible(true);
-            });
-        } else {
-            setIsVisible(false);
-
-            const timeout = setTimeout(() => {
-                setShouldRender(false);
-            }, 300); 
-
-            return () => clearTimeout(timeout);
-        }
-    }, [isOpen]);
-
-
+   
 
     const handleSubmit = async () => {
         if (!title || !selectedClient) {
@@ -83,31 +62,41 @@ export default function CreateProjectModal({
         }
     };
 
-    if (!shouldRender) return null;
-
-   
     return (
-        <div
-            className={`
-    fixed inset-0 z-50 flex items-center justify-center
-    transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
-    ${isVisible ? "bg-black/60 backdrop-blur-md" : "bg-black/0 backdrop-blur-0"}
-`}
-        >
-            <div
-                className={`
-        w-full max-w-lg rounded-2xl p-6
-        transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    className="fixed inset-0 z-50 flex items-center justify-center"
 
-        ${isVisible
-                        ? "opacity-100 translate-y-0 scale-100"
-                        : "opacity-0 translate-y-8 scale-95"
-                    }
+                    initial={{ opacity: 0,backdropFilter: "blur(0px)" }}
+                    animate={{ opacity: 1, backdropFilter: "blur(8px)" }}
+                    exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
 
-        bg-[#0F172A] border border-white/10
-        shadow-2xl shadow-black/40
-    `}
-            >
+                    transition={{
+                        duration: 0.3,
+                        ease: [0.22, 1, 0.36, 1],
+                        delay: 0.05
+                    }}
+                >
+
+                    
+                  
+                  
+                    <motion.div
+                        className="relative w-full max-w-lg rounded-2xl p-6
+                bg-[#0F172A] border border-white/10
+                shadow-2xl shadow-black/40"
+
+                        initial={{ opacity: 0, y: 40, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 30, scale: 0.96 }}
+
+                        transition={{
+                            duration: 0.3,
+                            ease: [0.22, 1, 0.36, 1],
+                            delay: 0.05
+                        }}
+                    >
 
                 <h2 className="text-lg font-semibold tracking-tight text-slate-100 mb-6">
                     Create Project
@@ -189,7 +178,10 @@ export default function CreateProjectModal({
 
                 </div>
 
-            </div>
-        </div>
+                    </motion.div>
+
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }
