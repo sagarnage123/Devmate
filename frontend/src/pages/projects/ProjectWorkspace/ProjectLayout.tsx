@@ -31,7 +31,7 @@ export default function ProjectLayout() {
 
     return (
         <ProjectProvider project={project}>
-            <div className="text-slate-100">
+            <div className="text-slate-100 overflow-y-auto no-scrollbar h-full">
 
                 <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
 

@@ -77,28 +77,46 @@ export default function ProjectSettings() {
     };
     
     return (
-        <div className="bg-slate-200 p-6 rounded-2xl">
+        <div className="
+    bg-[#0F172A] border border-white/10 rounded-xl
+    p-6 space-y-8
+    ">
 
-            <h2 className="text-xl font-semibold mb-6">
-                Project Settings
-            </h2>
+           
+            <div>
+                <h2 className="text-lg font-semibold text-white">
+                    Project Settings
+                </h2>
+                <p className="text-sm text-slate-400 mt-1">
+                    Update your project details and preferences
+                </p>
+            </div>
 
+           
             <div className="space-y-4">
 
-               
                 <input
                     value={form.title}
                     onChange={(e) => handleChange("title", e.target.value)}
-                    className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                    placeholder="Project title"
+                    className="
+                w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+                placeholder:text-slate-500
+                focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40
+                transition-all duration-200
+                "
                 />
 
-               
                 <select
                     value={form.status}
                     onChange={(e) =>
                         handleChange("status", e.target.value as ProjectStatus)
                     }
-                    className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                    className="
+                w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+                focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40
+                transition-all duration-200
+                "
                 >
                     <option value="planned">Planned</option>
                     <option value="in-progress">In Progress</option>
@@ -106,50 +124,72 @@ export default function ProjectSettings() {
                     <option value="completed">Completed</option>
                 </select>
 
-               
                 <input
                     type="number"
                     value={form.budget || ""}
                     onChange={(e) =>
                         handleChange("budget", Number(e.target.value))
                     }
-                    className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                    placeholder="Budget"
+                    className="
+                w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+                placeholder:text-slate-500
+                focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40
+                transition-all duration-200
+                "
                 />
 
-               
                 <textarea
                     value={form.description || ""}
                     onChange={(e) =>
                         handleChange("description", e.target.value)
                     }
-                    className="w-full bg-transparent border border-gray-700 rounded-lg px-4 py-2"
+                    placeholder="Description"
+                    rows={3}
+                    className="
+                w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+                placeholder:text-slate-500
+                focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40
+                transition-all duration-200 overflow-y-auto no-scrollbar
+                "
                 />
 
             </div>
 
-            <div className="mt-10 border-t pt-6 mb-3">
+            
+            <div className="h-px bg-white/10" />
 
-                <h3 className="text-red-400 font-semibold mb-3">
+           
+            <div className="space-y-3">
+
+                <h3 className="text-sm font-medium text-red-400">
                     Danger Zone
                 </h3>
 
-               
-                <div className="flex items-center justify-between gap-4">
+                <div className="
+            flex items-center justify-between gap-4
+            bg-red-500/5 border border-red-500/10 rounded-lg p-4
+            ">
 
-                    
-                    <div className="text-sm text-gray-400 min-h-[24px] flex items-center">
+                 
+                    <div className="text-sm text-slate-400">
                         {confirmDelete
-                            ? "Are you sure? This cannot be undone."
+                            ? "Are you sure? This action cannot be undone."
                             : "Delete this project permanently"}
                     </div>
 
-                   
-                    <div className="flex items-center gap-2 min-w-[220px] justify-end">
+                    
+                    <div className="flex items-center gap-2">
 
                         {!confirmDelete ? (
                             <button
                                 onClick={() => setConfirmDelete(true)}
-                                className="bg-red-600 hover:bg-red-500 px-4 py-2 rounded-lg"
+                                className="
+                            px-3 py-1.5 text-sm rounded-lg
+                            text-red-400 hover:text-red-300
+                            hover:bg-red-500/10
+                            transition-all duration-200
+                            "
                             >
                                 Delete
                             </button>
@@ -158,36 +198,51 @@ export default function ProjectSettings() {
                                 <button
                                     onClick={handleDelete}
                                     disabled={deleting}
-                                    className="bg-red-600 px-4 py-2 rounded-lg"
+                                    className="
+                                px-3 py-1.5 text-sm rounded-lg
+                                bg-red-600 text-white
+                                hover:bg-red-500
+                                transition-all duration-200
+                                "
                                 >
                                     {deleting ? "Deleting..." : "Confirm"}
                                 </button>
 
                                 <button
                                     onClick={() => setConfirmDelete(false)}
-                                    className="bg-gray-600 px-4 py-2 rounded-lg"
+                                    className="
+                                px-3 py-1.5 text-sm rounded-lg
+                                text-slate-400 hover:text-white
+                                hover:bg-slate-800
+                                transition-all duration-200
+                                "
                                 >
                                     Cancel
                                 </button>
                             </>
                         )}
-                    </div>
 
+                    </div>
                 </div>
             </div>
 
-           
-            <div className="mt-6 flex justify-end">
+            
+            <div className="flex justify-end pt-2">
                 <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="bg-indigo-600 px-5 py-2 rounded-lg"
+                    className="
+                px-5 py-2 rounded-lg text-sm font-medium
+                bg-indigo-500 text-white
+                transition-all duration-300 ease-out
+                hover:bg-indigo-400 hover:shadow-lg hover:shadow-indigo-500/20
+                active:scale-[0.97]
+                "
                 >
                     {saving ? "Saving..." : "Save Changes"}
                 </button>
             </div>
 
-            
         </div>
     );
 }

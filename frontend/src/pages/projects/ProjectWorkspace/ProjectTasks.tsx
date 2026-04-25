@@ -1,9 +1,10 @@
 import { useProjectContext } from "@/context/ProjectContext";
 import { useProjectTasks } from "@/hooks/useProjectTasks";
-import { cardStyles, sectionPadding, titleText } from "@/components/ui/styles";
+
 import { useEffect, useRef, useState } from "react";
 import TaskEditModal from "@/components/TaskEditModal";
 import { Task } from "@/types/Task";
+import toast from "react-hot-toast";
 
 
 export default function ProjectTasks() {
@@ -31,6 +32,8 @@ export default function ProjectTasks() {
 
         await updateTask(editingTask._id, form);
 
+        toast.success("Task updated",{icon:"✏️"});
+
         setIsModalOpen(false);
         setEditingTask(null);
     }
@@ -42,7 +45,7 @@ export default function ProjectTasks() {
                 {[1, 2, 3].map(i => (
                     <div
                         key={i}
-                        className="h-20 bg-slate-200 rounded-lg animate-pulse"
+                        className="h-20 bg-[#111827] border border-white/10 rounded-lg animate-pulse"
                     />
                 ))}
             </div>
@@ -61,7 +64,7 @@ export default function ProjectTasks() {
             <div className="
 bg-[#0F172A] border border-white/10 rounded-lg px-3 py-2
 focus-within:border-indigo-500/40
-transition-all duration-200
+transition-all duration-200 
 ">
                 <input
                     type="text"
@@ -83,9 +86,10 @@ transition-all duration-200
 
                         try {
                             await createTask({ title: trimmed, priority: "Medium" });
+                            toast.success("Task created",{icon:"✅"});
                             setTitle("");
                         } catch (err) {
-
+                            toast.error("Failed to create task");
                         }
                     }}
                 />
@@ -147,6 +151,7 @@ bg-[#0F172A] border border-white/10 rounded-xl p-5
                                                 <button
                                                     onClick={async () => {
                                                         await deleteTask(task._id);
+                                                        toast.success("Task deleted",{icon:"🗑️"});
                                                         setDeletingId(null);
                                                     }}
                                                     className="

@@ -1,5 +1,6 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Task } from "../types/Task";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface TaskForm {
     title: string;
@@ -14,49 +15,30 @@ interface TaskEditModalProps {
     onClose: () => void;
     onSave: (form: TaskForm) => void;
 }
+
 export default function TaskEditModal({
     task,
     isOpen,
     onClose,
     onSave
-}:TaskEditModalProps){
-    const [form,setForm]=useState<TaskForm>({
+}: TaskEditModalProps) {
+
+    const [form, setForm] = useState<TaskForm>({
         title: "",
         description: "",
         priority: "",
         dueDate: ""
     });
-    const [show, setShow] = useState(false);
-    const [animateIn, setAnimateIn] = useState(false);
 
-    
-    useEffect(()=>{
-        if(task)
+    useEffect(() => {
+        if (task)
             setForm({
                 title: task.title,
                 description: task.description ?? "",
                 priority: task.priority ?? "",
                 dueDate: task.dueDate ? task.dueDate.split("T")[0] : ""
             });
-
-    },[task]);
-
-    useEffect(() => {
-        if (isOpen) {
-            setShow(true);
-
-           
-            setTimeout(() => {
-                setAnimateIn(true);
-            }, 70);
-        } else {
-            setAnimateIn(false);
-
-            setTimeout(() => {
-                setShow(false);
-            }, 200);
-        }
-    }, [isOpen]);
+    }, [task]);
 
     useEffect(() => {
         function handleEsc(e: KeyboardEvent) {
@@ -67,72 +49,129 @@ export default function TaskEditModal({
         return () => window.removeEventListener("keydown", handleEsc);
     }, [onClose]);
 
-    if (!isOpen && !show) return null;
-
     return (
-        <div
-            onClick={onClose}
-            className={`fixed inset-0 bg-black/30 flex items-center justify-center z-50 transition-opacity duration-250 ease-in ${animateIn ? "opacity-100" : "opacity-0"
-                }`}
-        >
-            <div
-                onClick={(e) => e.stopPropagation()}
-                className={`bg-white border border-slate-200 rounded-xl shadow-sm w-full max-w-md p-5 space-y-4 transform transition-all duration-250 ease-in ${animateIn
-                        ? "opacity-100 scale-100 translate-y-0"
-                        : "opacity-0 scale-95 translate-y-2"
-                    }`}
-            >
-                <h2 className="text-lg font-semibold text-slate-900 mb-3">Edit task</h2>
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    onClick={onClose}
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
 
-                <input type="text"
-                value={form.title}
-                onChange={(e)=>{setForm({...form,title:e.target.value})}} 
-                placeholder="Title"
-                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:outline-none focus:border-slate-300"
-                />
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
 
-                <textarea value={form.description}
-                onChange={(e)=>{setForm({...form,description:e.target.value})}}
-                    placeholder="Description"
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:outline-none focus:border-slate-300"
-                    rows={3}
-                />
-                <select
-                    value={form.priority}
-                    onChange={(e) => setForm({ ...form, priority: e.target.value })}
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-md focus:outline-none focus:border-slate-300"
+                    transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                 >
-                    <option value="">Select priority</option>
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                </select>
+                    <motion.div
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-full max-w-md p-5 space-y-4
+                        bg-[#0F172A] border border-white/10 rounded-xl
+                        shadow-2xl shadow-black/40"
 
-                <input
-                    type="date"
-                    value={form.dueDate}
-                    onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
-                    className="w-full mb-3 p-2 border rounded"
-                />
+                        initial={{ opacity: 0, y: 40, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 30, scale: 0.96 }}
 
-                <div className="flex justify-end gap-2">
-                    <button
-                        onClick={onClose}
-                        className="px-3 py-1.5 text-sm border border-slate-200 rounded-md text-slate-600 hover:bg-slate-100 transition-colors"
+                        transition={{
+                            duration: 0.3,
+                            ease: [0.22, 1, 0.36, 1]
+                        }}
                     >
-                        Cancel
-                    </button>
-                    <button
+
+                       
+                        <h2 className="text-lg font-semibold text-white tracking-tight">
+                            Edit Task
+                        </h2>
+
                         
-                        onClick={() => onSave(form)}
-                        className="px-3 py-1.5 text-sm bg-slate-900 text-white rounded-md hover:bg-slate-800 transition-colors"
-                    >
-                        Save
-                    </button>
-                </div>
+                        <input
+                            type="text"
+                            value={form.title}
+                            onChange={(e) => setForm({ ...form, title: e.target.value })}
+                            placeholder="Title"
+                            className="
+                            w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+                            placeholder:text-slate-500
+                            focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40
+                            transition-all duration-200
+                            "
+                        />
 
-            </div>
-        </div>
+                        
+                        <textarea
+                            value={form.description}
+                            onChange={(e) => setForm({ ...form, description: e.target.value })}
+                            placeholder="Description"
+                            rows={3}
+                            className="
+                            w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+                            placeholder:text-slate-500
+                            focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40
+                            transition-all duration-200 overflow-y-auto no-scrollbar
+                            "
+                        />
 
-    )
+                       
+                        <select
+                            value={form.priority}
+                            onChange={(e) => setForm({ ...form, priority: e.target.value })}
+                            className="
+                            w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+                            focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40
+                            transition-all duration-200
+                            "
+                        >
+                            <option value="">Select priority</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+
+                      
+                        <input
+                            type="date"
+                            value={form.dueDate}
+                            onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
+                            className="
+                            w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+                            focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40
+                            transition-all duration-200
+                            "
+                        />
+
+                       
+                        <div className="flex justify-end gap-2 pt-2">
+
+                            <button
+                                onClick={onClose}
+                                className="
+                                px-3 py-1.5 text-sm rounded-lg
+                                text-slate-400 hover:text-white
+                                hover:bg-slate-800
+                                transition-all duration-200
+                                "
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                onClick={() => onSave(form)}
+                                className="
+                                px-3 py-1.5 text-sm rounded-lg font-medium
+                                bg-indigo-500 text-white
+                                transition-all duration-300 ease-out
+                                hover:bg-indigo-400 hover:shadow-lg hover:shadow-indigo-500/20
+                                active:scale-[0.97]
+                                "
+                            >
+                                Save
+                            </button>
+
+                        </div>
+
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
 }

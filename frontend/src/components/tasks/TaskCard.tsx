@@ -16,20 +16,38 @@ export default function TaskCard({
     isUpdating
 }: Props) {
     return (
-        <div className={`group border border-slate-200 rounded-lg p-3 space-y-2 
-hover:border-slate-300 hover:shadow-sm hover:-translate-y-[1px] 
-transition-all duration-200
-${isUpdating ? "opacity-0 scale-95" : "opacity-100 scale-100"}
-`}>
+        <div className={`
+        group
+        bg-[#111827] border border-white/10 rounded-lg p-3 space-y-2
 
+        transition-all duration-200 ease-out
+        hover:border-indigo-500/30 hover:-translate-y-[1px]
+        hover:shadow-md hover:shadow-indigo-500/5
+
+        ${isUpdating ? "cursor-not-allowed opacity-70" : "cursor-pointer"}
+        `}
+            onClick={() => !isUpdating && onEdit(task)}
+        >
+           
             <div className="flex justify-between items-center gap-3">
-                <span className="font-medium text-slate-800">
+
+                <span className="font-medium text-slate-200 leading-snug">
                     {task.title}
                 </span>
 
                 <button
                     onClick={() => onStatusChange(task._id, task.status)}
-                    className="text-xs font-medium px-2 py-1 rounded-md bg-slate-100 hover:bg-slate-200 transition-colors capitalize"
+                    className={`
+                    text-xs font-medium px-2 py-1 rounded-md capitalize
+                    transition-all duration-200
+
+                    ${task.status === "Done"
+                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                            : task.status === "In Progress"
+                                ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20"
+                                : "bg-slate-500/10 text-slate-400 border border-white/10"
+                        }
+                    `}
                 >
                     {task.status}
                 </button>
@@ -37,18 +55,38 @@ ${isUpdating ? "opacity-0 scale-95" : "opacity-100 scale-100"}
 
             
             {task.description && (
-                <p className="text-sm text-slate-600 line-clamp-2 cursor-pointer">
+                <p className="
+                text-sm text-slate-400 line-clamp-2 cursor-pointer
+                hover:text-slate-200 transition-colors
+                ">
                     {task.description}
                 </p>
             )}
 
-            
+          
             <div className="flex justify-between items-center text-xs text-slate-500">
-                <span>{task.priority}</span>
+
+                <span className={`
+                font-medium
+                ${task.priority === "High"
+                        ? "text-red-400"
+                        : task.priority === "Medium"
+                            ? "text-amber-400"
+                            : "text-slate-400"
+                    }
+                `}>
+                    {task.priority}
+                </span>
 
                 <button
                     onClick={() => onDelete(task._id)}
-                    className="opacity-0 group-hover:opacity-100 text-red-500"
+                    className="
+                    opacity-0 group-hover:opacity-100
+                    text-red-400
+                    px-2 py-1 rounded-md
+                    hover:bg-red-500/10 hover:text-red-300
+                    transition-all duration-200
+                    "
                 >
                     Delete
                 </button>

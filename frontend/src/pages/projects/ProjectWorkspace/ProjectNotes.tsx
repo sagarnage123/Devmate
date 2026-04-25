@@ -1,6 +1,7 @@
 import { useProjectContext } from "@/context/ProjectContext";
 import { useProjectNotes } from "@/hooks/useProjectNotes";
 import { useState } from "react";
+import toast from "react-hot-toast";
 export default function ProjectNotes() {
     const project = useProjectContext();
     const { notes, loading, error, createNote, updateNote, deleteNote } =
@@ -8,55 +9,71 @@ export default function ProjectNotes() {
     const [content, setContent] = useState("");
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editingContent, setEditingContent] = useState("");
-    
+
     return (
         <div className="space-y-6">
 
-           
-            <div className="w-full text-sm outline-none resize-none placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-lg border border-slate-200 p-3 bg-white/80 backdrop-blur-sm shadow-sm transition-colors">
+
+            <div className="
+bg-[#0F172A] border border-white/10 rounded-xl
+p-3 transition-all duration-200
+focus-within:border-indigo-500/40 focus-within:shadow-md focus-within:shadow-indigo-500/5
+">
                 <textarea
-                    placeholder="Add note..."
-                    className="w-full text-sm border-none p-3 outline-none resize-none  transition-colors"
+                    placeholder="Write a note… (Enter to save, Shift+Enter for new line)"
+                    className="
+    w-full bg-transparent text-sm text-slate-200
+    placeholder:text-slate-500
+    outline-none resize-none
+    leading-relaxed no-scrollbar
+    "
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     onKeyDown={async (e) => {
                         if (e.key !== "Enter" || e.shiftKey) return;
 
-                       
-                        
+
+
                         e.preventDefault();
-                        
+
                         const trimmed = content.trim();
-                       
+
                         if (!trimmed) return;
 
                         try {
                             await createNote({ content: trimmed });
+                            toast .success("Note added",{icon:"📝"});
                             setContent("");
                         } catch (err) {
-                           
+                            toast.error("Failed to add note");
                         }
                     }}
                     disabled={loading}
                 />
             </div>
 
-           
+
             {notes.length === 0 ? (
                 <p className="text-sm text-slate-500">
-                    No notes yet. Add one above.
+                    No notes yet. Start writing above.
                 </p>
             ) : (
-                notes.map(note => ( 
+                notes.map(note => (
                     <div
                         key={note._id}
-                        
+                        className="space-y-3"
                     >
                         {editingId === note._id ? (
                             <textarea
                                 value={editingContent}
                                 onChange={(e) => setEditingContent(e.target.value)}
-                                className="w-full text-sm border border-slate-200 rounded-lg p-3 outline-none resize-none  transition-colors"
+                                className="
+w-full bg-[#111827] border border-indigo-500/30 rounded-lg p-3
+text-sm text-slate-200
+outline-none resize-none
+focus:ring-2 focus:ring-indigo-500/30
+transition-all duration-200 no-scrollbar h-auto max-h-100x
+"
                                 rows={2}
                                 autoFocus
                                 onKeyDown={async (e) => {
@@ -83,23 +100,41 @@ export default function ProjectNotes() {
                                     setEditingId(note._id);
                                     setEditingContent(note.content);
                                 }}
-                                className="group border border-slate-200 rounded-lg p-3 text-sm text-slate-700 hover:border-slate-300 transition-colors cursor-pointer flex justify-between items-start"
-                            >
-                                    <span>{note.content}</span>
+                                    className="
+group
+bg-[#111827] border border-white/10 rounded-lg p-3
 
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            deleteNote(note._id);
-                                        }}
-                                        className="opacity-0 group-hover:opacity-100 text-xs text-red-500 border bg-red-100 border-red-500 rounded-lg px-2 py-0.5 transition-opacity"
-                                    >
-                                        Delete
-                                    </button>
+text-sm text-slate-300
+flex justify-between items-start gap-3
+
+transition-all duration-200 ease-out
+hover:border-indigo-500/30 hover:-translate-y-[1px]
+hover:shadow-md hover:shadow-indigo-500/5
+cursor-pointer
+"
+                            >
+                                     <span className="leading-relaxed">{note.content}</span>
+
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteNote(note._id);
+                                        toast.success("Note deleted",{icon:"🗑️"});
+                                    }}
+                                        className="
+opacity-0 group-hover:opacity-100
+text-xs text-red-400
+px-2 py-1 rounded-md
+hover:bg-red-500/10 hover:text-red-300
+transition-all duration-200
+"
+                                >
+                                    Delete
+                                </button>
                             </div>
                         )}
                     </div>
-                     
+
                 ))
             )}
 

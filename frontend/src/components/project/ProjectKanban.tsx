@@ -33,40 +33,84 @@ export default function ProjectKanban() {
 
     return (
 
-        <div className="space-y-3 min-h-2">
-            <div className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl p-4 space-y-4 shadow-sm transition-all duration-300">
-                <div className="flex justify-between text-sm text-slate-600">
+        <div className="space-y-4 pb-4">
+
+            <div className="
+bg-[#0F172A] border border-white/10 rounded-xl p-4 space-y-4
+">
+                <div className="flex justify-between text-sm text-slate-400">
                     <span>Progress</span>
-                    <span>{Math.round(progress)}%</span>
+                    <span className="text-slate-200 font-medium">
+                        {Math.round(progress)}%
+                    </span>
                 </div>
 
-                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                
+                <div className="relative h-2 rounded-full bg-[#111827] overflow-hidden ">
+
                     <div
-                        className={`h-full ${progressColor} transition-all duration-500 ease-out`}
+                        className={`h-full ${progressColor} rounded-full trasniton-colors duration-300 ease-in-out`}
                         style={{ width: `${progress}%` }}
                     />
+
+                    <div
+                        className={`absolute top-0 left-0 h-full ${progressColor} opacity-30 blur-sm`}
+                        style={{ width: `${progress}%` }}
+                    />
+
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            
+
+
+            <div className="
+grid grid-cols-1 md:grid-cols-3 gap-5
+items-start
+">
 
                 {Object.entries(columns).map(([status, tasks]) => (
                     <div
                         key={status}
-                        className="bg-white border border-slate-200 rounded-xl p-4 space-y-3 min-h-[300px]"
+                        className={`
+    flex flex-col
+    bg-[#0F172A] border border-white/10 rounded-xl
+    p-3 gap-3 h-[420px]
+
+    ${status === "todo" ? "border-l-2 border-l-slate-500/30" : ""}
+    ${status === "in-progress" ? "border-l-2 border-l-indigo-500/40" : ""}
+    ${status === "done" ? "border-l-2 border-l-emerald-500/40" : ""}
+`}
                     >
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-sm font-semibold text-slate-800 capitalize tracking-tight">
+                        <div className="
+                            sticky top-0 z-10
+                            bg-[#0F172A]/90 backdrop-blur-sm
+                            pb-2
+                            flex items-center justify-between
+                            ">
+
+                            <h3 className="
+    text-sm font-medium text-slate-300 capitalize tracking-tight
+    ">
                                 {status.replace("-", " ")}
                             </h3>
 
-                            <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                            <span className="
+    text-xs text-slate-400
+    bg-[#111827] border border-white/10
+    px-2 py-0.5 rounded-md
+    ">
                                 {tasks.length}
                             </span>
+
                         </div>
 
-                        <div className="space-y-3 transition-all duration-500 ease-out">
+                        <div className="flex-1 overflow-y-auto space-y-3 pr-1 no-scrollbar">
                             {tasks.length === 0 ? (
-                                <div className="text-xs text-slate-400 text-center py-6 border border-dashed border-slate-200 rounded-lg">
+                                <div className="
+                                        text-xs text-slate-500 text-center py-6
+                                        border border-dashed border-white/10 rounded-lg
+                                        ">
                                     No tasks
                                 </div>
                             ) : (
@@ -82,7 +126,7 @@ export default function ProjectKanban() {
                                             setTimeout(() => {
                                                 updateTaskStatus(taskId, status);
                                                 setUpdatingTaskId(null);
-                                            }, 120); 
+                                            }, 120);
                                         }}
                                         isUpdating={updatingTaskId === task._id}
                                     />
