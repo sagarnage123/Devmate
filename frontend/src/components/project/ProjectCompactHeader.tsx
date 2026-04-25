@@ -37,11 +37,9 @@ export default function ProjectCompactHeader({project}: {project: Project}) {
             {/* Right */}
             <div className="flex items-center gap-3">
 
-                {/* Status */}
-                <span className={`
-                px-2 py-0.5 text-xs rounded-full
-                ${getStatusStyles(project.status)}
-                `}>
+                <span
+                    className={`px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap hover:scale-105 transition-transform duration-200 ${getStatusStyles(project.status)}`}
+                >
                     {project.status}
                 </span>
 
