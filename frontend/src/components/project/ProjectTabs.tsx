@@ -12,7 +12,7 @@ export default function ProjectTabs({ projectId }: { projectId: string }) {
        
         <div className="
 sticky top-0 z-40
-bg-[#0B0F19]/60 backdrop-blur-sm
+bg-transparent 
 border-b border-white/5
 ">
 
