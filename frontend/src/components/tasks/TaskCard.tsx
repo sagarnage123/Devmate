@@ -1,4 +1,6 @@
 import { Task } from "@/types/Task";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 
 type Props = {
     task: Task;
@@ -15,20 +17,36 @@ export default function TaskCard({
     onStatusChange,
     isUpdating
 }: Props) {
+    const { attributes, listeners, setNodeRef, transform, isDragging } =
+        useDraggable({
+            id: task._id,
+            data: {
+                status: task.status,
+            },
+        });
+
+    const style = {
+        transform: CSS.Translate.toString(transform),
+    };
+
     return (
-        <div className={`
-        group
-        bg-[#111827] border border-white/10 rounded-lg p-3 space-y-2
+        <div
+            ref={setNodeRef}
+            {...listeners}
+            {...attributes}
+            style={style}
+            className={`
+    group
+    bg-[#111827] border border-white/10 rounded-lg p-3 space-y-2
 
-        transition-all duration-200 ease-out
-        hover:border-indigo-500/30 hover:-translate-y-[1px]
-        hover:shadow-md hover:shadow-indigo-500/5
+    transition-all duration-200 ease-out
+    hover:border-indigo-500/30 hover:-translate-y-[2px] hover:scale-[1.02]
+    active:scale-[0.98]
 
-        ${isUpdating ? "cursor-not-allowed opacity-70" : "cursor-pointer"}
-        `}
-            onClick={() => !isUpdating && onEdit(task)}
-        >
-           
+    ${isUpdating ? "opacity-0 scale-90 translate-y-2" : ""}
+    ${isDragging ? "opacity-0" : ""}
+    `}
+        >  
             <div className="flex justify-between items-center gap-3">
 
                 <span className="font-medium text-slate-200 leading-snug">
