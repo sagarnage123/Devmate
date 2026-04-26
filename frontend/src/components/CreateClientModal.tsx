@@ -53,11 +53,12 @@ export default function CreateClientModal({
 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                exit={{ opacity: 0 ,animationDuration:0.3}}
 
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
 
+                <AnimatePresence>
                 <motion.div
                     className="w-full max-w-md rounded-2xl p-6
                 bg-[#0F172A] border border-white/10
@@ -65,7 +66,7 @@ export default function CreateClientModal({
 
                     initial={{ opacity: 0, y: 40, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 30, scale: 0.96 }}
+                    exit={{ opacity: 0, y: 30, scale: 0.96 ,animationDuration: 0.3}}
 
                     transition={{
                         duration: 0.3,
@@ -99,7 +100,7 @@ export default function CreateClientModal({
                             className="w-full bg-[#111827] border border-white/10 rounded-lg px-3 py-2 text-sm text-white
                         placeholder:text-slate-500
                         focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500/40
-                        transition-all duration-200"
+                        transition-all duration-300"
                         />
 
                         <input
@@ -144,6 +145,7 @@ export default function CreateClientModal({
                     </div>
 
                 </motion.div>
+                </AnimatePresence>
             </motion.div>
         </AnimatePresence>,
         document.body

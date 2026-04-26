@@ -29,50 +29,141 @@ export default function Login(){
 
 
     return (
+        <div className="min-h-screen overflow-hidden flex items-center justify-center bg-[#0B0F19]">
 
-        <div className="min-h-screen flex justify-center items-center bg-gray-100">
-            <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
-                <h2 className="text-2xl font-semibold text-center mb-6">Login to your account</h2>
+           
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute w-[400px] h-[400px] bg-indigo-500/10 blur-3xl top-[-100px] left-[-100px]" />
+                <div className="absolute w-[300px] h-[300px] bg-indigo-500/10 blur-3xl bottom-[-100px] right-[-100px]" />
+            </div>
+           
+            <div className="
+        relative
+        w-full max-w-md
+        bg-[#111827]/90 backdrop-blur-md
+        border border-white/10
+        rounded-2xl p-8
 
-        
-        <form onSubmit={handleLogin}
-        className="space-y-5">
+        shadow-xl shadow-black/40
 
-          <div>
-            <label className="block text-gray-700 mb-1">Email</label>
+        transition-all duration-500 ease-out
+        animate-[fadeIn_0.6s_ease-out]
+        ">
+
+               
+                <h2 className="text-xl font-semibold text-center mb-6">
+                    Welcome back
+                </h2>
+
+                
+                <form
+                    onSubmit={handleLogin}
+                    className="space-y-5"
+                >
+
+                    
+                    <div className="space-y-1">
+                        <label className="text-sm text-slate-400">
+                            Email
+                        </label>
+
                         <input
                             type="email"
                             value={email}
                             placeholder="Enter your email"
-                            onChange={(e) =>
-                                setEmail(e.target.value)
-                            }
+                            onChange={(e) => setEmail(e.target.value)}
                             required
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue"
-                        />
-          </div>
+                            className="
+                                w-full px-4 py-2 rounded-lg
+                                bg-[#0B0F19]
+                                border border-white/10
 
-          <div>
-                        <label className="block text-gray-700 mb-1">Password</label>
+                                text-sm text-red placeholder:text-slate-500
+
+                                focus:outline-none
+                                focus:ring-2 focus:ring-indigo-500/40
+                                focus:border-indigo-500/40
+
+                                transition-all duration-200
+                                "
+                        />
+                    </div>
+
+                   
+                    <div className="space-y-1">
+                        <label className="text-sm text-slate-400">
+                            Password
+                        </label>
+
                         <input
                             type="password"
                             value={password}
-                            placeholder="Enter the password"
+                            placeholder="Enter your password"
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="w-full border px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue"
+                            className="
+                                w-full px-4 py-2 rounded-lg
+                                bg-[#0B0F19]
+                                border border-white/10
+
+                                text-sm text-white placeholder:text-slate-500
+
+                                focus:outline-none
+                                focus:ring-2 focus:ring-indigo-500/40
+                                focus:border-indigo-500/40
+
+                                transition-all duration-200
+                                "
                         />
-          </div>
+                    </div>
 
-           <button type="submit"
-                        className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-800 transition-all">Submit</button>
+                    
+                    <button
+                        type="submit"
+                        className="
+                    w-full py-2 rounded-lg text-sm font-medium
 
-    </form>
-        <p className="text-center text-sm text-gray-600 mt-4">Don't have an account? 
-                    <Link to="/register" className="hover:text-black hover:underline"> Sign up</Link>
-        </p>
+                    bg-indigo-500 hover:bg-indigo-400
+                    shadow-md shadow-indigo-500/20
+
+                    transition-all duration-200
+                    active:scale-[0.97]
+                    "
+                    >
+                        Login
+                    </button>
+
+                </form>
+
+                
+                <p className="text-center text-sm text-slate-400 mt-6">
+                    Don’t have an account?
+                    <Link
+                        to="/register"
+                        className="ml-1 text-indigo-400 hover:text-indigo-300 transition-colors"
+                    >
+                        Sign up
+                    </Link>
+                </p>
+
             </div>
-        </div>
 
+            
+            <style>
+                {`
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px) scale(0.98);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+            `}
+            </style>
+
+        </div>
     );
 }

@@ -55,6 +55,30 @@ export default function CreateInvoice() {
         setLineItems((prev) => prev.filter((_, i) => i !== index));
     };
 
+    const handleCreate = async () => {
+        if (!selectedClient) return;
+
+        try {
+            setCreating(true);
+
+            await createInvoice({
+                clientId: selectedClient.id,
+                lineItems,
+                taxRate,
+                issueDate: issueDate || Date.now().toString().split("T")[0],
+                dueDate: dueDate || undefined,
+            });
+
+            toast.success("Invoice created successfully!", { icon: "✅" });
+            navigate(`/invoices`);
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Failed to create invoice.", { icon: "❌" });
+        } finally {
+            setCreating(false);
+        }
+    }
     const subtotal = lineItems.reduce((s, i) => s + i.total, 0);
     const taxAmount = (subtotal * taxRate) / 100;
     const total = subtotal + taxAmount;
@@ -62,55 +86,51 @@ export default function CreateInvoice() {
     const isValid = selectedClient && lineItems.length > 0;
     return (
         <div className="min-h-screen bg-[#0B0F19] text-white p-8">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto space-y-6">
 
-                <div className="bg-[#111827] border border-white/10 rounded-xl overflow-hidden">
-
-                    
-                    <div className="px-6 py-5 border-b border-white/10 flex justify-between items-center">
-                        <div>
-                            <h1 className="text-lg font-semibold">New Invoice</h1>
-                            <p className="text-sm text-slate-400">Create invoice details</p>
-                        </div>
-
-                        <button
-                            disabled={!isValid}
-                            onClick={async () => {
-                                if (!selectedClient) return;
-
-                                try {
-                                    setCreating(true);
-
-                                    await createInvoice({
-                                        clientId: selectedClient.id,
-                                        lineItems,
-                                        taxRate,
-                                        issueDate: issueDate || Date.now().toString().split("T")[0],
-                                        dueDate: dueDate || undefined,
-                                    });
-
-                                    toast.success("Invoice created successfully!", { icon: "✅" });
-                                    navigate(`/invoices`);
-
-                                } catch (err) {
-                                    console.error(err);
-                                    toast.error("Failed to create invoice.", { icon: "❌" });
-                                } finally {
-                                    setCreating(false);
-                                }
-                            }}
-                            className={`
-                        px-4 py-2 rounded-lg text-sm font-medium transition
-                        ${isValid
-                                    ? "bg-indigo-500 hover:bg-indigo-400"
-                                    : "bg-slate-700 text-slate-400 cursor-not-allowed"}
-                        `}
-                        >
-                            Save Draft
-                        </button>
+                
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-lg font-semibold text-white">
+                            New Invoice
+                        </h1>
+                        <p className="text-sm text-slate-400 mt-1">
+                            Create a new invoice
+                        </p>
                     </div>
 
-                   <div className="px-6 py-4 border-b border-white/10">
+                    <button
+                        disabled={!isValid}
+                        onClick={handleCreate}
+                        className={`
+                    px-4 py-2 rounded-lg text-sm font-medium transition
+                    ${isValid
+                                ? "bg-indigo-500 hover:bg-indigo-400"
+                                : "bg-slate-700 text-slate-400 cursor-not-allowed"}
+                    `}
+                    >
+                        Save Draft
+                    </button>
+                </div>
+
+                
+                <div className="bg-[#111827] border border-white/10 rounded-xl overflow-hidden">
+
+                   
+                    <div className="px-6 py-4 border-b border-white/10 flex justify-between items-center">
+
+                        <span className="text-sm text-slate-400">
+                            New draft invoice
+                        </span>
+
+                        <span className="text-xs px-2.5 py-1 rounded-full bg-slate-600/20 text-slate-300 border border-white/10">
+                            Draft
+                        </span>
+
+                    </div>
+
+                    
+                    <div className="px-6 py-4 border-b border-white/10">
                         <ClientSelector
                             selectedClient={selectedClient}
                             setSelectedClient={setSelectedClient}
@@ -128,7 +148,7 @@ export default function CreateInvoice() {
 
                         {lineItems.length > 0 && (
                             <>
-                               
+                                
                                 <div className="grid grid-cols-12 gap-4 text-xs text-slate-500 pb-3 border-b border-white/10">
                                     <span className="col-span-5">Description</span>
                                     <span className="col-span-2">Qty</span>
@@ -137,7 +157,7 @@ export default function CreateInvoice() {
                                     <span className="col-span-1" />
                                 </div>
 
-                               
+                                
                                 <div className="divide-y divide-white/10">
                                     {lineItems.map((item, index) => (
                                         <div
@@ -159,22 +179,20 @@ export default function CreateInvoice() {
 
                                             <input
                                                 type="number"
-                                               
                                                 value={item.quantity}
                                                 onChange={(e) =>
                                                     updateItem(index, "quantity", Number(e.target.value))
                                                 }
-                                                className="col-span-2 bg-transparent text-sm border rounded-lg outline-slate-50"
+                                                className="col-span-2 bg-transparent text-sm outline-none"
                                             />
 
                                             <input
                                                 type="number"
-                                                
                                                 value={item.rate}
                                                 onChange={(e) =>
                                                     updateItem(index, "rate", Number(e.target.value))
                                                 }
-                                                className="col-span-2 bg-transparent text-sm border rounded-lg"
+                                                className="col-span-2 bg-transparent text-sm outline-none"
                                             />
 
                                             <div className="col-span-2 text-right text-sm font-medium text-white">
@@ -203,7 +221,7 @@ export default function CreateInvoice() {
 
                     </div>
 
-                    
+                   
                     {lineItems.length > 0 && (
                         <div className="px-6 py-5 border-t border-white/10 flex justify-end">
                             <div className="w-72 space-y-3 text-sm">
@@ -238,6 +256,7 @@ export default function CreateInvoice() {
                     )}
 
                 </div>
+
             </div>
         </div>
     );

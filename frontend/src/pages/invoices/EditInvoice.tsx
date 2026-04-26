@@ -43,20 +43,67 @@ export default function EditInvoice() {
 
     return (
         <div className="min-h-screen bg-[#0B0F19] text-white p-8">
-            <div className="max-w-5xl mx-auto bg-[#111827] rounded-2xl p-8">
+            <div className="max-w-4xl mx-auto space-y-6">
 
-                <h1 className="text-xl font-semibold mb-6">
-                    Edit Invoice
-                </h1>
+               
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-lg font-semibold text-white">
+                            Edit Invoice
+                        </h1>
+                        <p className="text-sm text-slate-400 mt-1">
+                            Update your draft invoice details
+                        </p>
+                    </div>
 
-                <InvoiceForm
-                    initialData={{
-                        lineItems: invoice.lineItems,
-                        taxRate: invoice.taxRate,
-                    }}
-                    onSubmit={handleUpdate}
-                    submitLabel="Update Invoice"
-                />
+                    <button
+                        onClick={() => navigate(`/invoices/${invoiceId}`)}
+                        className="
+                    text-sm text-slate-400 hover:text-white
+                    transition-colors
+                    "
+                    >
+                        ← Back
+                    </button>
+                </div>
+
+                
+                <div className="
+            bg-[#111827] border border-white/10 rounded-xl overflow-hidden
+            ">
+
+                    
+                    <div className="
+                px-6 py-4 border-b border-white/10
+                flex items-center justify-between
+                ">
+
+                        <div className="text-sm text-slate-400">
+                            Editing draft invoice
+                        </div>
+
+                        <span className="
+                    text-xs px-2.5 py-1 rounded-full
+                    bg-yellow-500/10 text-yellow-400 border border-yellow-500/20
+                    ">
+                            Draft
+                        </span>
+
+                    </div>
+
+                    <div className="px-6 py-6">
+                        <InvoiceForm
+                            initialData={{
+                                lineItems: invoice.lineItems,
+                                taxRate: invoice.taxRate,
+                            }}
+                            onSubmit={handleUpdate}
+                            submitLabel="Update Invoice"
+                        />
+                    </div>
+
+                </div>
+
             </div>
         </div>
     );

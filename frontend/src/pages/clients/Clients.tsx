@@ -25,22 +25,45 @@ export default function Clients() {
     }, []);
 
     return (
-        <div className="max-w-6xl mx-auto">
+        <div className="min-h-screen bg-[#0B0F19] text-white p-8">
+            <div className="max-w-6xl mx-auto space-y-6">
 
-            
-            <div className="mb-8">
-                <h1 className="text-2xl font-semibold">Clients</h1>
-                <p className="text-gray-400 text-sm mt-1">
-                    Manage all your clients in one place
-                </p>
+                
+                <div className="flex items-center justify-between">
+
+                    <div>
+                        <h1 className="text-lg font-semibold text-white">
+                            Clients
+                        </h1>
+                        <p className="text-sm text-slate-400 mt-1">
+                            Manage all your clients in one place
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div className="
+            bg-[#111827] border border-white/10 rounded-xl
+            ">
+
+                  
+                    <div className="px-6 py-4 border-b border-white/10 text-sm text-slate-400">
+                        All clients
+                    </div>
+
+                    
+                    <div className="px-6 py-6">
+                        <ClientCard
+                            clientsLoading={loading}
+                            clients={clients}
+                            fetchClients={fetchClients}
+                        />
+                    </div>
+
+                </div>
+
             </div>
-
-           
-            <ClientCard
-                clientsLoading={loading}
-                clients={clients}
-                fetchClients={fetchClients}
-            />
         </div>
     );
 }

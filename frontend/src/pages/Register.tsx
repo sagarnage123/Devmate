@@ -1,123 +1,3 @@
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { Link } from "react-router-dom";
-// import axios, { formToJSON } from "axios";
-// import toast from "react-hot-toast";
-
-// export default function Register(){
-
-//     const [email,setEmail]=useState("");
-//     const [password,setPassword]=useState("");
-//     const [confirmPassword,setConfirmPassword]=useState("");
-//     const [name,setName]=useState("");
-//     const navigate=useNavigate();
-
-//     const handleRegister=async (e)=>{
-
-//         e.preventDefault();
-
-//         if(password !==confirmPassword)
-//         {
-//             toast.error("Password and confirm passsword are not same");
-//             return;
-//         }
-
-//         try {
-//             const res = await axios.post("/api/users/register",{
-//                 name,
-//                 email,
-//                 password
-//             }, { withCredentials:true});
-
-//             const token = res.data.token;
-
-//             if (token)
-//                 localStorage.setItem("devmate-token", token);
-
-           
-//             navigate("/dashboard");
-            
-//         } catch (error) {
-//             console.log(error.response?.data?.message || "Register Failed");
-//         }
-
-//     };
-
-
-//     return (
-//         <div className="min-h-screen flex justify-center items-center bg-gray-100">
-//             <div className="bg-white w-full max-w-md rounded-2xl shadow-md p-8 ">
-//                 <h2 className="text-2xl font-semibold mb-6 text-center ">Create a new account</h2>
-
-        
-//         <form onSubmit={handleRegister}
-//         className="space-y-5">
-
-//             <div>
-//                 <label className="block text-gray-700 mb-2" >Name</label>
-//                         <input
-//                             type="text"
-//                             value={name}
-//                             placeholder="Enter your name"
-//                             onChange={(e) => setName(e.target.value)}
-//                             required
-//                             className="w-full text-gray-500 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-//                         />
-//             </div>
-
-//         <div>
-//             <label className="block text-gray-700 mb-2">Email</label>
-
-//           <input 
-//           type="email"
-//           value={email}
-//           placeholder="Enter your email"
-//           onChange={(e)=>
-//             setEmail(e.target.value)
-//         }
-//         required
-//         className="w-full rounded-lg px-4 py-2 text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 border"
-//         />
-//         </div>
-
-//         <div>
-//             <label className="block text-gray-700 mb-2">Password</label>
-
-//           <input 
-//           type="password"
-//           value={password}
-//           placeholder="Enter the password"
-//           onChange={(e)=>setPassword(e.target.value)}
-//           required
-//           className="border w-full rounded-lg text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 px-4 py-2"
-//           />
-
-
-//           </div>
-
-//           <div>
-//                         <label className="block text-gray-700 mb-2">Confirm Password</label>
-//             <input type="password"
-//             value={confirmPassword}
-//             onChange={(e)=>{setConfirmPassword(e.target.value)}} 
-//             placeholder="Confirm Password"
-//             required
-//             className="w-full border rounded-lg text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 px-4 py-2"
-//             />
-//           </div>
-
-//            <button type="submit"
-//            className="w-full border rounded-lg bg-blue-500 text-white px-4 py-2 mt-6 hover:bg-blue-700 transition-all" >Submit</button>
-//     </form>
-//     <p className=" text-sm text-gray-700 text-center mt-4">Already have an account?
-        
-//                     <Link to="/login" className="hover:text-black hover:underline"> Login</Link>
-//     </p>
-//             </div>
-//         </div>
-
-//     );
-// }
 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
@@ -153,51 +33,112 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen flex justify-center items-center bg-gray-100">
-            <div className="bg-white w-full max-w-md rounded-2xl shadow-md p-8">
-                <h2 className="text-2xl font-semibold mb-6 text-center">
-                    Create a new account
+        <div className="min-h-screen overflow-hidden flex items-center justify-center bg-[#0B0F19] text-white px-4 relative">
+
+           
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute w-[400px] h-[400px] bg-indigo-500/10 blur-3xl top-[-120px] left-[-120px]" />
+                <div className="absolute w-[320px] h-[320px] bg-indigo-500/10 blur-3xl bottom-[-120px] right-[-120px]" />
+            </div>
+
+          
+            <div className="
+        relative z-10
+        w-full max-w-md
+        bg-[#111827]/90 backdrop-blur-md
+        border border-white/10
+        rounded-2xl p-8
+
+        shadow-xl shadow-black/40
+        animate-[fadeIn_0.6s_ease-out]
+        ">
+
+                
+                <h2 className="text-xl font-semibold text-center mb-6">
+                    Create your account
                 </h2>
 
+               
                 <form onSubmit={handleRegister} className="space-y-5">
-                    <div>
-                        <label className="block text-gray-700 mb-2">Name</label>
+
+                   
+                    <div className="space-y-1">
+                        <label className="text-sm text-slate-400">Name</label>
                         <input
                             type="text"
                             value={name}
                             placeholder="Enter your name"
                             onChange={(e) => setName(e.target.value)}
                             required
-                            className="w-full px-4 py-2 border rounded-lg"
+                            className="
+                        w-full px-4 py-2 rounded-lg
+                        bg-[#0B0F19]
+                        border border-white/10
+
+                        text-sm text-white placeholder:text-slate-500
+
+                        focus:outline-none
+                        focus:ring-2 focus:ring-indigo-500/40
+                        focus:border-indigo-500/40
+
+                        transition-all duration-200
+                        "
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-gray-700 mb-2">Email</label>
+                    
+                    <div className="space-y-1">
+                        <label className="text-sm text-slate-400">Email</label>
                         <input
                             type="email"
                             value={email}
                             placeholder="Enter your email"
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            className="w-full px-4 py-2 border rounded-lg"
+                            className="
+                        w-full px-4 py-2 rounded-lg
+                        bg-[#0B0F19]
+                        border border-white/10
+
+                        text-sm text-white placeholder:text-slate-500
+
+                        focus:outline-none
+                        focus:ring-2 focus:ring-indigo-500/40
+                        focus:border-indigo-500/40
+
+                        transition-all duration-200
+                        "
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-gray-700 mb-2">Password</label>
+                    
+                    <div className="space-y-1">
+                        <label className="text-sm text-slate-400">Password</label>
                         <input
                             type="password"
                             value={password}
-                            placeholder="Enter the password"
+                            placeholder="Enter password"
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="w-full px-4 py-2 border rounded-lg"
+                            className="
+                        w-full px-4 py-2 rounded-lg
+                        bg-[#0B0F19]
+                        border border-white/10
+
+                        text-sm text-white placeholder:text-slate-500
+
+                        focus:outline-none
+                        focus:ring-2 focus:ring-indigo-500/40
+                        focus:border-indigo-500/40
+
+                        transition-all duration-200
+                        "
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-gray-700 mb-2">
+                   
+                    <div className="space-y-1">
+                        <label className="text-sm text-slate-400">
                             Confirm Password
                         </label>
                         <input
@@ -206,28 +147,69 @@ export default function Register() {
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             placeholder="Confirm password"
                             required
-                            className="w-full px-4 py-2 border rounded-lg"
+                            className="
+                        w-full px-4 py-2 rounded-lg
+                        bg-[#0B0F19]
+                        border border-white/10
+
+                        text-sm text-white placeholder:text-slate-500
+
+                        focus:outline-none
+                        focus:ring-2 focus:ring-indigo-500/40
+                        focus:border-indigo-500/40
+
+                        transition-all duration-200
+                        "
                         />
                     </div>
 
+                    
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all"
+                        className="
+                    w-full py-2 rounded-lg text-sm font-medium
+
+                    bg-indigo-500 hover:bg-indigo-400
+                    shadow-md shadow-indigo-500/20
+
+                    transition-all duration-200
+                    active:scale-[0.97]
+                    "
                     >
-                        Submit
+                        Create Account
                     </button>
+
                 </form>
 
-                <p className="text-sm text-gray-700 text-center mt-4">
+                
+                <p className="text-sm text-slate-400 text-center mt-6">
                     Already have an account?
                     <Link
                         to="/login"
-                        className="hover:text-black hover:underline ml-1"
+                        className="ml-1 text-indigo-400 hover:text-indigo-300 transition-colors"
                     >
                         Login
                     </Link>
                 </p>
+
             </div>
+
+           
+            <style>
+                {`
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px) scale(0.98);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+            `}
+            </style>
+
         </div>
     );
 }

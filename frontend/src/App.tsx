@@ -46,9 +46,9 @@ export default function App() {
             } />
             <Route path="invoices/create-invoice" element={
                 <ProtectedRoute>
-
+                    <AppLayout>
                     <CreateInvoice />
-
+                    </AppLayout>
                 </ProtectedRoute>
             } />
             <Route path="invoices/:invoiceId" element={

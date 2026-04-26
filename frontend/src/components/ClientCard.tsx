@@ -59,33 +59,77 @@ export default function ClientCard({
         }
     }
 
-    return(
-        <div>
-            <h2 className="text-xl font-semibold mt-6 mb-2">Clients</h2>
-            {
-                (clientsLoading) ? (<p>⏳ Loading clients...</p>)
-                    : (clients.length == 0) ? (<p>No clients yet.</p>)
-                        : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{
-                                    clients.map(client => (
-                                        <div key={client.id} className="p-4 border rounded shadow-sm hover:shadow-md transition">
-                                            <h3 className="font-bold">{client.name}</h3>
-                                            <p className="text-gray-600">{client.email}</p>
-                                            <p className="text-gray-500 text-sm"> Phone :{client.phone || "N/A"}</p>
-                                        </div>
-                                    ))
-                                }
+    return (
+        <div className="space-y-6">
 
-                                </div>
-                        )
-            }
-            <button
-                onClick={() => setIsModalOpen(true)}
-                className="mb-4 mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-            >
-                + Add Client
-            </button>
+          
+            <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-white">
+                    Clients
+                </h2>
 
+                <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="
+                px-4 py-2 rounded-lg text-sm font-medium
+                bg-indigo-500 hover:bg-indigo-400 hover:scale-105
+                transition-all duration-200 
+                "
+                >
+                    + Add Client
+                </button>
+            </div>
+
+            
+            {clientsLoading ? (
+                <div className="text-sm text-slate-400 py-10 text-center">
+                    ⏳ Loading clients...
+                </div>
+            ) : clients.length === 0 ? (
+                <div className="
+            text-center py-16 text-slate-500
+            border border-dashed border-white/10 rounded-xl
+            ">
+                    No clients yet. Add your first client.
+                </div>
+            ) : (
+                <div className="
+            grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4
+            ">
+                    {clients.map(client => (
+                        <div
+                            key={client.id}
+                            className="
+                        group
+                        bg-[#111827] border border-white/10 rounded-xl p-4
+
+                        transition-all duration-200 ease-out
+                        hover:border-indigo-500/30 hover:-translate-y-[2px]
+                        hover:shadow-md hover:shadow-indigo-500/10
+                        "
+                        >
+
+                           
+                            <h3 className="text-sm font-semibold text-white">
+                                {client.name}
+                            </h3>
+
+                           
+                            <p className="text-sm text-slate-400 mt-1 truncate">
+                                {client.email}
+                            </p>
+
+                           
+                            <p className="text-xs text-slate-500 mt-2">
+                                {client.phone || "No phone"}
+                            </p>
+
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* MODAL */}
             <CreateClientModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
@@ -95,8 +139,7 @@ export default function ClientCard({
                     await fetchClients();
                 }}
             />
-            
+
         </div>
-       
-    )
+    );
 }
