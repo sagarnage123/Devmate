@@ -55,17 +55,24 @@ export default function Invoices() {
         };
 
         return (
-            <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm border ${styles[status]}`}>
+            <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm border ${styles[status]} capitalize text-xs font-medium`}>
                 {status}
             </span>
         );
     };
     return (
-        <div className="min-h-screen bg-[#0B0F19] text-white p-8">
-            <div className="max-w-6xl mx-auto">
+        <div className="min-h-screen bg-[#0B0F19] text-white p-8 
+">
+            <div className="max-w-5xl mx-auto">
 
 
-                <div className="flex justify-between mb-8">
+                <div className="
+                sticky top-6
+                              z-20 flex justify-between my-8
+                          
+                            bg-[#0B0F19]
+                            pb-4
+                            ">
                     <h1 className="text-2xl font-semibold">Invoices</h1>
 
                     <a
@@ -77,34 +84,61 @@ export default function Invoices() {
                 </div>
 
 
-                <div className="bg-[#111827] rounded-2xl overflow-hidden">
-
-                    <div className="grid grid-cols-5 px-6 py-3 text-sm text-gray-400 border-b border-gray-700">
-                        <span>Invoice</span>
-                        <span>Client</span>
-                        <span>Status</span>
-                        <span>Total</span>
-                        <span>Date</span>
-                    </div>
-
+                <div className="
+grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
+gap-4 h-[calc(95vh-120px)]
+overflow-y-auto
+pr-1
+no-scrollbar
+">
                     {invoices.map((inv) => (
                         <a
                             key={inv._id}
                             href={`invoices/${inv._id}`}
-                            className="grid grid-cols-5 px-6 py-4 border-b border-gray-800 hover:bg-[#1F2937] transition"
+                            className="
+    group
+    bg-[#111827] border border-white/10 rounded-xl p-4
+
+    flex flex-col justify-between
+
+    transition-all duration-200 ease-out
+    hover:border-indigo-500/30 hover:-translate-y-[2px]
+    hover:shadow-lg hover:shadow-indigo-500/10
+    "
                         >
-                            <span>{inv.invoiceNumber}</span>
-                            <span>{inv.clientId?.name}</span>
 
-                            <StatusBadge status={inv.status} />
+                            
+                            <div className="space-y-2">
 
-                            <span>₹{inv.total.toFixed(2)}</span>
-                            <span>
-                                {new Date(inv.issueDate).toLocaleDateString()}
-                            </span>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium text-slate-200">
+                                        {inv.invoiceNumber}
+                                    </span>
+
+                                    <StatusBadge status={inv.status} />
+                                </div>
+
+                                <p className="text-sm text-slate-400">
+                                    {inv.clientId?.name}
+                                </p>
+
+                            </div>
+
+                           
+                            <div className="mt-4 flex items-end justify-between">
+
+                                <p className="text-lg font-semibold text-white tracking-tight">
+                                    ₹{inv.total.toFixed(2)}
+                                </p>
+
+                                <p className="text-xs text-slate-500">
+                                    {new Date(inv.issueDate).toLocaleDateString()}
+                                </p>
+
+                            </div>
+
                         </a>
                     ))}
-
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import { downloadInvoicePDF, duplicateInvoice, getInvoiceById, markInvoicePaid,sendInvoice } from "@/api/invoices";
+import { downloadInvoicePDF, duplicateInvoice, getInvoiceById, markInvoicePaid, sendInvoice } from "@/api/invoices";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -25,8 +25,8 @@ interface Invoice {
 }
 
 export default function InvoiceDetail() {
-    const { invoiceId,projectId } = useParams();
-    if(!invoiceId) {
+    const { invoiceId, projectId } = useParams();
+    if (!invoiceId) {
         return <div>Invalid invoice ID</div>;
     }
     const [invoice, setInvoice] = useState<Invoice | null>(null);
@@ -53,7 +53,7 @@ export default function InvoiceDetail() {
             icon: "📤",
         });
         await fetchInvoice();
-        
+
     };
 
     const markPaid = async () => {
@@ -62,91 +62,130 @@ export default function InvoiceDetail() {
             icon: "✅",
         });
         await fetchInvoice();
-        
+
     };
 
-    const handleDownload =  () => {
+    const handleDownload = () => {
         downloadInvoicePDF(invoiceId!);
         toast.success("PDF downloaded successfully", {
             icon: "📥"
-            });
+        });
     }
     const handleDuplicate = async () => {
         const res = await duplicateInvoice(invoiceId!);
         Navigate(`projects/${projectId}/invoices/${res.data._id}`);
     };
-    
+
 
     if (!invoice) return <div>Loading...</div>;
 
     return (
         <div className="min-h-screen bg-[#0B0F19] text-white p-8">
-            <div className="max-w-4xl mx-auto bg-[#111827] rounded-2xl p-8">
+            <div className="max-w-4xl mx-auto space-y-6">
 
-                
-                <div className="flex justify-between items-center mb-6">
-                    <div>
-                        <h1 className="text-xl font-semibold">
+               
+                <div className="
+            relative
+            bg-gradient-to-b from-[#111827] to-[#0F172A]
+            border border-white/10 rounded-xl p-6
+            flex items-center justify-between
+            overflow-hidden
+            ">
+
+                    
+                    <div className="absolute -top-10 right-0 w-40 h-40 bg-indigo-500/10 blur-3xl pointer-events-none" />
+
+                    
+                    <div className="space-y-1">
+                        <h1 className="text-lg font-semibold text-white tracking-tight">
                             {invoice.invoiceNumber}
                         </h1>
-                        <p className="text-gray-400 text-sm">
+
+                        <p className="text-sm text-slate-400">
                             {invoice.clientId.name}
                         </p>
                     </div>
 
-                    <div className="flex gap-2">
+                   
+                    <div className="flex items-center gap-2">
+
                         {invoice.status === "draft" && (
                             <>
                                 <button
                                     onClick={handleSend}
-                                    className="bg-blue-600 px-4 py-2 rounded-lg"
+                                    className="
+                                px-4 py-2 rounded-lg text-sm font-medium
+                                bg-blue-500 hover:bg-blue-400
+                                shadow-md shadow-blue-500/20
+                                transition-all duration-200 active:scale-[0.97]
+                                "
                                 >
                                     Send
                                 </button>
 
                                 <a
                                     href={`edit-invoice/${invoice._id}`}
-                                    className="bg-gray-600 px-4 py-2 rounded-lg"
+                                    className="
+                                px-4 py-2 rounded-lg text-sm
+                                text-slate-300 hover:text-white
+                                hover:bg-white/5
+                                transition-all duration-200
+                                "
                                 >
                                     Edit
                                 </a>
                             </>
                         )}
 
-                        {(invoice.status === "sent" ||
-                            invoice.status === "overdue") && (
-                                <button
-                                    onClick={markPaid}
-                                    className="bg-green-600 px-4 py-2 rounded-lg"
-                                >
-                                    Mark Paid
-                                </button>
-                            )}
-                      
+                        {(invoice.status === "sent" || invoice.status === "overdue") && (
+                            <button
+                                onClick={markPaid}
+                                className="
+                            px-4 py-2 rounded-lg text-sm font-medium
+                            bg-emerald-500 hover:bg-emerald-400
+                            shadow-md shadow-emerald-500/20
+                            transition-all duration-200 active:scale-[0.97]
+                            "
+                            >
+                                Mark Paid
+                            </button>
+                        )}
 
                         {invoice.status === "paid" && (
-                            <span className="inline-flex items-center gap-2 bg-green-500/10 text-green-400 px-3 py-1 rounded-full text-sm font-medium border border-green-500/20 shadow-[0_0_10px_rgba(34,197,94,0.2)]">
+                            <span className="
+                        inline-flex items-center gap-2 px-3 py-1 rounded-full
+                        text-sm font-medium
+                        bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
+                        ">
                                 ✓ Paid
                             </span>
                         )}
-                        
-
-                       
 
                         <button
                             onClick={handleDownload}
-                            className="bg-indigo-600 px-4 py-2 rounded-lg"
+                            className="
+                        px-4 py-2 rounded-lg text-sm font-medium
+                        bg-indigo-500 hover:bg-indigo-400
+                        shadow-md shadow-indigo-500/20
+                        transition-all duration-200 active:scale-[0.97]
+                        "
                         >
                             PDF
                         </button>
+
                     </div>
                 </div>
 
                
-                <div className="flex justify-between text-sm text-gray-400 mb-6">
+                <div className="
+            flex items-center justify-between
+            text-sm text-slate-400 px-1
+            ">
+
                     <span>
                         Issue: {new Date(invoice.issueDate).toLocaleDateString()}
                     </span>
+
                     <span>
                         Due:{" "}
                         {invoice.dueDate
@@ -156,25 +195,67 @@ export default function InvoiceDetail() {
                 </div>
 
                
-                <div className="space-y-3">
-                    {invoice.lineItems.map((item, i) => (
-                        <div
-                            key={i}
-                            className="grid grid-cols-4 border-b border-gray-700 pb-2"
-                        >
-                            <span>{item.description}</span>
-                            <span>{item.quantity}</span>
-                            <span>₹{item.rate}</span>
-                            <span className="text-right">
-                                ₹{item.total.toFixed(2)}
-                            </span>
-                        </div>
-                    ))}
-                </div>
+                <div className="
+            bg-[#111827] border border-white/10 rounded-xl
+            p-6 space-y-4
+            ">
 
-                
-                <div className="mt-6 text-right text-lg font-semibold">
-                    Total: ₹{invoice.total.toFixed(2)}
+                    
+                    <div className="grid grid-cols-4 text-xs text-slate-500 pb-2 border-b border-white/10">
+                        <span>Description</span>
+                        <span>Qty</span>
+                        <span>Rate</span>
+                        <span className="text-right">Total</span>
+                    </div>
+
+                    
+                    <div className="space-y-3">
+                        {invoice.lineItems.map((item, i) => (
+                            <div
+                                key={i}
+                                className="
+                            grid grid-cols-4 text-sm items-center
+                            text-slate-300
+                            "
+                            >
+                                <span className="text-slate-200">
+                                    {item.description}
+                                </span>
+
+                                <span>{item.quantity}</span>
+
+                                <span>₹{item.rate}</span>
+
+                                <span className="text-right font-medium text-white">
+                                    ₹{item.total.toFixed(2)}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+
+                   
+                    <div className="
+                mt-6 pt-5 border-t border-white/10
+                flex justify-end
+                ">
+
+                        <div className="
+                    bg-[#0F172A] border border-white/10 rounded-lg px-5 py-3
+                    text-right
+                    ">
+
+                            <p className="text-xs text-slate-400">
+                                Total Amount
+                            </p>
+
+                            <p className="text-2xl font-semibold text-white tracking-tight">
+                                ₹{invoice.total.toFixed(2)}
+                            </p>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
