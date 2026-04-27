@@ -7,9 +7,6 @@ const createError = (message: string, statusCode: number): AppError => {
 
     err.message = message;
     err.statusCode = statusCode;
-
-    
-
     return err;
 };
 
