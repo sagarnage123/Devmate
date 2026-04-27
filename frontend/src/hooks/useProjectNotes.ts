@@ -44,8 +44,7 @@ export function useProjectNotes(projectId: string) {
             projectId,
             ...data,
         });
-        console.log("Created note:", newNote);
-
+       
         setNotes((prev) => [newNote, ...prev]);
     }
 

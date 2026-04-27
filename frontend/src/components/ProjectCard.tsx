@@ -145,7 +145,7 @@ export default function ProjectCard({
         }
 
         setNoteProjectId(projectId);
-        // console.log(projectId);
+        
 
         if (!notes || notes.length == 0)
             await fetchNotes(projectId);

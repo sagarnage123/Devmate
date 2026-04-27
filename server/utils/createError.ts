@@ -8,9 +8,7 @@ const createError = (message: string, statusCode: number): AppError => {
     err.message = message;
     err.statusCode = statusCode;
 
-    if (!message || !statusCode) {
-        console.log('There is Some Problem');
-    }
+    
 
     return err;
 };
