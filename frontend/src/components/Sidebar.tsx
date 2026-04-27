@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
  import { motion } from "framer-motion";
 import { transitionProperty } from "@dnd-kit/sortable/dist/hooks/defaults";
 import { opacity } from "pdfkit";
+import { width } from "pdfkit/js/page";
 
 type Props = {
     collapsed: boolean;
@@ -60,6 +61,16 @@ export default function Sidebar({ collapsed, setCollapsed }: Props) {
 
         }
     }
+    const topParentVariant={
+
+        open:{
+            width:"16rem",
+        },
+        close:{
+            width:"4.5rem",
+           
+        }
+    }
         
         
 
@@ -70,14 +81,14 @@ export default function Sidebar({ collapsed, setCollapsed }: Props) {
 
     return (
         <motion.div
-           animate={{
-                width: !collapsed?"16rem":"4.5rem"
-           }}
+            animate={!collapsed ? "open" : "close"}
+            variants={topParentVariant}
+           
             transition={{ duration: 0.3, ease: "easeInOut" }}
         
          className="w-64 bg-[#0B0F19] border-r border-white/10 flex flex-col p-4 ">
 
-            <button
+            <motion.button
                 onClick={() => setCollapsed(prev => !prev)}
                 className="
     mb-6 text-slate-400 hover:text-white
@@ -85,21 +96,23 @@ export default function Sidebar({ collapsed, setCollapsed }: Props) {
     "
             >
                 {collapsed ? "→" : "←"}
-            </button>
+            </motion.button>
         
             <div>
-                <div className="mt-8 flex items-center gap-2 px-2 mb-6">
+                <motion.div
+                variants={childVariant}
+                 className="mt-8 flex items-center gap-2 px-2 mb-6">
 
                     <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
                         <span className="text-indigo-400 font-semibold text-sm">D</span>
                     </div>
 
                    
-                    <h1 className={`text-xl font-semibold ${collapsed && "sr-only"}`}>
+                    <h1 className={`text-xl font-semibold ${collapsed?"opacity-0":"opacity-100"}`}>
                         DevMate
                     </h1>
 
-                </div>
+                </motion.div>
 
                 <motion.nav
                 
@@ -112,10 +125,6 @@ export default function Sidebar({ collapsed, setCollapsed }: Props) {
                         className="flex flex-col gap-2"
                     >
                     
-
-                    
-                    
-
                         {list.map((item) => (
                             <motion.li
                                 key={item.path}
