@@ -5,17 +5,31 @@ import ProjectHeader from "@/components/project/ProjectHeader";
 import ProjectCompactHeader from "@/components/project/ProjectCompactHeader";
 import { ProjectProvider } from "@/context/ProjectContext";
 import ProjectTabs from "@/components/project/ProjectTabs";
+
 export default function ProjectLayout() {
     const { projectId } = useParams();
     const location = useLocation();
     const isOverview = location.pathname.includes("/overview");
-    if (!projectId) return <div className="text-sm text-slate-400">Invalid project</div>;
+
+    if (!projectId) {
+        return (
+            <div className="flex items-center justify-center py-20 text-sm text-slate-400">
+                Invalid project
+            </div>
+        );
+    }
 
     const { project, loading, error } = useProject(projectId);
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-full text-sm text-slate-400 animate-pulse">
+            <div
+                className="
+                    flex h-full min-h-[50vh]
+                    items-center justify-center
+                    text-sm text-slate-400 animate-pulse
+                "
+            >
                 Loading project...
             </div>
         );
@@ -23,7 +37,13 @@ export default function ProjectLayout() {
 
     if (error || !project) {
         return (
-            <div className="flex items-center justify-center h-full text-sm text-red-400">
+            <div
+                className="
+                    flex h-full min-h-[50vh]
+                    items-center justify-center
+                    text-sm text-red-400
+                "
+            >
                 {error ?? "Project not found"}
             </div>
         );
@@ -31,25 +51,39 @@ export default function ProjectLayout() {
 
     return (
         <ProjectProvider project={project}>
-            <div className="text-slate-100 overflow-y-auto no-scrollbar h-full">
+            <div className="h-full overflow-y-auto overflow-x-hidden text-slate-100 no-scrollbar">
 
-                <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+                <div
+                    className="
+                        mx-auto w-full max-w-6xl
+                        space-y-5 sm:space-y-6
+                        px-3 sm:px-4 md:px-6
+                        py-4 sm:py-6 md:py-8
+                    "
+                >
 
-                    <ProjectTabs projectId={project._id} />
-                    
-                    {isOverview ? (
-                        <ProjectHeader project={project} />
-                    ) : (
-                        <ProjectCompactHeader project={project}/>
-                    )}
+                    <div className="overflow-x-auto pb-1 no-scrollbar">
+                        <ProjectTabs projectId={project._id} />
+                    </div>
 
+                    <div className="min-w-0">
+                        {isOverview ? (
+                            <ProjectHeader project={project} />
+                        ) : (
+                            <ProjectCompactHeader project={project} />
+                        )}
+                    </div>
 
-                    
-                    <div className="bg-[#0F172A] border border-white/10 rounded-xl p-5
-                    transition-all duration-200">
-
+                    <div
+                        className="
+                            overflow-hidden
+                            rounded-2xl border border-white/10
+                            bg-[#0F172A]
+                            p-4 sm:p-5 md:p-6
+                            transition-all duration-200
+                        "
+                    >
                         <Outlet />
-
                     </div>
 
                 </div>
