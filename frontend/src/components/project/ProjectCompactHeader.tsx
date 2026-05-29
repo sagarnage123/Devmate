@@ -1,5 +1,5 @@
-
 import { Project } from "@/types/Project";
+
 function getStatusStyles(status: string) {
     switch (status) {
         case "completed":
@@ -13,35 +13,65 @@ function getStatusStyles(status: string) {
     }
 }
 
-export default function ProjectCompactHeader({project}: {project: Project}) {
+export default function ProjectCompactHeader({
+    project,
+}: {
+    project: Project;
+}) {
     return (
-        <div className="
-        flex items-center justify-between
-        px-4 py-3
-        bg-[#0F172A] border border-white/10 rounded-lg
-        ">
+        <div
+            className="
+                overflow-hidden
+                rounded-2xl border border-white/10
+                bg-[#0F172A]
+                px-4 py-3 sm:px-5 sm:py-4
+            "
+        >
 
-            {/* Left */}
-            <div className="flex items-center gap-3">
+            <div
+                className="
+                    flex flex-col gap-3
+                    sm:flex-row sm:items-center sm:justify-between
+                "
+            >
 
-                {/* Accent dot */}
-                <div className="w-2 h-2 rounded-full bg-indigo-500/70" />
+               
+                <div className="flex min-w-0 items-center gap-3">
 
-                {/* Title */}
-                <h1 className="text-sm font-medium text-slate-200">
-                    {project.title}
-                </h1>
+                    
+                    <div className="h-2 w-2 shrink-0 rounded-full bg-indigo-500/70" />
 
-            </div>
+                   
+                    <h1
+                        className="
+                            truncate
+                            text-sm sm:text-base
+                            font-medium text-slate-200
+                        "
+                    >
+                        {project.title}
+                    </h1>
 
-            {/* Right */}
-            <div className="flex items-center gap-3">
+                </div>
 
-                <span
-                    className={`px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap hover:scale-105 transition-transform duration-200 ${getStatusStyles(project.status)}`}
-                >
-                    {project.status}
-                </span>
+
+                
+                <div className="flex items-center sm:justify-end">
+
+                    <span
+                        className={`
+                            inline-flex items-center
+                            rounded-full px-3 py-1
+                            text-xs font-medium whitespace-nowrap
+                            transition-transform duration-200
+                            hover:scale-105
+                            ${getStatusStyles(project.status)}
+                        `}
+                    >
+                        {project.status}
+                    </span>
+
+                </div>
 
             </div>
 
