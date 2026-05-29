@@ -23,6 +23,7 @@ export default function KanbanColumn({
             className={`
             ${className}
             ${isOver ? "bg-indigo-500/5 border-indigo-500/40" : ""}
+            
             `}
         >
             {children}

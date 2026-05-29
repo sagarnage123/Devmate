@@ -25,6 +25,7 @@ export default function ProjectCompactHeader({
                 rounded-2xl border border-white/10
                 bg-[#0F172A]
                 px-4 py-3 sm:px-5 sm:py-4
+                relative
             "
         >
 
