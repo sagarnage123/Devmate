@@ -85,11 +85,12 @@ export default function CreateInvoice() {
 
     const isValid = selectedClient && lineItems.length > 0;
     return (
-        <div className="min-h-screen bg-[#0B0F19] text-white p-8">
+        <div className="px-3 sm:px-4 md:px-6">
             <div className="max-w-4xl mx-auto space-y-6">
 
                 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4
+sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-lg font-semibold text-white">
                             New Invoice
@@ -103,6 +104,7 @@ export default function CreateInvoice() {
                         disabled={!isValid}
                         onClick={handleCreate}
                         className={`
+                            w-full sm:w-auto
                     px-4 py-2 rounded-lg text-sm font-medium transition
                     ${isValid
                                 ? "bg-indigo-500 hover:bg-indigo-400"
@@ -162,7 +164,26 @@ export default function CreateInvoice() {
                                     {lineItems.map((item, index) => (
                                         <div
                                             key={index}
-                                            className="grid grid-cols-12 gap-4 items-center py-3 group"
+                                            className="
+                                                    group
+
+                                                    flex flex-col gap-3
+
+                                                    rounded-xl
+                                                    border border-white/10
+                                                    bg-[#0F172A]
+                                                    p-4
+
+                                                    md:grid
+                                                    md:grid-cols-12
+                                                    md:gap-4
+                                                    md:items-center
+
+                                                    md:rounded-none
+                                                    md:border-0
+                                                    md:bg-transparent
+                                                    md:p-0
+                                                    "
                                         >
                                             <input
                                                 autoFocus={index === lineItems.length - 1}
@@ -174,7 +195,10 @@ export default function CreateInvoice() {
                                                 onKeyDown={(e) => {
                                                     if (e.key === "Enter") addItem();
                                                 }}
-                                                className="col-span-5 bg-transparent text-sm outline-none placeholder:text-slate-500"
+                                                className="w-full
+                                                py-1 px-2
+                                                rounded-md
+md:col-span-5 bg-transparent text-sm outline-none placeholder:text-slate-500"
                                             />
 
                                             <input
@@ -183,7 +207,10 @@ export default function CreateInvoice() {
                                                 onChange={(e) =>
                                                     updateItem(index, "quantity", Number(e.target.value))
                                                 }
-                                                className="col-span-2 bg-transparent text-sm outline-none"
+                                                className="w-full
+                                                py-1 px-2
+                                                rounded-md
+md:col-span-2 bg-transparent text-sm outline-none"
                                             />
 
                                             <input
@@ -192,16 +219,23 @@ export default function CreateInvoice() {
                                                 onChange={(e) =>
                                                     updateItem(index, "rate", Number(e.target.value))
                                                 }
-                                                className="col-span-2 bg-transparent text-sm outline-none"
+                                                className="w-full
+                                                py-1 px-2
+                                                rounded-md
+md:col-span-2 bg-transparent text-sm outline-none"
                                             />
 
-                                            <div className="col-span-2 text-right text-sm font-medium text-white">
+                                            <div className="flex justify-between
+md:block md:text-right text-sm font-medium text-white">
+                                                <span className="md:hidden text-slate-500">
+                                                    Total
+                                                </span>
                                                 ₹{item.total.toFixed(2)}
                                             </div>
 
                                             <button
                                                 onClick={() => removeItem(index)}
-                                                className="col-span-1 text-red-400 opacity-0 group-hover:opacity-100 transition"
+                                                className="ml-auto col-span-1 text-red-400 sm:opacity-0 sm:group-hover:opacity-100 transition"
                                             >
                                                 ✕
                                             </button>
@@ -224,7 +258,7 @@ export default function CreateInvoice() {
                    
                     {lineItems.length > 0 && (
                         <div className="px-6 py-5 border-t border-white/10 flex justify-end">
-                            <div className="w-72 space-y-3 text-sm">
+                            <div className="w-full max-w-sm space-y-3 text-sm">
 
                                 <div className="flex justify-between text-slate-400">
                                     <span>Subtotal</span>
@@ -237,7 +271,7 @@ export default function CreateInvoice() {
                                         type="number"
                                         value={taxRate}
                                         onChange={(e) => setTaxRate(Number(e.target.value))}
-                                        className="w-16 bg-transparent text-right outline-none"
+                                        className="w-20 bg-transparent text-right outline-none"
                                     />
                                 </div>
 

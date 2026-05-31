@@ -80,7 +80,7 @@ export default function InvoiceDetail() {
     if (!invoice) return <div>Loading...</div>;
 
     return (
-        <div className="min-h-screen bg-[#0B0F19] text-white p-8">
+        <div className="px-3 sm:px-4 md:px-6 text-white ">
             <div className="max-w-4xl mx-auto space-y-6">
 
                
@@ -88,7 +88,8 @@ export default function InvoiceDetail() {
             relative
             bg-gradient-to-b from-[#111827] to-[#0F172A]
             border border-white/10 rounded-xl p-6
-            flex items-center justify-between
+            flex flex-col gap-4
+sm:flex-row sm:items-center sm:justify-between
             overflow-hidden
             ">
 
@@ -97,7 +98,7 @@ export default function InvoiceDetail() {
 
                     
                     <div className="space-y-1">
-                        <h1 className="text-lg font-semibold text-white tracking-tight">
+                        <h1 className="text-lg sm:text-xl font-semibold text-white tracking-tight">
                             {invoice.invoiceNumber}
                         </h1>
 
@@ -107,7 +108,7 @@ export default function InvoiceDetail() {
                     </div>
 
                    
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
 
                         {invoice.status === "draft" && (
                             <>
@@ -178,7 +179,8 @@ export default function InvoiceDetail() {
 
                
                 <div className="
-            flex items-center justify-between
+            flex flex-col gap-2
+sm:flex-row sm:items-center sm:justify-between
             text-sm text-slate-400 px-1
             ">
 
@@ -236,12 +238,14 @@ export default function InvoiceDetail() {
                    
                     <div className="
                 mt-6 pt-5 border-t border-white/10
-                flex justify-end
+                justify-center sm:justify-end
                 ">
 
                         <div className="
                     bg-[#0F172A] border border-white/10 rounded-lg px-5 py-3
                     text-right
+                    max-w-fit  
+                    ml-auto
                     ">
 
                             <p className="text-xs text-slate-400">

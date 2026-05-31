@@ -37,7 +37,7 @@ export default function Sidebar({ collapsed, setCollapsed }: Props) {
 
     const list = [
         {
-            name: "Project",
+            name: "Projects",
             path: "/projects"
         },
         {
@@ -167,7 +167,9 @@ export default function Sidebar({ collapsed, setCollapsed }: Props) {
                                 key={item.path}
                                 variants={childVariant}
                             >
-                                <NavLink to={item.path} className={linkClass}>
+                                <NavLink
+                                onClick={(e)=>setCollapsed(true)}
+                                 to={item.path} className={linkClass}>
                                     <span
                                         className={`
                                             truncate text-sm

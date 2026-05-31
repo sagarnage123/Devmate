@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import {X} from "lucide-react";
 interface LineItem {
     description: string;
     quantity: number;
@@ -78,10 +78,27 @@ export default function InvoiceForm({
 
             <div className="space-y-3">
                 {lineItems.map((item, index) => (
-                    <div key={index} className="grid grid-cols-12 gap-4 items-center group">
+                    <div key={index} className="
+group
+
+flex flex-col gap-3
+
+rounded-xl
+border border-white/10
+bg-[#0F172A]
+p-4
+
+md:grid md:grid-cols-12
+md:items-center
+md:gap-4
+md:border-0
+md:bg-transparent
+md:p-0
+">
 
                         <input
-                            className="col-span-5 bg-transparent border border-gray-700 rounded-lg px-3 py-2"
+                            className="w-full
+md:col-span-5 bg-transparent border border-gray-700 rounded-lg px-3 py-2"
                             value={item.description}
                             onChange={(e) =>
                                 updateItem(index, "description", e.target.value)
@@ -90,7 +107,8 @@ export default function InvoiceForm({
 
                         <input
                             type="number"
-                            className="col-span-2 border border-gray-700 rounded-lg px-3 py-2 text-black"
+                            className="w-full
+md:col-span-2 border border-gray-700 rounded-lg px-3 py-2 text-white"
                             value={item.quantity}
                             onChange={(e) =>
                                 updateItem(index, "quantity", Number(e.target.value))
@@ -99,22 +117,40 @@ export default function InvoiceForm({
 
                         <input
                             type="number"
-                            className="col-span-2 border border-gray-700 rounded-lg px-3 py-2 text-black"
+                            className="w-full
+md:col-span-2 border border-gray-700 rounded-lg px-3 py-2 text-white"
                             value={item.rate}
                             onChange={(e) =>
                                 updateItem(index, "rate", Number(e.target.value))
                             }
                         />
+                        <input
+                            type="number"
+                            value={taxRate}
+                            onChange={(e) => setTaxRate(Number(e.target.value))}
+                            className="w-full
+md:col-span-2 border border-gray-700 rounded-lg px-3 py-2 text-white"
+                        />
 
-                        <div className="col-span-2 text-right">
-                            ₹{item.total.toFixed(2)}
+                        <div className="flex justify-between
+text-sm
+md:block
+md:col-span-2
+md:text-right">
+                            <span className="md:hidden text-slate-500">
+                                Total
+                            </span>
+
+                            <span>
+                                ₹{item.total.toFixed(2)}
+                            </span>
                         </div>
 
                         <button
                             onClick={() => removeItem(index)}
-                            className="opacity-0 group-hover:opacity-100 text-red-400"
+                            className="ml-auto  sm:opacity-0 sm:group-hover:opacity-100 text-red-400"
                         >
-                            ✕
+                            <X size={20} />
                         </button>
                     </div>
                 ))}
@@ -133,10 +169,10 @@ export default function InvoiceForm({
             </div>
 
            
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex flex-col sm:flex-row sm:justify-end">
                 <button
                     onClick={() => onSubmit({ lineItems, taxRate })}
-                    className="bg-indigo-600 px-6 py-2 rounded-lg"
+                    className="w-full sm:w-auto bg-indigo-600 px-6 py-2 rounded-lg"
                 >
                     {submitLabel}
                 </button>

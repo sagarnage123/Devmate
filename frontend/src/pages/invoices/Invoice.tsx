@@ -61,14 +61,15 @@ export default function Invoices() {
         );
     };
     return (
-        <div className="min-h-screen bg-[#0B0F19] text-white p-8 
+        <div className="text-white p-3 sm:p-4 md:p-6
 ">
             <div className="max-w-5xl mx-auto">
 
 
                 <div className="
                 sticky top-6
-                              z-20 flex justify-between my-8
+                              z-20 flex flex-col gap-4
+sm:flex-row sm:items-center sm:justify-between my-8
                           
                             bg-[#0B0F19]
                             pb-4
@@ -86,8 +87,7 @@ export default function Invoices() {
 
                 <div className="
 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
-gap-4 h-[calc(95vh-120px)]
-overflow-y-auto
+gap-4 
 pr-1
 no-scrollbar
 ">
@@ -110,22 +110,22 @@ no-scrollbar
                             
                             <div className="space-y-2">
 
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium text-slate-200">
+                                <div className="flex items-start justify-between gap-3">
+                                    <span className="min-w-0 truncate text-sm font-medium text-slate-200">
                                         {inv.invoiceNumber}
                                     </span>
 
                                     <StatusBadge status={inv.status} />
                                 </div>
 
-                                <p className="text-sm text-slate-400">
+                                <p className="truncate text-sm text-slate-400">
                                     {inv.clientId?.name}
                                 </p>
 
                             </div>
 
                            
-                            <div className="mt-4 flex items-end justify-between">
+                            <div className="mt-4 flex items-end justify-between gap-3">
 
                                 <p className="text-lg font-semibold text-white tracking-tight">
                                     ₹{inv.total.toFixed(2)}
