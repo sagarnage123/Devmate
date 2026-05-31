@@ -25,14 +25,14 @@ export default function Clients() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#0B0F19] text-white p-8">
+        <div className="text-white px-3 sm:px-4 md:px-6">
             <div className="max-w-6xl mx-auto space-y-6">
 
                 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-2">
 
                     <div>
-                        <h1 className="text-lg font-semibold text-white">
+                        <h1 className="text-xl sm:text-2xl font-semibold text-white">
                             Clients
                         </h1>
                         <p className="text-sm text-slate-400 mt-1">
@@ -44,16 +44,16 @@ export default function Clients() {
 
 
                 <div className="
-            bg-[#111827] border border-white/10 rounded-xl
+            rounded-2xl
             ">
 
                   
-                    <div className="px-6 py-4 border-b border-white/10 text-sm text-slate-400">
+                    <div className="px-4 py-4 sm:px-6 border-b border-white/10 text-sm text-slate-400">
                         All clients
                     </div>
 
                     
-                    <div className="px-6 py-6">
+                    <div className="px-4 py-4 sm:px-6">
                         <ClientCard
                             clientsLoading={loading}
                             clients={clients}

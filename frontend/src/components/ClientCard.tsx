@@ -19,51 +19,15 @@ export default function ClientCard({
 
 }:ClientCardProps){
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [clientName, setClientName] = useState("");
-    const [clientEmail, setClientEmail] = useState("");
-    const [clientPhone, setClientPhone] = useState("");
-    const [creatingClient, setCreatingClient] = useState(false);
-
-    const handleCreateClient=async ():Promise<void>=>{
-        
-        if(!clientEmail || !clientName)
-        {
-            toast.error("Name and Email are required");
-            return;
-        }
-
-        setCreatingClient(true);
-
-        try {
-            await createClient({
-                name: clientName,
-                email: clientEmail,
-                phone: clientPhone || undefined
-            })
-
-            toast.success("✅ Client created!");
-
-           
-            await fetchClients(); 
-
-           
-            setClientName("");
-            setClientEmail("");
-            setClientPhone("");
-            setIsModalOpen(false);
-            
-        } catch (error: unknown) {
-            toast.error(getApiErrorMessage(error));
-        } finally {
-            setCreatingClient(false);
-        }
-    }
-
+   
     return (
         <div className="space-y-6">
 
           
-            <div className="flex items-center justify-between">
+            <div className="
+flex flex-col gap-3
+sm:flex-row sm:items-center sm:justify-between
+">
                 <h2 className="text-lg font-semibold text-white">
                     Clients
                 </h2>
@@ -71,10 +35,13 @@ export default function ClientCard({
                 <button
                     onClick={() => setIsModalOpen(true)}
                     className="
-                px-4 py-2 rounded-lg text-sm font-medium
-                bg-indigo-500 hover:bg-indigo-400 hover:scale-105
-                transition-all duration-200 
-                "
+w-full sm:w-auto
+px-4 py-2.5
+rounded-lg text-sm font-medium
+bg-indigo-500 hover:bg-indigo-400
+shadow-md shadow-indigo-500/20
+transition-all duration-200 active:scale-[0.97]
+"
                 >
                     + Add Client
                 </button>
@@ -87,21 +54,21 @@ export default function ClientCard({
                 </div>
             ) : clients.length === 0 ? (
                 <div className="
-            text-center py-16 text-slate-500
+            text-center py-12 sm:py-16 text-slate-500
             border border-dashed border-white/10 rounded-xl
             ">
                     No clients yet. Add your first client.
                 </div>
             ) : (
                 <div className="
-            grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4
+            grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4
             ">
                     {clients.map(client => (
                         <div
                             key={client.id}
                             className="
                         group
-                        bg-[#111827] border border-white/10 rounded-xl p-4
+                        bg-[#111827] border border-white/10 rounded-xl p-4 sm:p-6
 
                         transition-all duration-200 ease-out
                         hover:border-indigo-500/30 hover:-translate-y-[2px]
@@ -110,7 +77,7 @@ export default function ClientCard({
                         >
 
                            
-                            <h3 className="text-sm font-semibold text-white">
+                            <h3 className="truncate text-sm font-semibold text-white">
                                 {client.name}
                             </h3>
 
@@ -120,7 +87,7 @@ export default function ClientCard({
                             </p>
 
                            
-                            <p className="text-xs text-slate-500 mt-2">
+                            <p className="mt-2 break-all text-xs text-slate-500">
                                 {client.phone || "No phone"}
                             </p>
 
@@ -129,7 +96,7 @@ export default function ClientCard({
                 </div>
             )}
 
-            {/* MODAL */}
+            
             <CreateClientModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
