@@ -22,10 +22,11 @@ export default function ProjectTabs({ projectId }: { projectId: string }) {
         <>
             <div
                 className="
-                sticky top-0 z-40
-                border-b border-white/5
-                bg-transparent
-            "
+    bg-[#0B0F19]/80
+    backdrop-blur-xl
+    border-b border-white/5
+    py-2
+"
             >
 
                 <div className="py-3">
@@ -127,7 +128,7 @@ export default function ProjectTabs({ projectId }: { projectId: string }) {
                         transition={{ duration: 0.25 , ease: "easeInOut"}}
              
                     className="
-            fixed inset-0 z-50
+            fixed inset-0 z-60  
             sm:hidden
         "
                     onClick={() => setMobileOpen(false)}

@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Menu } from "lucide-react";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const [collapsed, setCollapsed] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
 
     return (
         <div className="flex h-screen overflow-hidden bg-[#0B0F19] text-slate-100">
@@ -12,12 +11,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 setCollapsed={setCollapsed}
             />
           
-            <main className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-4 md:p-5 lg:p-6 no-scrollbar">
+            <main className="flex-1 overflow-y-auto overflow-x-hidden p-2 sm:p-4 md:p-5 lg:p-6 no-scrollbar">
                 <div className="mb-4">
                     <button
                         onClick={() => setCollapsed(false)}
                         className="
-        fixed left-4 top-4 z-40
+        fixed left-4 top-4 
+        z-50
         flex h-10 w-10 items-center justify-center
         rounded-xl border border-white/10
         bg-[#111827]/90

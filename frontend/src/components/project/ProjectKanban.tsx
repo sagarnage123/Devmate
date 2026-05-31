@@ -76,7 +76,7 @@ export default function ProjectKanban() {
             <div className="space-y-4 pb-4">
 
                 <div className="
-bg-[#0F172A] border border-white/10 rounded-xl p-4 space-y-4
+bg-[#0F172A] border border-white/10 rounded-xl p-3 sm:p-4 space-y-3 sm:space-y-4
 ">
                     <div className="flex justify-between text-sm text-slate-400">
                         <span>Progress</span>
@@ -86,7 +86,7 @@ bg-[#0F172A] border border-white/10 rounded-xl p-4 space-y-4
                     </div>
 
 
-                    <div className="relative h-2 rounded-full bg-[#111827] overflow-hidden ">
+                    <div className="relative  h-2 sm:h-2 rounded-full bg-[#111827] overflow-hidden ">
 
                         <div
                             className={`h-full ${progressColor} rounded-full trasniton-colors duration-300 ease-in-out`}
@@ -126,8 +126,15 @@ bg-[#0F172A] border border-white/10 rounded-xl p-4 space-y-4
 
 
                 <div className="
-grid grid-cols-1 md:grid-cols-3 gap-5
-items-start
+flex gap-4
+overflow-x-auto
+pb-2
+snap-x snap-mandatory
+no-scrollbar
+
+md:grid md:grid-cols-3
+md:overflow-visible
+md:snap-none
 ">
 
                     {Object.entries(columns).map(([status, tasks]) => {
@@ -142,6 +149,13 @@ items-start
                                 id={status}
                                 className={`
     flex flex-col
+    w-[85vw]
+max-w-[320px]
+shrink-0
+snap-center
+
+md:w-auto
+md:max-w-none
     bg-[#0F172A] border border-white/10 rounded-xl
     p-3 gap-3 h-[420px]
 
