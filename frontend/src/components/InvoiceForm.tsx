@@ -98,7 +98,7 @@ md:p-0
 
                         <input
                             className="w-full
-md:col-span-5 bg-transparent border border-gray-700 rounded-lg px-3 py-2"
+md:col-span-4 bg-transparent border border-gray-700 rounded-lg px-3 py-2"
                             value={item.description}
                             onChange={(e) =>
                                 updateItem(index, "description", e.target.value)
@@ -132,26 +132,30 @@ md:col-span-2 border border-gray-700 rounded-lg px-3 py-2 text-white"
 md:col-span-2 border border-gray-700 rounded-lg px-3 py-2 text-white"
                         />
 
-                        <div className="flex justify-between
-text-sm
-md:block
-md:col-span-2
-md:text-right">
+                        <div className="flex 
+                        justify-between
+                        group
+                        text-sm
+                       
+                        md:col-span-2  
+                            
+                        ">
                             <span className="md:hidden text-slate-500">
                                 Total
                             </span>
 
-                            <span>
+                            <span className="md:block w-fit">
                                 ₹{item.total.toFixed(2)}
                             </span>
-                        </div>
 
                         <button
                             onClick={() => removeItem(index)}
-                            className="ml-auto  sm:opacity-0 sm:group-hover:opacity-100 text-red-400"
+                            className=" sm:opacity-0 sm:group-hover:opacity-100 text-red-400"
                         >
                             <X size={20} />
                         </button>
+                        </div>
+
                     </div>
                 ))}
             </div>
@@ -166,6 +170,7 @@ md:text-right">
                 <p>Subtotal: ₹{subtotal.toFixed(2)}</p>
                 <p>Tax: ₹{taxAmount.toFixed(2)}</p>
                 <p className="font-semibold">Total: ₹{total.toFixed(2)}</p>
+                
             </div>
 
            

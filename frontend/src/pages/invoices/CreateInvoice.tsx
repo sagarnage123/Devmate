@@ -160,7 +160,7 @@ sm:flex-row sm:items-center sm:justify-between">
                                 </div>
 
                                 
-                                <div className="divide-y divide-white/10">
+                                <div className="divide-y divide-white/10 space-y-4">
                                     {lineItems.map((item, index) => (
                                         <div
                                             key={index}
