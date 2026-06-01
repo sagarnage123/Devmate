@@ -1,7 +1,7 @@
 import { Task } from "@/types/Task";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-
+import { GripVertical } from "lucide-react";
 type Props = {
     task: Task;
     onEdit: (task: Task) => void;
@@ -32,8 +32,6 @@ export default function TaskCard({
     return (
         <div
             ref={setNodeRef}
-            {...listeners}
-            {...attributes}
             style={style}
             className={`
     group
@@ -47,14 +45,41 @@ export default function TaskCard({
     ${isDragging ? "opacity-0" : ""}
     `}
         >  
-            <div className="flex justify-between items-center gap-3">
+            <div className="flex justify-between items-start gap-3">
+                <div className="flex items-start gap-2 flex-1 min-w-0">
 
-                <span className="font-medium text-slate-200 leading-snug">
-                    {task.title}
-                </span>
+                    <button
+                        {...listeners}
+                        {...attributes}
+                        className="
+            mt-0.5 shrink-0
+            text-slate-500
+            hover:text-slate-300
+            cursor-grab
+            active:cursor-grabbing
+        "
+                    >
+                        <GripVertical size={16} />
+                    </button>
+
+                    <span
+                        className="
+            font-medium text-slate-200
+            leading-snug
+            break-words
+        "
+                    >
+                        {task.title}
+                    </span>
+
+                </div>
 
                 <button
-                    onClick={() => onStatusChange(task._id, task.status)}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        
+                        onStatusChange(task._id, task.status)
+                    }}
                     className={`
                     text-xs font-medium px-2 py-1 rounded-md capitalize
                     transition-all duration-200
@@ -99,7 +124,8 @@ export default function TaskCard({
                 <button
                     onClick={() => onDelete(task._id)}
                     className="
-                    opacity-0 group-hover:opacity-100
+                    opacity-1
+                    sm:opacity-0 group-hover:opacity-100
                     text-red-400
                     px-2 py-1 rounded-md
                     hover:bg-red-500/10 hover:text-red-300

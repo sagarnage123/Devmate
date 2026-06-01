@@ -2,7 +2,7 @@ import Sidebar from "@/components/Sidebar";
 import { useState } from "react";
 import { Menu } from "lucide-react";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
 
     return (
         <div className="flex h-screen overflow-hidden bg-[#0B0F19] text-slate-100">

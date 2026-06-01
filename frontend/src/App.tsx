@@ -22,12 +22,14 @@ import AppLayout from "./layout/AppLayout.js";
 
 import Clients from "./pages/clients/Clients.js";
 
+import LandingPage from "./pages/landing/LandingPage.js";
+
 
 export default function App() {
 
     return (
         <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
            
             <Route path="invoices" element={
