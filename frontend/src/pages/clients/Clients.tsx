@@ -29,7 +29,7 @@ export default function Clients() {
             <div className="max-w-6xl mx-auto space-y-6">
 
                 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 text-center sm:text-left">
 
                     <div>
                         <h1 className="text-xl sm:text-2xl font-semibold text-white">
@@ -48,7 +48,7 @@ export default function Clients() {
             ">
 
                   
-                    <div className="px-4 py-4 sm:px-6 border-b border-white/10 text-sm text-slate-400">
+                    <div className="px-4 py-4 sm:px-6 border-b border-white/10 text-sm text-slate-400 text-center sm:text-left">
                         All clients
                     </div>
 
