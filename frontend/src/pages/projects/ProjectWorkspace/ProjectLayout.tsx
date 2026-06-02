@@ -51,7 +51,7 @@ export default function ProjectLayout() {
 
     return (
         <ProjectProvider project={project}>
-            <div className="h-full overflow-y-auto overflow-x-hidden text-slate-100 no-scrollbar">
+            <div className="h-full overflow-x-hidden text-slate-100">
 
                 <div
                     className="
@@ -59,10 +59,11 @@ export default function ProjectLayout() {
                         space-y-5 sm:space-y-6
                         px-3 sm:px-4 md:px-6
                         py-4 sm:py-6 md:py-8
+                    
                     "
                 >
 
-                    <div className="overflow-x-auto pb-1 no-scrollbar">
+                    <div className="sticky top-0 z-40">
                         <ProjectTabs projectId={project._id} />
                     </div>
 
@@ -79,7 +80,8 @@ export default function ProjectLayout() {
                             overflow-hidden
                             rounded-2xl border border-white/10
                             bg-[#0F172A]
-                            p-4 sm:p-5 md:p-6
+                            p-2 sm:p-5 md:p-6
+                            relative
                             transition-all duration-200
                         "
                     >
