@@ -39,7 +39,7 @@ export default function Login(){
            
             <div className="
         relative
-        w-full max-w-md
+        w-fit sm:w-full max-w-md
         bg-[#111827]/90 backdrop-blur-md
         border border-white/10
         rounded-2xl p-8
