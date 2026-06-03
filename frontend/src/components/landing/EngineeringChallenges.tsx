@@ -49,7 +49,7 @@ const challenges = [
 
 export default function EngineeringChallenges() {
     return (
-        <section className="py-24">
+        <section className="py-24" id="engineering">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}

@@ -61,7 +61,7 @@ bg-black/60 backdrop-blur-md
                 exit={{ opacity: 0 ,animationDuration:0.3}}
 
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                onClick={onClose}
+                
                 
             >
                 <motion.div
@@ -81,7 +81,7 @@ no-scrollbar rounded-2xl p-4 sm:p-6
                         ease: [0.22, 1, 0.36, 1],
                         delay: 0.05
                     }}
-                        onClick={onClose}
+                       onClick={(e) => e.stopPropagation()}
                 >
 
                   

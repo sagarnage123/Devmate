@@ -6,6 +6,7 @@ export interface TourStep {
     mobileImage: string;
     title: string;
     description: string;
+    isMobileScreenshot?: boolean;
 }
 
 interface WorkflowTourModalProps {
@@ -74,16 +75,20 @@ const WorkflowTourModal = ({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
+                    onClick={onClose}
                     className="
                         fixed
                         inset-0
-                z-200
+                z-50
                 flex
                 items-center
                 justify-center
                 bg-black/70
                 backdrop-blur-md
                 p-4
+                h-auto
+                pt-12
+                overflow-auto
                
             "
                 >
@@ -91,18 +96,26 @@ const WorkflowTourModal = ({
                     <div
                         onClick={(e) => e.stopPropagation()}
                         className="
-                    relative
-                    w-full
-                    max-w-6xl
-                    2xl:max-w-7xl
-                    overflow-hidden
-                    rounded-2xl 
-                    sm:rounded-3xl
-                    bg-white
-                    shadow-2xl
+                relative
+                w-full
+                max-w-6xl
+                2xl:max-w-7xl
+                overflow-hidden
+                rounded-3xl
+                border
+                border-white/10
+                bg-gradient-to-br
+            from-indigo-950
+            via-indigo-900
+            to-slate-950
+                p-6
+                sm:p-10
+                
+                backdrop-blur-xl
+                shadow-2xl
                 "
+                  
                     >
-
                         <button
                             onClick={onClose}
                             className="
@@ -147,16 +160,18 @@ const WorkflowTourModal = ({
         "
                             >
 
-                                <div className="
-            bg-slate-100
-            flex
-            items-center
-            justify-center
-            p-2 
-            sm:p-4
-           
-        ">
-
+                                <div
+                                    className="
+    flex
+    items-center
+    justify-center
+    w-auto
+    max-h-[60vh]
+    sm:max-h-[95vh]
+    p-2
+    
+  "
+                                >
                                     <picture>
                                         <source
                                             media="(max-width: 640px)"
@@ -164,28 +179,29 @@ const WorkflowTourModal = ({
                                         />
 
                                         <img
-                                            src={step.desktopImage}
+                                        src={step.desktopImage}
                                             alt={step.title}
                                             className="
-      w-full
-      rounded-2xl
-      border
-      border-slate-200
-      object-contain
-      max-h-[55vh]
-      sm:max-h-[88vh]
-      shadow-lg
-    "
+    h-auto
+    w-auto
+    max-w-full
+    max-h-[55vh]
+    lg:max-h-[88vh]
+    rounded-2xl
+    border
+    border-slate-200
+    object-contain
+    shadow-lg
+  "
                                         />
                                     </picture>
-
                                 </div>
 
                                 <div className="
             flex
             flex-col
             justify-between
-            p-6
+            p-4
             sm:p-8
             lg:p-10
         ">
@@ -196,13 +212,13 @@ const WorkflowTourModal = ({
                     inline-flex
                     rounded-full
                     border
-                    border-slate-200
-                    bg-slate-100
+                    border-white/10
+                    bg-black/20
                     px-3
                     py-1
                     text-xs
                     font-semibold
-                    text-slate-700
+                    text-slate-100
                 ">
                                             Step {currentStep + 1}
                                         </div>
@@ -224,7 +240,7 @@ const WorkflowTourModal = ({
                     sm:text-base
                     leading-7
                     sm:leading-8
-                    text-slate-600
+                    text-slate-100
                 ">
                                             {step.description}
                                         </p>
@@ -273,17 +289,15 @@ const WorkflowTourModal = ({
                         items-center
                         gap-2
                         rounded-xl
-                        border
-                        border-slate-300
-                        bg-white
+                        bg-slate-900
                         px-4
                         sm:px-5
                         py-3
                         text-sm
                         font-medium
-                        text-slate-700
+                        text-white
                         transition
-                        hover:bg-slate-100
+                        hover:bg-slate-800
                         disabled:opacity-40
                         disabled:cursor-not-allowed
                     "

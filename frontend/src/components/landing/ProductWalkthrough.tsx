@@ -35,12 +35,7 @@ import clientsMobile from "@/assets/screenshots/clients-mobile.png";
 import createClientDesktop from "@/assets/screenshots/create-client-desktop.png";
 import createClientMobile from "@/assets/screenshots/create-client-mobile.png";
 
-console.log("ProductWalkthrough component loaded", {
-    registerDesktop,
-    registerMobile,
-    loginDesktop,
-    loginMobile
-});
+
 
 export const steps: TourStep[] = [
     {
@@ -49,6 +44,7 @@ export const steps: TourStep[] = [
         title: "User Registration",
         description:
             "New users can create an account to access their personal DevMate workspace.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -57,6 +53,8 @@ export const steps: TourStep[] = [
         title: "Secure Authentication",
         description:
             "Users authenticate through JWT-based login before accessing protected application resources.",
+        isMobileScreenshot: true,
+
     },
 
     {
@@ -65,6 +63,7 @@ export const steps: TourStep[] = [
         title: "Projects Dashboard",
         description:
             "The projects area provides a centralized view of ongoing work and project activity.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -73,6 +72,7 @@ export const steps: TourStep[] = [
         title: "Create Project",
         description:
             "Projects can be created and organized to structure client work and delivery.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -81,6 +81,7 @@ export const steps: TourStep[] = [
         title: "Project Overview",
         description:
             "View project details, progress, tasks, notes and invoices from a single workspace.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -89,6 +90,7 @@ export const steps: TourStep[] = [
         title: "Task Management",
         description:
             "Break projects into actionable tasks and track execution progress.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -97,6 +99,7 @@ export const steps: TourStep[] = [
         title: "Kanban Workflow",
         description:
             "Visual task management helps teams monitor work across different stages of completion.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -105,6 +108,7 @@ export const steps: TourStep[] = [
         title: "Project Notes",
         description:
             "Store project-related information and important context alongside active work.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -113,6 +117,7 @@ export const steps: TourStep[] = [
         title: "Invoices Workspace",
         description:
             "Manage project invoices through a dedicated billing workflow.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -121,6 +126,7 @@ export const steps: TourStep[] = [
         title: "Create Invoice",
         description:
             "Generate invoices directly within the platform without relying on external tools.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -129,6 +135,7 @@ export const steps: TourStep[] = [
         title: "Invoice Details",
         description:
             "Review invoice information, payment details and project-related billing records.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -137,6 +144,7 @@ export const steps: TourStep[] = [
         title: "Update Invoice",
         description:
             "Modify invoice information while maintaining a consistent billing workflow.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -145,6 +153,7 @@ export const steps: TourStep[] = [
         title: "Client Management",
         description:
             "Maintain centralized client records connected to projects and invoices.",
+        isMobileScreenshot: true,
     },
 
     {
@@ -153,6 +162,7 @@ export const steps: TourStep[] = [
         title: "Create Client",
         description:
             "Quickly onboard new clients and connect them to future projects.",
+        isMobileScreenshot: true,
     },
 ];
 export default function ProductWalkthrough() {
@@ -161,7 +171,7 @@ export default function ProductWalkthrough() {
 
     return (
         <>
-            <section className="py-24">
+            <section className="py-24" id="walkthrough">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 24 }}

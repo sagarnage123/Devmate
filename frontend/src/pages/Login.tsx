@@ -29,7 +29,7 @@ export default function Login(){
 
 
     return (
-        <div className="min-h-screen overflow-hidden flex items-center justify-center bg-[#0B0F19]">
+        <div className="min-h-screen  overflow-hidden flex items-center justify-center bg-[#0B0F19]">
 
            
             <div className="absolute inset-0 overflow-hidden">
@@ -51,7 +51,7 @@ export default function Login(){
         ">
 
                
-                <h2 className="text-xl font-semibold text-center mb-6">
+                <h2 className="text-xl font-semibold text-center mb-6 text-white">
                     Welcome back
                 </h2>
 
@@ -78,7 +78,9 @@ export default function Login(){
                                 bg-[#0B0F19]
                                 border border-white/10
 
-                                text-sm text-red placeholder:text-slate-500
+                                text-sm 
+                                text-white
+                                 placeholder:text-slate-500
 
                                 focus:outline-none
                                 focus:ring-2 focus:ring-indigo-500/40
@@ -134,6 +136,68 @@ export default function Login(){
                     </button>
 
                 </form>
+
+                <div
+                    className="
+        mt-6
+        rounded-xl
+        border border-indigo-500/20
+        bg-indigo-500/5
+        sm:p-4
+    "
+                >
+                    <div className="flex items-center justify-between gap-3">
+                        <div>
+                            <h3 className="text-sm font-semibold text-white">
+                                Demo Workspace
+                            </h3>
+
+                            <p className="mt-1 text-xs text-slate-400">
+                                Explore DevMate instantly using the pre-configured recruiter account.
+                            </p>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setEmail("demo@devmate.app");
+                                setPassword("Demo@123");
+                            }}
+                            className="
+                shrink-0
+                rounded-lg
+                bg-indigo-500/15
+                px-3
+                py-2
+                text-xs
+                font-medium
+                text-indigo-300
+                transition
+                hover:bg-indigo-500/25
+            "
+                        >
+                            Fill
+                        </button>
+                    </div>
+
+                    <div className="mt-4 space-y-2 text-sm">
+                        <div className="flex items-center justify-between rounded-lg bg-black/20 px-3 py-2">
+                            <span className="text-slate-400">Email</span>
+
+                            <span className="font-medium text-slate-200">
+                                demo@devmate.app
+                            </span>
+                        </div>
+
+                        <div className="flex items-center justify-between rounded-lg bg-black/20 px-3 py-2">
+                            <span className="text-slate-400">Password</span>
+
+                            <span className="font-medium text-slate-200">
+                                Demo@123
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
                 
                 <p className="text-center text-sm text-slate-400 mt-6">

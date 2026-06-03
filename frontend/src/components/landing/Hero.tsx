@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import HeroPreviewCard from "./HeroPreviewCard";
-
+import {useNavigate} from "react-router-dom";
 const fadeUp = {
     hidden: {
         opacity: 0,
@@ -24,8 +24,9 @@ const highlights = [
 ];
 
 export default function Hero() {
+    const navigate = useNavigate();
     return (
-        <section className="relative overflow-hidden py-20 md:py-28 lg:py-32 text-center">
+        <section className="relative overflow-hidden py-20 md:py-28 lg:py-32 text-center" id="hero">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="grid items-center  gap-14 lg:grid-cols-2 lg:gap-16">
                     <div>
@@ -78,12 +79,24 @@ export default function Hero() {
                             variants={fadeUp}
                             className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-between w-fit mx-auto"
                         >
-                            <button className="rounded-xl bg-indigo-600 px-6 py-3 font-medium text-white transition hover:bg-indigo-500">
+                            <button
+                                onClick={() => navigate("/register")}
+                                className="rounded-xl bg-indigo-600 px-3 py-1 font-medium text-white transition hover:bg-indigo-500"
+                            >
                                 Explore the Platform
                             </button>
 
-                            <button className="rounded-xl border border-white/10 px-6 py-3 font-medium text-white transition hover:bg-white/5">
+                            <button
+                                onClick={() => window.open("https://github.com/sagarnage123/Devmate", "_blank", "noopener noreferrer")}
+                                className="rounded-xl border border-white/10 px-6 py-3 font-medium text-white transition hover:bg-white/5"
+                            >
                                 View Source Code
+                            </button>
+                            <button
+                                onClick={() => navigate("/login")}
+                                className="rounded-xl bg-indigo-600 px-6 py-3 font-medium text-white transition hover:bg-indigo-500"
+                            >
+                                Login to demmo account
                             </button>
                         </motion.div>
 

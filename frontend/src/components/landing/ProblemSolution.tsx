@@ -19,7 +19,7 @@ const solutions = [
 
 export default function ProblemSolution() {
     return (
-        <section className="py-24">
+        <section className="py-24" id="problemsolutions">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}

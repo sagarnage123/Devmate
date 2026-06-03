@@ -36,7 +36,7 @@ const workflow = [
 
 export default function Workflow() {
     return (
-        <section className="py-24">
+        <section className="py-24" id="workflow">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
