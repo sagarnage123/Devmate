@@ -1,10 +1,10 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import toast from "react-hot-toast";
 
-const api=axios.create({
-    baseURL:"http://localhost:5000/api",
-    withCredentials:true
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
 });
+
 
 api.interceptors.request.use(
     (config: InternalAxiosRequestConfig)=>{
