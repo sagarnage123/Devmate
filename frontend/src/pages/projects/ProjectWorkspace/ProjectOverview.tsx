@@ -12,52 +12,95 @@ export default function ProjectOverview() {
     const project = useProjectContext();
 
     return (
-        <div className="grid gap-5 md:grid-cols-2">
+        <div
+            className="
+                grid grid-cols-1
+                gap-4 sm:gap-5
+                lg:grid-cols-2
+            "
+        >
 
-            <div className="
-            group relative
-            bg-[#0F172A] border border-white/10 rounded-xl p-5
-            transition-all duration-300 ease-out
-            hover:border-indigo-500/30 hover:-translate-y-0.5
-            hover:shadow-lg hover:shadow-indigo-500/5
-            ">
+            <div
+                className="
+                    group relative overflow-hidden
+                    rounded-2xl border border-white/10
+                    bg-[#0F172A]
+                    p-4 sm:p-5
 
-                <h3 className="text-xs font-medium text-slate-400 mb-2">
+                    transition-all duration-300 ease-out
+                    hover:-translate-y-0.5
+                    hover:border-indigo-500/30
+                    hover:shadow-lg hover:shadow-indigo-500/5
+                "
+            >
+
+                <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">
                     Description
                 </h3>
 
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <p
+                    className="
+                        break-words
+                        text-sm leading-relaxed text-slate-300
+                    "
+                >
                     {project.description || "No description provided"}
                 </p>
             </div>
 
-            
-            <div className="
-            group relative
-            bg-[#0F172A] border border-white/10 rounded-xl p-5
-            transition-all duration-300 ease-out
-            hover:border-indigo-500/30 hover:-translate-y-0.5
-            hover:shadow-lg hover:shadow-indigo-500/5
-            ">
 
-                <h3 className="text-xs font-medium text-slate-400 mb-3">
+            <div
+                className="
+                    group relative overflow-hidden
+                    rounded-2xl border border-white/10
+                    bg-[#0F172A]
+                    p-4 sm:p-5
+
+                    transition-all duration-300 ease-out
+                    hover:-translate-y-0.5
+                    hover:border-indigo-500/30
+                    hover:shadow-lg hover:shadow-indigo-500/5
+                "
+            >
+
+                <h3 className="mb-4 text-xs font-medium uppercase tracking-wide text-slate-400">
                     Timeline
                 </h3>
 
-                <div className="flex justify-between items-center">
+                <div
+                    className="
+                        flex items-center justify-between gap-4
+                    "
+                >
 
-                    <div className="space-y-1">
-                        <p className="text-xs text-slate-500">Start</p>
-                        <p className="text-sm font-medium text-slate-200">
+                    <div className="min-w-0 space-y-1">
+                        <p className="text-xs text-slate-500">
+                            Start
+                        </p>
+
+                        <p
+                            className="
+                                truncate
+                                text-sm font-medium text-slate-200
+                            "
+                        >
                             {formatDate(project.startDate)}
                         </p>
                     </div>
 
-                    <div className="h-6 w-px bg-white/10" />
+                    <div className="h-8 w-px shrink-0 bg-white/10" />
 
-                    <div className="space-y-1 text-right">
-                        <p className="text-xs text-slate-500">Due</p>
-                        <p className="text-sm font-medium text-slate-200">
+                    <div className="min-w-0 space-y-1 text-right">
+                        <p className="text-xs text-slate-500">
+                            Due
+                        </p>
+
+                        <p
+                            className="
+                                truncate
+                                text-sm font-medium text-slate-200
+                            "
+                        >
                             {formatDate(project.dueDate)}
                         </p>
                     </div>
@@ -65,52 +108,77 @@ export default function ProjectOverview() {
                 </div>
             </div>
 
-           
-            <div className="
-            group relative
-            bg-[#0F172A] border border-white/10 rounded-xl p-5
-            transition-all duration-300 ease-out
-            hover:border-indigo-500/30 hover:-translate-y-0.5
-            hover:shadow-lg hover:shadow-indigo-500/5
-            ">
 
-                <h3 className="text-xs font-medium text-slate-400 mb-3">
+            <div
+                className="
+                    group relative overflow-hidden
+                    rounded-2xl border border-white/10
+                    bg-[#0F172A]
+                    p-4 sm:p-5
+
+                    transition-all duration-300 ease-out
+                    hover:-translate-y-0.5
+                    hover:border-indigo-500/30
+                    hover:shadow-lg hover:shadow-indigo-500/5
+                "
+            >
+
+                <h3 className="mb-3 text-xs font-medium uppercase tracking-wide text-slate-400">
                     Status
                 </h3>
 
                 <div className="flex items-center gap-2.5">
 
-                    <span className="
-                    h-2.5 w-2.5 rounded-full
-                    bg-indigo-500
-                    shadow-sm shadow-indigo-500/50
-                    " />
+                    <span
+                        className="
+                            h-2.5 w-2.5 shrink-0 rounded-full
+                            bg-indigo-500
+                            shadow-sm shadow-indigo-500/50
+                        "
+                    />
 
-                    <p className="text-sm font-medium text-slate-200 capitalize">
+                    <p
+                        className="
+                            truncate
+                            text-sm font-medium capitalize text-slate-200
+                        "
+                    >
                         {project.status}
                     </p>
 
                 </div>
             </div>
 
-           
-            <div className="
-            group relative
-            bg-[#0F172A] border border-white/10 rounded-xl p-5
-            transition-all duration-300 ease-out
-            hover:border-indigo-500/30 hover:-translate-y-0.5
-            hover:shadow-lg hover:shadow-indigo-500/5
-            ">
 
-                <h3 className="text-xs font-medium text-slate-400 mb-2">
+            <div
+                className="
+                    group relative overflow-hidden
+                    rounded-2xl border border-white/10
+                    bg-[#0F172A]
+                    p-4 sm:p-5
+
+                    transition-all duration-300 ease-out
+                    hover:-translate-y-0.5
+                    hover:border-indigo-500/30
+                    hover:shadow-lg hover:shadow-indigo-500/5
+                "
+            >
+
+                <h3 className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-400">
                     Budget
                 </h3>
 
-                <p className="text-xl font-semibold text-white tracking-tight tabular-nums">
+                <p
+                    className="
+                        break-words
+                        text-2xl font-semibold tracking-tight
+                        text-white tabular-nums
+                    "
+                >
                     {project.budget ? `₹${project.budget}` : "—"}
                 </p>
 
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="mt-1 text-xs text-slate-500">
                     Total allocated budget
                 </p>
             </div>
