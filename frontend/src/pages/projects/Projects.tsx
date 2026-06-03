@@ -37,11 +37,11 @@ export default function Projects() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
                 <div className="min-w-0">
-                    <h1 className="text-2xl sm:text-3xl text-center font-semibold tracking-tight text-slate-100">
+                    <h1 className="text-2xl sm:text-3xl text-center sm:text-left font-semibold tracking-tight text-slate-100">
                         Projects
                     </h1>
 
-                    <p className="mt-1 text-sm text-slate-400 text-center">
+                    <p className="mt-1 text-sm text-slate-400 text-center sm:text-left  ">
                         Manage and track all your active projects
                     </p>
                 </div>
