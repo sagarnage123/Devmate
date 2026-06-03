@@ -19,6 +19,7 @@ import { errorHandler } from "./middleware/errorMiddleware";
 const allowedOrigins: string[] = [
     "http://localhost:5173",
     "http://localhost:5174",
+    "https://devmate-5vow.vercel.app"
 ];
 
 app.use(
