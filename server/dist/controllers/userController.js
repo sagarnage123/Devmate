@@ -38,6 +38,13 @@ exports.loginUser = (0, asyncHandler_1.asyncHandler)(async (req, res, next) => {
     if (!user) {
         return next((0, createError_1.createError)("This email is not register", 400));
     }
+    if (process.env.NODE_ENV === "development") {
+        console.log("🔍 User found for login:", {
+            id: user._id.toString(),
+            email: user.email,
+            passwordHash: password,
+        });
+    }
     const isPasswordValid = await bcryptjs_1.default.compare(password, user.password);
     if (!isPasswordValid) {
         return next((0, createError_1.createError)("Invalid Password", 400));

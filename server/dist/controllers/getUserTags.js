@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserTags = void 0;
 const Note_1 = __importDefault(require("../models/Note"));
-const asyncHandler_js_1 = require("../utils/asyncHandler.js");
-const createError_js_1 = require("../utils/createError.js");
-const getUserTags = (0, asyncHandler_js_1.asyncHandler)(async (req, res, next) => {
+const asyncHandler_1 = require("../utils/asyncHandler");
+const createError_1 = require("../utils/createError");
+const getUserTags = (0, asyncHandler_1.asyncHandler)(async (req, res, next) => {
     if (!req.user || !req.user._id) {
-        return next((0, createError_js_1.createError)("User not authenticated", 401));
+        return next((0, createError_1.createError)("User not authenticated", 401));
     }
     const tags = await Note_1.default.distinct("tags", { user: req.user._id });
     res.status(200).json({

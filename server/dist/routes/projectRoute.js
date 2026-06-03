@@ -11,4 +11,5 @@ router.post("/", authMiddleware_1.protect, projectController_1.createProject);
 router.get("/", authMiddleware_1.protect, projectController_1.getProject);
 router.put("/:id", authMiddleware_1.protect, projectController_1.updateProject);
 router.delete("/:id", authMiddleware_1.protect, projectController_1.deleteProject);
+router.get("/:id", authMiddleware_1.protect, projectController_1.getProjectById);
 exports.default = router;

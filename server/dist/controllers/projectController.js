@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProject = exports.updateProject = exports.getProject = exports.createProject = void 0;
+exports.getProjectById = exports.deleteProject = exports.updateProject = exports.getProject = exports.createProject = void 0;
 const Client_1 = __importDefault(require("../models/Client"));
 const Project_1 = __importDefault(require("../models/Project"));
 const asyncHandler_1 = require("../utils/asyncHandler");
 const createError_1 = require("../utils/createError");
+const mongoose_1 = require("mongoose");
 const createProject = (0, asyncHandler_1.asyncHandler)(async (req, res, next) => {
     const { clientId, budget, dueDate, startDate, description, status, title } = req.body;
     if (!req.user)
@@ -42,10 +43,22 @@ const getProject = (0, asyncHandler_1.asyncHandler)(async (req, res, next) => {
         filter.clientId = clientId;
     if (status)
         filter.status = status;
-    const projects = await Project_1.default.find(filter);
+    const projects = await Project_1.default.find(filter).populate("clientId", "name email").lean();
     res.status(200).json({ projects });
 });
 exports.getProject = getProject;
+const getProjectById = (0, asyncHandler_1.asyncHandler)(async (req, res, next) => {
+    const { id } = req.params;
+    if (!id)
+        throw new mongoose_1.Error("Id required for project");
+    const project = await Project_1.default.findOne({ _id: id }).populate("clientId", "name email");
+    if (!project)
+        throw new mongoose_1.Error("Project not found");
+    res.status(200).json({
+        data: project
+    });
+});
+exports.getProjectById = getProjectById;
 const updateProject = (0, asyncHandler_1.asyncHandler)(async (req, res, next) => {
     const { id } = req.params;
     if (!req.user) {

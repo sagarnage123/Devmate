@@ -15,6 +15,7 @@ const tagRoutes_1 = __importDefault(require("./routes/tagRoutes"));
 const clientRoutes_1 = __importDefault(require("./routes/clientRoutes"));
 const projectRoute_1 = __importDefault(require("./routes/projectRoute"));
 const taskRoutes_1 = __importDefault(require("./routes/taskRoutes"));
+const invoice_routes_1 = __importDefault(require("./routes/invoice.routes"));
 const errorMiddleware_1 = require("./middleware/errorMiddleware");
 const allowedOrigins = [
     "http://localhost:5173",
@@ -37,6 +38,7 @@ app.use("/api/tags", tagRoutes_1.default);
 app.use("/api/client", clientRoutes_1.default);
 app.use("/api/project", projectRoute_1.default);
 app.use("/api/task", taskRoutes_1.default);
+app.use("/api/invoices", invoice_routes_1.default);
 app.get("/", (req, res) => {
     res.send("Hello");
 });
@@ -55,7 +57,7 @@ mongoose_1.default
 });
 app.listen(PORT, (err) => {
     if (err) {
-        console.log("Error found while setting up the server", err);
+        console.log("Error found while setting up the server\n", err);
     }
     else {
         console.log(`Server is running at the PORT ${PORT}`);

@@ -34,44 +34,12 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const taskSchema = new mongoose_1.Schema({
-    userId: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
-    projectId: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "Project",
-        required: true
-    },
-    title: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    description: {
-        type: String,
-        trim: true
-    },
-    status: {
-        type: String,
-        enum: ["To Do", "In Progress", "Done"],
-        default: "To Do"
-    },
-    priority: {
-        type: String,
-        enum: ["Low", "Medium", "High"],
-        default: "Medium"
-    },
-    dueDate: {
-        type: Date
-    },
-    completedAt: {
-        type: Date
-    }
-}, { timestamps: true });
-taskSchema.index({ projectId: 1, status: 1 });
-taskSchema.index({ userId: 1, dueDate: 1 });
-const Task = mongoose_1.default.models.Task || mongoose_1.default.model("Task", taskSchema);
-exports.default = Task;
+const counterSchema = new mongoose_1.Schema({
+    userId: { type: mongoose_1.default.Schema.Types.ObjectId, required: true },
+    year: { type: Number, required: true },
+    seq: { type: Number, default: 0 },
+});
+counterSchema.index({ userId: 1, year: 1 }, { unique: true });
+const Counter = mongoose_1.default.models.Counter ||
+    mongoose_1.default.model("Counter", counterSchema);
+exports.default = Counter;
