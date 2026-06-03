@@ -60,12 +60,19 @@ export default function ProjectTasks() {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="
-bg-[#0F172A] border border-white/10 rounded-lg px-3 py-2
-focus-within:border-indigo-500/40
-transition-all duration-200 
-">
+        <div className="space-y-5 sm:space-y-6">
+
+            <div
+                className="
+                rounded-2xl border border-white/10
+                bg-[#0F172A]
+                px-2 sm:px-4
+                py-2.5 sm:py-3
+
+                transition-all duration-200
+                focus-within:border-indigo-500/40
+            "
+            >
                 <input
                     type="text"
                     value={title}
@@ -73,9 +80,12 @@ transition-all duration-200
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="Add a task and press Enter..."
                     className="
-    w-full text-sm bg-transparent outline-none
-    text-slate-200 placeholder:text-slate-500
-    "
+                    w-full bg-transparent
+                    text-sm text-slate-200
+                    outline-none
+
+                    placeholder:text-slate-500
+                "
                     disabled={taskSubmitting}
                     onKeyDown={async (e) => {
                         if (e.key !== "Enter") return;
@@ -86,7 +96,7 @@ transition-all duration-200
 
                         try {
                             await createTask({ title: trimmed, priority: "Medium" });
-                            toast.success("Task created",{icon:"✅"});
+                            toast.success("Task created", { icon: "✅" });
                             setTitle("");
                         } catch (err) {
                             toast.error("Failed to create task");
@@ -94,16 +104,22 @@ transition-all duration-200
                     }}
                 />
             </div>
+
             {taskSubmitting && (
-                <div className="text-xs text-slate-500 mt-1">
+                <div className="mt-1 text-xs text-slate-500">
                     Adding task...
                 </div>
             )}
 
-            <div className="
-bg-[#0F172A] border border-white/10 rounded-xl p-5
-">
-                <h3 className="text-sm font-medium text-slate-300 mb-3">
+            <div
+                className="
+                overflow-hidden
+                rounded-2xl border border-white/10
+                bg-[#0F172A]
+                p-2 sm:p-5
+            "
+            >
+                <h3 className="mb-4 text-sm font-medium text-slate-300">
                     Tasks
                 </h3>
 
@@ -117,22 +133,53 @@ bg-[#0F172A] border border-white/10 rounded-xl p-5
                             <li
                                 key={task._id}
                                 className="
-                                    group
-                                    bg-[#111827] border border-white/10 rounded-lg p-4 space-y-2
+                                group
+                                overflow-hidden
+                                rounded-xl border border-white/10
+                                bg-[#111827]
+                                p-3 sm:p-5
 
-                                    transition-all duration-200 ease-out
-                                    hover:border-indigo-500/30 hover:-translate-y-[1px]
-                                    hover:shadow-lg hover:shadow-indigo-500/5 "
+                                transition-all duration-200 ease-out
+
+                                hover:-translate-y-[1px]
+                                hover:border-indigo-500/30
+                                hover:shadow-lg hover:shadow-indigo-500/5
+                            "
                             >
-                                <div className="flex justify-between items-center gap-3">
-                                    <span className="font-medium text-slate-200">
-                                        {task.title}
-                                    </span>
 
-                                    <div className="flex items-center gap-4 transition-opacity">
+                                <div
+                                    className="
+                                    flex flex-col gap-3
+                                    sm:flex-row sm:items-start sm:justify-between
+                                "
+                                >
+
+                                    <div className="min-w-0 flex-1">
+
+                                        <span
+                                            className="
+                                            block break-words
+                                            font-medium text-slate-200
+                                        "
+                                        >
+                                            {task.title}
+                                        </span>
+
+                                    </div>
+
+                                    <div
+                                        className="
+                                        flex flex-wrap items-center gap-2 sm:gap-3 justify-between
+                                    "
+                                    >
+
                                         <button
                                             onClick={() => updateTaskStatus(task._id, task.status)}
-                                            className="text-xs text-slate-400 capitalize hover:text-slate-200 transition-colors"
+                                            className="
+                                            text-xs capitalize
+                                            transition-colors
+                                            hover:text-slate-200
+                                        "
                                         >
                                             <span
                                                 className={`text-xs font-medium capitalize ${task.status === "Done"
@@ -145,22 +192,26 @@ bg-[#0F172A] border border-white/10 rounded-xl p-5
                                                 {task.status}
                                             </span>
                                         </button>
+
                                         {deletingId === task._id ? (
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex items-center gap-2 justify-end">
 
                                                 <button
                                                     onClick={async () => {
                                                         await deleteTask(task._id);
-                                                        toast.success("Task deleted",{icon:"🗑️"});
+                                                        toast.success("Task deleted", { icon: "🗑️" });
                                                         setDeletingId(null);
                                                     }}
                                                     className="
-                                                        opacity-0 group-hover:opacity-100
-                                                        text-xs text-red-400
-                                                        px-2 py-1 rounded-md
-                                                        hover:bg-red-500/10 hover:text-red-300
-                                                        transition-all duration-200
-                                                        "
+                                                    text-xs text-red-400
+                                                    rounded-md px-2 py-1
+                                                    transition-all duration-200
+
+                                                    hover:bg-red-500/10
+                                                    hover:text-red-300
+
+                                                    sm:opacity-0 sm:group-hover:opacity-100
+                                                "
                                                 >
                                                     Confirm
                                                 </button>
@@ -168,59 +219,85 @@ bg-[#0F172A] border border-white/10 rounded-xl p-5
                                                 <button
                                                     onClick={() => setDeletingId(null)}
                                                     className="
-                                                    opacity-0 group-hover:opacity-100
                                                     text-xs text-slate-400
-                                                    px-2 py-1 rounded-md
-                                                    hover:bg-slate-700 hover:text-white
+                                                    rounded-md px-2 py-1
                                                     transition-all duration-200
-                                                    "
+
+                                                    hover:bg-slate-700
+                                                    hover:text-white
+
+                                                    sm:opacity-0 sm:group-hover:opacity-100
+                                                "
                                                 >
                                                     Cancel
                                                 </button>
 
                                             </div>
-                                        ) :
-                                            (<button
+                                        ) : (
+                                            <button
                                                 onClick={() => {
                                                     setDeletingId(task._id);
                                                 }}
                                                 className="
-                                                    opacity-0 group-hover:opacity-100
-                                                    text-xs text-red-400
-                                                    px-2 py-1 rounded-md
-                                                    hover:bg-red-500/10 hover:text-red-300
-                                                    transition-all duration-200
-                                                    "
+                                                text-xs text-red-400
+                                                rounded-md px-2 py-1
+                                                transition-all duration-200
+
+                                                hover:bg-red-500/10
+                                                hover:text-red-300
+
+                                                sm:opacity-0 sm:group-hover:opacity-100
+                                            "
                                             >
                                                 Delete
-                                            </button>)}
+                                            </button>
+                                        )}
+
                                     </div>
+
                                 </div>
 
-                                <span
-                                    className={`text-xs font-medium ${task.priority === "High"
-                                        ? "text-red-400"
-                                        : task.priority === "Medium"
-                                            ? "text-amber-400"
-                                            : "text-slate-400"
-                                        }`}
+                                <div
+                                    className="
+                                    mt-3 flex flex-wrap items-center gap-x-4 gap-y-2
+                                "
                                 >
-                                    {task.priority}
-                                </span>
-                                {task.dueDate && (
-                                    <span className="ml-4 text-xs text-slate-500">
-                                        Due {new Date(task.dueDate).toLocaleDateString()}
-                                    </span>
-                                )}
 
-                                <div className="text-sm space-y-1">
+                                    <span
+                                        className={`text-xs font-medium ${task.priority === "High"
+                                            ? "text-red-400"
+                                            : task.priority === "Medium"
+                                                ? "text-amber-400"
+                                                : "text-slate-400"
+                                            }`}
+                                    >
+                                        {task.priority}
+                                    </span>
+
+                                    {task.dueDate && (
+                                        <span className="text-xs text-slate-500">
+                                            Due {new Date(task.dueDate).toLocaleDateString()}
+                                        </span>
+                                    )}
+
+                                </div>
+
+                                <div className="mt-3 space-y-1 text-sm">
 
                                     {task.description ? (
                                         <p
                                             onClick={() => openEditModal(task)}
-                                            className={`text-slate-400 cursor-pointer
-    hover:text-slate-200 ${expandedTaskId === task._id ? "" : "line-clamp-2"
-                                                }`}
+                                            className={`
+                                            cursor-pointer
+                                            break-words
+                                            text-slate-400
+                                            hover:text-slate-200
+
+                                            ${expandedTaskId === task._id
+                                                    ? ""
+                                                    : "line-clamp-2"
+                                                }
+                                        `}
                                         >
                                             {task.description}
                                         </p>
@@ -228,8 +305,9 @@ bg-[#0F172A] border border-white/10 rounded-xl p-5
                                         <button
                                             onClick={() => openEditModal(task)}
                                             className="
-                                                text-slate-500 hover:text-slate-300 text-sm italic
-                                                "
+                                            text-sm italic text-slate-500
+                                            hover:text-slate-300
+                                        "
                                         >
                                             Add description...
                                         </button>
@@ -243,9 +321,14 @@ bg-[#0F172A] border border-white/10 rounded-xl p-5
                                                     expandedTaskId === task._id ? null : task._id
                                                 );
                                             }}
-                                            className="text-xs text-slate-500 hover:text-slate-300"
+                                            className="
+                                            text-xs text-slate-500
+                                            hover:text-slate-300
+                                        "
                                         >
-                                            {expandedTaskId === task._id ? "Show less" : "Show more..."}
+                                            {expandedTaskId === task._id
+                                                ? "Show less"
+                                                : "Show more..."}
                                         </button>
                                     )}
 
@@ -257,6 +340,7 @@ bg-[#0F172A] border border-white/10 rounded-xl p-5
                 )}
 
             </div>
+
             <TaskEditModal
                 task={editingTask}
                 isOpen={isModalOpen}

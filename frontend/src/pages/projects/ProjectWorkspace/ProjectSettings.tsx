@@ -23,7 +23,9 @@ export default function ProjectSettings() {
     }, [project]);
 
     if (loading || !form || !project) {
-        return <div>Loading...</div>;
+        return <div className="text-sm text-slate-400 animate-pulse">
+            Loading project settings...
+        </div>
     }
    
     if (error) {
@@ -79,7 +81,7 @@ export default function ProjectSettings() {
     return (
         <div className="
     bg-[#0F172A] border border-white/10 rounded-xl
-    p-6 space-y-8
+    p-4 sm:p-5 md:p-6 space-y-8
     ">
 
            
@@ -167,7 +169,8 @@ export default function ProjectSettings() {
                 </h3>
 
                 <div className="
-            flex items-center justify-between gap-4
+           flex flex-col gap-4
+sm:flex-row sm:items-center sm:justify-between
             bg-red-500/5 border border-red-500/10 rounded-lg p-4
             ">
 
@@ -179,7 +182,7 @@ export default function ProjectSettings() {
                     </div>
 
                     
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
 
                         {!confirmDelete ? (
                             <button
@@ -227,11 +230,12 @@ export default function ProjectSettings() {
             </div>
 
             
-            <div className="flex justify-end pt-2">
+            <div className="flex flex-col sm:flex-row sm:justify-end pt-2">
                 <button
                     onClick={handleSave}
                     disabled={saving}
                     className="
+                    w-full sm:w-auto
                 px-5 py-2 rounded-lg text-sm font-medium
                 bg-indigo-500 text-white
                 transition-all duration-300 ease-out
