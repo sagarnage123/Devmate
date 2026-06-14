@@ -63,7 +63,7 @@ export default function ProjectLayout() {
                     "
                 >
 
-                    <div className="sticky top-0 z-40">
+                    <div className="sticky z-40 bg-transparent">
                         <ProjectTabs projectId={project._id} />
                     </div>
 
