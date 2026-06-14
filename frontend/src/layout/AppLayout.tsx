@@ -15,7 +15,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <div className="mb-4">
                     <button
                         onClick={() => setCollapsed(false)}
-                        className="
+                        className={`
         fixed left-4 top-4 
         z-50
         flex h-10 w-10 items-center justify-center
@@ -25,7 +25,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         text-slate-300
         transition-colors
         hover:bg-slate-800 hover:text-white
-    "
+        ${!collapsed ? "hidden" : ""}
+                            `}
+        
                     >
                         <Menu size={18} />
                     </button>
