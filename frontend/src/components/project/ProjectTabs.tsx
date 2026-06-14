@@ -19,11 +19,11 @@ export default function ProjectTabs({ projectId }: { projectId: string }) {
     const activeTab =
         tabs.find((tab) => location.pathname.includes(tab.path)) || tabs[0];
     return (
-        <div className="fixed top-0 left-[5%] w-[90%] z-40 bg-transparent">
+        <div className="fixed top-0 left-[20%] w-[60%] z-50 bg-transparent">
             <div
                 className="
-    bg-[#0B0F19]/80
-    backdrop-blur-xl
+   
+    
     border-b border-white/5
     py-2
 "
