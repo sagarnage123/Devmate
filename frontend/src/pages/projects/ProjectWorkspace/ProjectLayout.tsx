@@ -63,9 +63,9 @@ export default function ProjectLayout() {
                     "
                 >
 
-                    <div className="sticky z-40 bg-transparent">
+                    {/* <div className="sticky z-40 bg-transparent"> */}
                         <ProjectTabs projectId={project._id} />
-                    </div>
+                    {/* </div> */}
 
                     <div className="min-w-0">
                         {isOverview ? (

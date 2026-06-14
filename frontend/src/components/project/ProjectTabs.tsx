@@ -19,7 +19,7 @@ export default function ProjectTabs({ projectId }: { projectId: string }) {
     const activeTab =
         tabs.find((tab) => location.pathname.includes(tab.path)) || tabs[0];
     return (
-        <>
+        <div>
             <div
                 className="
     bg-[#0B0F19]/80
@@ -185,6 +185,6 @@ export default function ProjectTabs({ projectId }: { projectId: string }) {
                 
             )}
             </AnimatePresence>
-        </>
+        </div>
     );
 }
