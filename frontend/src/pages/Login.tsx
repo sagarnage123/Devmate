@@ -5,7 +5,7 @@ import { login } from "../api/auth";
 import { toast } from "react-hot-toast";
 import { getApiErrorMessage } from "../utils/getApiErrorMessage";
 import { Circles } from 'react-loader-spinner'
-
+import {ThreeDots} from 'react-loader-spinner'
 export default function Login() {
 
     const [email, setEmail] = useState<string>("");
@@ -22,16 +22,15 @@ export default function Login() {
             setLoading(true);
             await login({ email, password });
             toast.success("Logged in successfully");
-            setTimeout(() => {
+           
                 navigate("/projects");
-                setLoading(false);
-            }, 30000);
 
         } catch (error: unknown) {
             toast.error(getApiErrorMessage(error));
-            setLoading(false);
+            
         }
         finally {
+            setLoading(false);
 
         }
 
@@ -49,10 +48,12 @@ export default function Login() {
 
             <div className="
         relative
-        w-fit sm:w-full max-w-md
+        w-full max-w-md
+        h-full
+        p-2
         bg-[#111827]/90 backdrop-blur-md
         border border-white/10
-        rounded-2xl p-8
+        rounded-2xl sm:p-8
 
         shadow-xl shadow-black/40
 
@@ -146,25 +147,6 @@ export default function Login() {
                         Login
                     </button>
 
-
-                    {loading && (
-                        <div className="flex items-center justify-between  bg-inherit inset-0 mx-auto bg-red">
-                            <span className="mr-2 text-white">
-                                Loading...
-                            </span>
-                                <Circles
-                                    height="25"
-                                    width="25"
-                                    color="white"
-                                    ariaLabel="Circles-loading"
-                                    wrapperStyle={{}}
-                                    wrapperClass="wrapper-class"
-                                    visible={true}
-                                />
-                        </div>
-                    )}
-
-
                 </form>
 
                 <div
@@ -173,6 +155,7 @@ export default function Login() {
         rounded-xl
         border border-indigo-500/20
         bg-indigo-500/5
+        p-2
         sm:p-4
     "
                 >
@@ -239,6 +222,27 @@ export default function Login() {
                         Sign up
                     </Link>
                 </p>
+
+                {loading && (
+                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-2xl  bg-[#111827]/90 backdrop-blur-sm">
+                        <div className="flex justify-content-center align-items-center text-white text-xl mb-2">
+                            <span className="mr-2">
+                            Loading
+                                </span>
+                            
+                        <Circles
+                            height="25"
+                            width="25"
+                            color="white"
+                            ariaLabel="Circles-loading"
+                            wrapperStyle={{}}
+                            wrapperClass="wrapper-class"
+                            visible={true}
+                        />
+                        </div>
+                    </div>
+                )}
+                
 
             </div>
 
