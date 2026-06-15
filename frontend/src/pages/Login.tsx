@@ -6,19 +6,19 @@ import { toast } from "react-hot-toast";
 import { getApiErrorMessage } from "../utils/getApiErrorMessage";
 import { Circles } from 'react-loader-spinner'
 
-export default function Login(){
+export default function Login() {
 
-    const [email,setEmail]=useState<string>("");
-    const [password,setPassword]=useState<string>("");
-    const [loading,setLoading]=useState<boolean>(false);
-   
-    const navigate=useNavigate();
-  
-    const handleLogin=async (e:React.FormEvent<HTMLFormElement>):Promise<void>=>{
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const navigate = useNavigate();
+
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
 
         e.preventDefault();
 
-       try {
+        try {
             setLoading(true);
             await login({ email, password });
             toast.success("Logged in successfully");
@@ -26,27 +26,27 @@ export default function Login(){
                 navigate("/projects");
                 setLoading(false);
             }, 30000);
- 
+
         } catch (error: unknown) {
             toast.error(getApiErrorMessage(error));
-           setLoading(false);
-        } 
+            setLoading(false);
+        }
         finally {
-            
+
         }
 
     };
 
 
     return (
-        <div className="min-h-screen  overflow-hidden flex items-center justify-center bg-[#0B0F19]">
+        <div className="min-h-screen  overflow-hidden flex items-center justify-center bg-[#0B0F19] p-4 sm:p-0">
 
-           
+
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute w-[400px] h-[400px] bg-indigo-500/10 blur-3xl top-[-100px] left-[-100px]" />
                 <div className="absolute w-[300px] h-[300px] bg-indigo-500/10 blur-3xl bottom-[-100px] right-[-100px]" />
             </div>
-           
+
             <div className="
         relative
         w-fit sm:w-full max-w-md
@@ -60,18 +60,18 @@ export default function Login(){
         animate-[fadeIn_0.6s_ease-out]
         ">
 
-               
+
                 <h2 className="text-xl font-semibold text-center mb-6 text-white">
                     Welcome back
                 </h2>
 
-                
+
                 <form
                     onSubmit={handleLogin}
                     className="space-y-5"
                 >
 
-                    
+
                     <div className="space-y-1">
                         <label className="text-sm text-slate-400">
                             Email
@@ -101,7 +101,7 @@ export default function Login(){
                         />
                     </div>
 
-                   
+
                     <div className="space-y-1">
                         <label className="text-sm text-slate-400">
                             Password
@@ -129,34 +129,41 @@ export default function Login(){
                         />
                     </div>
 
-                    
+
                     <button
                         type="submit"
                         className="
-                    w-full py-2 rounded-lg text-sm font-medium
-
-                    bg-indigo-500 hover:bg-indigo-400
-                    shadow-md shadow-indigo-500/20
-
-                    transition-all duration-200
-                    active:scale-[0.97]
-                    "
+                        w-full py-2 rounded-lg text-sm font-medium
+                        
+                        bg-indigo-500 hover:bg-indigo-400
+                        shadow-md shadow-indigo-500/20
+                        
+                        transition-all duration-200
+                        active:scale-[0.97]
+                        "
+                        hidden={loading}
                     >
                         Login
-                        {loading && (
-                            <span className="ml-2">
+                    </button>
+
+
+                    {loading && (
+                        <div className="flex items-center justify-between  bg-inherit inset-0 mx-auto bg-red">
+                            <span className="mr-2 text-white">
+                                Loading...
+                            </span>
                                 <Circles
-                                    height="80"
-                                    width="80"
-                                    color="#4fa94d"
+                                    height="25"
+                                    width="25"
+                                    color="white"
                                     ariaLabel="Circles-loading"
                                     wrapperStyle={{}}
                                     wrapperClass="wrapper-class"
                                     visible={true}
                                 />
-                            </span>
-                        )}
-                    </button>
+                        </div>
+                    )}
+
 
                 </form>
 
@@ -222,7 +229,7 @@ export default function Login(){
                     </div>
                 </div>
 
-                
+
                 <p className="text-center text-sm text-slate-400 mt-6">
                     Don’t have an account?
                     <Link
@@ -235,7 +242,7 @@ export default function Login(){
 
             </div>
 
-            
+
             <style>
                 {`
             @keyframes fadeIn {
