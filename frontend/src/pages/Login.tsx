@@ -4,26 +4,36 @@ import { Link } from "react-router-dom";
 import { login } from "../api/auth";
 import { toast } from "react-hot-toast";
 import { getApiErrorMessage } from "../utils/getApiErrorMessage";
-
+import { Circles } from 'react-loader-spinner'
 
 export default function Login(){
 
     const [email,setEmail]=useState<string>("");
     const [password,setPassword]=useState<string>("");
+    const [loading,setLoading]=useState<boolean>(false);
    
     const navigate=useNavigate();
-
+  
     const handleLogin=async (e:React.FormEvent<HTMLFormElement>):Promise<void>=>{
 
         e.preventDefault();
 
        try {
+            setLoading(true);
             await login({ email, password });
             toast.success("Logged in successfully");
-            navigate("/projects");
+            setTimeout(() => {
+                navigate("/projects");
+                setLoading(false);
+            }, 30000);
+ 
         } catch (error: unknown) {
             toast.error(getApiErrorMessage(error));
+           setLoading(false);
         } 
+        finally {
+            
+        }
 
     };
 
@@ -133,6 +143,19 @@ export default function Login(){
                     "
                     >
                         Login
+                        {loading && (
+                            <span className="ml-2">
+                                <Circles
+                                    height="80"
+                                    width="80"
+                                    color="#4fa94d"
+                                    ariaLabel="Circles-loading"
+                                    wrapperStyle={{}}
+                                    wrapperClass="wrapper-class"
+                                    visible={true}
+                                />
+                            </span>
+                        )}
                     </button>
 
                 </form>
